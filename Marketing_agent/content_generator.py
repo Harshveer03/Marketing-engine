@@ -79,22 +79,44 @@ class ContentGenerator:
         needs_str = self._format_needs(niche)
 
         prompt = f"""
-        Create a LinkedIn post about the topic: "{topic['title']}".
+        You are an AI assistant specialized in crafting high-impact LinkedIn posts for CXO and industry audiences.
 
-        Context:
-        - Industry: {niche.get("industry")}
-        - Pain Points (with causes, explanations, indicators):
-        - {pain_points_str}
-        - Needs: {needs_str}
-        - Target Audience: {audience}
-        - Desired Tone: {tone}
-        - Related News: {json.dumps(related_news, indent=2, ensure_ascii=False)}
-        - Reference Material (ICP/Niche PDF): {pdf_context}
+        Your Task:
+        Create a LinkedIn post on the topic: "{topic['title']}"
+
+        Context Provided:
+
+            -Industry: {niche.get("industry")}
+
+            -Pain Points (with causes, explanations, indicators):
+            {pain_points_str}
+
+            -Needs: {needs_str}
+
+            -Target Audience: {audience}
+
+            -Desired Tone: {tone}
+
+            -Related News: {json.dumps(related_news, indent=2, ensure_ascii=False)}
+
+            -Reference Material (ICP/Niche PDF): {pdf_context}
 
         Requirements:
-        - Write a professional caption (max 200 words).
-        - Add 5-7 relevant hashtags.
-        - Make it engaging and insight-driven.
+        
+            1. Write a professional, insight-driven caption (≤ 200 words).
+
+            2. Ensure the content is engaging, authoritative, and strategically valuable for decision-makers.
+
+            3. Highlight industry pain points, emerging needs, or opportunities with clarity.
+
+            4. Incorporate storytelling or thought-leadership hooks to maximize engagement.
+
+            5. Add 5–7 relevant, high-impact hashtags tailored to the industry and audience.
+
+            6. Maintain a credible, CXO-level voice (avoid fluff, generic advice, or overselling).
+
+        Goal:
+        - The post should educate, provoke thought, and position the brand/author as a trusted authority in the space.
 
         Output in JSON:
         {{
@@ -113,21 +135,41 @@ class ContentGenerator:
         needs_str = self._format_needs(niche)
 
         prompt = f"""
-        Create a Twitter (X) post about the topic: "{topic['title']}".
+        You are an AI assistant specialized in writing high-impact Twitter (X) posts for industry leaders and professionals.
+
+        Task:
+        Create a tweet on the topic: "{topic['title']}"
 
         Context:
-        - Industry: {niche.get("industry")}
-        - Pain Points: {pain_points_str}
-        - Needs: {needs_str}
-        - Target Audience: {audience}
-        - Desired Tone: {tone}
-        - Related News: {json.dumps(related_news, indent=2, ensure_ascii=False)}
-        - Reference Material (ICP/Niche PDF): {pdf_context}
+
+            -Industry: {niche.get("industry")}
+
+            -Pain Points: {pain_points_str}
+
+            -Needs: {needs_str}
+
+            -Target Audience: {audience}
+
+            -Desired Tone: {tone}
+
+            -Related News: {json.dumps(related_news, indent=2, ensure_ascii=False)}
+
+            -Reference Material (ICP/Niche PDF): {pdf_context}
 
         Requirements:
-        - Keep under 280 characters.
-        - Punchy, concise, and engaging.
-        - Add 2-3 trending hashtags.
+
+            1. Must fit within 280 characters.
+
+            2. Be punchy, concise, and attention-grabbing — avoid filler or generic phrasing.
+
+            3. Deliver a sharp insight, challenge, or opportunity that resonates with CXO-level readers.
+
+            4. Include 2–3 trending, relevant hashtags.
+
+            5. Style should be thought-leadership driven (not just promotional).
+
+        Goal:
+        The tweet should spark conversation, showcase authority, and connect industry pain points with strategic opportunities in a way that encourages engagement.
 
         Output in JSON:
         {{
@@ -145,25 +187,57 @@ class ContentGenerator:
         needs_str = self._format_needs(niche)
 
         prompt = f"""
-        Create a YouTube video script intro and description for the topic: "{topic['title']}".
+        You are an AI assistant specialized in creating YouTube video scripts and descriptions that position the brand as a thought leader.
+
+        Task:
+        Generate a YouTube video script intro and description for the topic: "{topic['title']}"
 
         Context:
-        - Industry: {niche.get("industry")}
-        - Pain Points (with causes, explanations, indicators):
-        - {pain_points_str}
-        - Needs: {needs_str}
-        - Target Audience: {audience}
-        - Desired Tone: {tone}
-        - Related News: {json.dumps(related_news, indent=2, ensure_ascii=False)}
-        - Reference Material (ICP/Niche PDF): {pdf_context}
+
+            - Industry: {niche.get("industry")}
+
+            - Pain Points (with causes, explanations, indicators): {pain_points_str}
+
+            - Needs: {needs_str}
+
+            - Target Audience: {audience}
+
+            - Desired Tone: {tone}
+
+            - Related News: {json.dumps(related_news, indent=2, ensure_ascii=False)}
+
+            - Reference Material (ICP/Niche PDF): {pdf_context}
 
         Requirements:
-        - Script intro (30-45 seconds).
-        - Description (2-3 sentences).
-        - Add 5-7 SEO-friendly tags.
 
-        Output in JSON:
-        {{
+        1. Script Intro (30–45 seconds):
+
+            - Hook the audience with a compelling, curiosity-driven opening line.
+
+            -Briefly highlight industry pain points and why they matter now.
+
+            -Introduce the value or solution your company/content will bring.
+
+            -End with a reason to keep watching (tease what’s coming).
+
+        2. Video Description (2–3 sentences):
+
+            - Provide a clear, SEO-friendly summary of the video.
+
+            -Emphasize value for the target audience and why they should watch.
+
+            -Keep professional, concise, and engagement-driven.
+
+        3. SEO Tags (5–7 keywords):
+
+            - Must be relevant, search-optimized, and niche-specific.
+
+            - Should cover industry trends, pain points, and opportunities.
+
+        Goal:
+            Produce an engaging, professional intro and description that not only retains viewers but also boosts discoverability on YouTube search.
+                Output in JSON:
+                {{
           "youtube": {{
             "script_intro": "...",
             "description": "...",

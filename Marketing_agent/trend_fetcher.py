@@ -31,16 +31,16 @@ class TrendFetcher:
         needs = ", ".join(icp_json.get("customer_needs", []))
 
         prompt = f"""
-        Generate exactly 1 concise search query (2–3 words) 
-        about {industry} trends, strategy, or customer challenges. 
-
-        Rules:
-        - Each query must contain either "{industry}", "{pain_points}" or "{needs}".
-        - Keep query short and distinct (no commas, no filler).
-        - Do not copy phrases directly; rephrase if needed.
-        - Output must be ONLY a valid JSON list of 1 string.
-
-        Example:
+        SEARCH_QUERY_PROMPT = 
+        Generate exactly 1 concise search query (2–3 words) related to {industry} trends, strategy, or customer challenges.
+        Requirements:
+        - The query MUST include either {industry}, {pain_points}, or {needs}.
+        - Do not copy phrases directly from the input; rephrase into natural search terms.
+        - Keep the query short (2–3 words max), distinct, and meaningful.
+        - Avoid filler words, commas, or generic terms like "insights", "overview", "update".
+       - Query should reflect a specific angle (e.g., a core challenge, need, or trend), not a vague phrase.
+       
+       Example:
         ["B2B SaaS GTM trends", "SaaS churn issues", "AI in SaaS", "SaaS CXO strategy", "SaaS growth 2025"]
         """
 

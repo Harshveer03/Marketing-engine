@@ -34,36 +34,40 @@ class TopicGenerator:
     def build_prompt(self, news_list, used_topics):
         news_text = json.dumps(news_list, indent=2, ensure_ascii=False)
         used_text = json.dumps([t["title"] for t in used_topics], indent=2, ensure_ascii=False)
-
+        
         prompt = f"""
-You are an AI assistant that creates social media content topics.
-
-I will give you:
-1. A list of recent news/trends.
-2. A list of previously used topics.
-
-Your job:
-1. Analyze the news items and detect patterns, overlaps, or recurring themes.
-2. Merge related items into a single concise topic if possible.
-3. Generate exactly 3 NEW distinct, high-relevance topic options that are NOT in the previously used list.
-4. Each topic should be short (max 12 words), actionable, and aligned with CXO-level strategy or industry opportunities.
-5. Do not repeat the same wording across topics.
-
-News Items:
-{news_text}
-
-Previously Used Topics:
-{used_text}
-
-Output ONLY in valid JSON as:
-{{
-  "topics": [
-    {{"title": "Topic Title 1"}},
-    {{"title": "Topic Title 2"}},
-    {{"title": "Topic Title 3"}}
-  ]
-}}
-"""
+        You are an AI assistant that generates strategic social media content topics.
+        Input:
+        1. A list of recent news/trends.
+        2. A list of previously used topics.
+        Your job:
+        1. Analyze the news/trends deeply to detect patterns, overlaps, and recurring themes. 
+            - Look for strategic signals: shifts in customer behavior, regulatory changes, competitive plays, tech adoption, or market risks.
+        2. Merge related items into a single concise theme if possible (avoid redundancy).
+        3. Generate exactly 3 NEW, distinct, and high-relevance topic options that are NOT in the previously used list.
+        4. Each topic MUST:
+            - Be short (max 12 words).
+            - Be phrased as a clear, actionable content hook.
+            - Be directly relevant to CXO-level priorities (growth, risk, innovation, market shifts).
+            - Highlight opportunities, threats, or decisions executives care about.
+            - Avoid vague wording or generic filler (e.g., no "future of", "latest insights").
+        5. Do not repeat the same words or phrasing across the 3 topics.
+        
+        News Items:
+        {news_text}
+        
+        Previously Used Topics:
+        {used_text}
+        
+        Output ONLY in valid JSON as:
+        {{
+            "topics": [
+                {{"title": "Topic Title 1"}},
+                {{"title": "Topic Title 2"}},
+                {{"title": "Topic Title 3"}}
+                ]
+                }}
+                """
         return prompt
 
     def parse_response(self, response, next_id, news_list):

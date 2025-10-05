@@ -25,22 +25,31 @@ class TrendFetcher:
         self.llm = ChatGoogleGenerativeAI(model=model, temperature=0)
 
     def build_queries(self, icp_json: dict) -> list:
-        """Generate exactly 1 concise queries using LLM"""
+        """Generate exactly 1 concise query using LLM"""
         industry = icp_json.get("industry", "")
-        pain_points = ", ".join(icp_json.get("customer_pain_points", []))
-        needs = ", ".join(icp_json.get("customer_needs", []))
+
+        # Extract just 'challenge' text if pain points are dicts
+        pain_points_data = icp_json.get("customer_pain_points", [])
+        pain_points = ", ".join(
+            [p["challenge"] if isinstance(p, dict) else str(p) for p in pain_points_data]
+        )
+
+        # Extract just 'need' text if customer_needs are dicts
+        needs_data = icp_json.get("customer_needs", [])
+        needs = ", ".join(
+            [n["need"] if isinstance(n, dict) else str(n) for n in needs_data]
+        )
 
         prompt = f"""
-        SEARCH_QUERY_PROMPT = 
         Generate exactly 1 concise search query (2–3 words) related to {industry} trends, strategy, or customer challenges.
         Requirements:
         - The query MUST include either {industry}, {pain_points}, or {needs}.
         - Do not copy phrases directly from the input; rephrase into natural search terms.
         - Keep the query short (2–3 words max), distinct, and meaningful.
         - Avoid filler words, commas, or generic terms like "insights", "overview", "update".
-       - Query should reflect a specific angle (e.g., a core challenge, need, or trend), not a vague phrase.
-       
-       Example:
+        - Query should reflect a specific angle (e.g., a core challenge, need, or trend), not a vague phrase.
+
+        Example:
         ["B2B SaaS GTM trends", "SaaS churn issues", "AI in SaaS", "SaaS CXO strategy", "SaaS growth 2025"]
         """
 
@@ -56,6 +65,7 @@ class TrendFetcher:
                 cleaned.append(" ".join(words))
 
         return cleaned if cleaned else [f"{industry} trends"]
+
 
     def fetch_serpapi(self, query: str, source: str = "google_news", num: int = 5) -> dict:
         """Fetch raw results from SerpAPI"""
@@ -125,8 +135,26 @@ class TrendFetcher:
     def relevance_filter(self, items: list, icp_json: dict, top_k: int = 10, threshold: float = 0.65) -> list:
         """Filter results using ICP keywords + vector similarity with threshold"""
         keywords = [icp_json.get("industry", "").lower()]
-        keywords += [kw.lower() for kw in icp_json.get("customer_pain_points", [])]
-        keywords += [kw.lower() for kw in icp_json.get("customer_needs", [])]
+
+        # Extract challenge text if available
+        pain_points_data = icp_json.get("customer_pain_points", [])
+        for p in pain_points_data:
+            if isinstance(p, dict):
+                challenge = p.get("challenge", "")
+                if challenge:
+                    keywords.append(challenge.lower())
+            elif isinstance(p, str):
+                keywords.append(p.lower())
+
+        # Extract need text if available
+        needs_data = icp_json.get("customer_needs", [])
+        for n in needs_data:
+            if isinstance(n, dict):
+                need = n.get("need", "")
+                if need:
+                    keywords.append(need.lower())
+            elif isinstance(n, str):
+                keywords.append(n.lower())
 
         filtered = []
         for item in items:
@@ -140,11 +168,11 @@ class TrendFetcher:
                 filtered.append({
                     **item,
                     "relevance_context": docs_and_scores[0][0].page_content if docs_and_scores else "",
-                    "similarity_score": float(docs_and_scores[0][1]) if docs_and_scores else None,  # ✅ cast
+                    "similarity_score": float(docs_and_scores[0][1]) if docs_and_scores else None,
                 })
 
-        # ✅ keep only top_k
         return filtered[:top_k]
+
 
     def run(self, icp_json_path="./niche/niche_icp.json"):
         with open(icp_json_path, "r") as f:

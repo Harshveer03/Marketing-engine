@@ -257,26 +257,49 @@ class ContentGenerator:
 
         os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-        # Save separate JSON files
+        # ✅ Simplified output structure
+        linkedin_data = {
+            "id": topic["id"],
+            "title": topic["title"],
+            "caption": linkedin_post.get("caption", ""),
+            "hashtags": linkedin_post.get("hashtags", [])
+        }
+
+        twitter_data = {
+            "id": topic["id"],
+            "title": topic["title"],
+            "caption": twitter_post.get("tweet", ""),
+            "hashtags": twitter_post.get("hashtags", [])
+        }
+
+        youtube_data = {
+            "id": topic["id"],
+            "title": topic["title"],
+            "script_intro": youtube_post.get("script_intro", ""),
+            "caption": youtube_post.get("description", ""),
+            "hashtags": youtube_post.get("tags", [])
+        }
+
         linkedin_file = os.path.join(OUTPUT_DIR, "linkedin.json")
         twitter_file = os.path.join(OUTPUT_DIR, "twitter.json")
         youtube_file = os.path.join(OUTPUT_DIR, "youtube.json")
 
         with open(linkedin_file, "w", encoding="utf-8") as f:
-            json.dump({"topic": topic, "linkedin": linkedin_post}, f, indent=4, ensure_ascii=False)
+            json.dump(linkedin_data, f, indent=4, ensure_ascii=False)
 
         with open(twitter_file, "w", encoding="utf-8") as f:
-            json.dump({"topic": topic, "twitter": twitter_post}, f, indent=4, ensure_ascii=False)
+            json.dump(twitter_data, f, indent=4, ensure_ascii=False)
 
         with open(youtube_file, "w", encoding="utf-8") as f:
-            json.dump({"topic": topic, "youtube": youtube_post}, f, indent=4, ensure_ascii=False)
+            json.dump(youtube_data, f, indent=4, ensure_ascii=False)
 
-        print("✅ Content generated and saved:")
+        print("✅ Simplified content generated and saved:")
         print("  -", linkedin_file)
         print("  -", twitter_file)
         print("  -", youtube_file)
 
-        return linkedin_post, twitter_post, youtube_post
+        return linkedin_data, twitter_data, youtube_data
+
 
 
 def main():

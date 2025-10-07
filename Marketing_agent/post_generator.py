@@ -263,12 +263,23 @@ class ContentGenerator:
         news_context = " ".join([n.get("title", "") for n in related_news[:5]])
 
         prompt = (
-            f"Create a high-quality, professional social-media banner image (16:9) "
-            f"for both LinkedIn and Twitter posts about '{topic_title}' in the {industry} industry. "
-            f"Use a {tone} tone — clean, futuristic, minimal design, with abstract gradients or tech patterns. "
-            f"Do NOT include any text, faces, or logos. "
-            f"Visual context: {news_context}."
-        )
+        f"Create a high-quality, visually refined 16:9 banner image for LinkedIn and Twitter (X) posts "
+        f"centered around the topic '{topic_title}' within the {industry} industry. "
+        f"Follow this detailed creative direction:\n\n"
+        f"Creative Direction:\n"
+        f"- Style: Futuristic, clean, and minimal — with depth through gradients, light abstraction, or intelligent tech-inspired geometry.\n"
+        f"- Tone: {tone} — reflect strategic confidence and sophistication rather than loudness or marketing flair.\n"
+        f"- Color Palette: Prefer muted modern tones (cool neutrals, gradients of blue, violet, gray, or soft metallics) that evoke trust and innovation.\n"
+        f"- Composition: Maintain strong negative space, elegant balance, and subtle motion cues or symmetry if possible.\n"
+        f"- Conceptually, the image should visually express transformation, intelligence, systems, or evolution — aligning with the analytical nature of B2B SaaS thought leadership.\n\n"
+        f"Content Rules:\n"
+        f"- Do NOT include any text, faces, people, or logos.\n"
+        f"- Abstract patterns, smooth shapes, gradient flows, or light energy themes are encouraged.\n"
+        f"- Avoid cliché tech imagery (no binary code, data grids, or circuit boards).\n\n"
+        f"Context for Inspiration:\n{news_context}\n\n"
+        f"Goal: Produce a premium, timeless banner image that represents thought-leadership — modern, credible, and insight-driven in its aesthetic."
+    )
+
 
         print("🎨 Generating unified image for LinkedIn & Twitter using Gemini Vision...")
 

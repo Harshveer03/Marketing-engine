@@ -5,6 +5,11 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import OllamaEmbeddings
+import google.generativeai as genai
+import base64
+import time
+from PIL import Image
+from io import BytesIO
 
 load_dotenv()
 
@@ -13,6 +18,7 @@ NEWS_FILE = "./news/filtered_news.json"
 NICHE_FILE = "./niche/niche_icp.json"
 OUTPUT_DIR = "./content/generated_content"
 VECTOR_DB_DIR = "./vectordb"
+IMAGE_OUTPUT_DIR = "./content/generated_content/images"
 
 
 class ContentGenerator:
@@ -247,6 +253,56 @@ class ContentGenerator:
         """
         response = self.llm.invoke(prompt).content
         return self.clean_response(response).get("youtube", {})
+    
+    def generate_post_image(self, topic, niche, tone, related_news):
+
+        os.makedirs(IMAGE_OUTPUT_DIR, exist_ok=True)
+
+        industry = niche.get("industry", "Business Strategy")
+        topic_title = topic.get("title", "Industry Insight")
+        news_context = " ".join([n.get("title", "") for n in related_news[:5]])
+
+        prompt = (
+            f"Create a high-quality, professional social-media banner image (16:9) "
+            f"for both LinkedIn and Twitter posts about '{topic_title}' in the {industry} industry. "
+            f"Use a {tone} tone — clean, futuristic, minimal design, with abstract gradients or tech patterns. "
+            f"Do NOT include any text, faces, or logos. "
+            f"Visual context: {news_context}."
+        )
+
+        print("🎨 Generating unified image for LinkedIn & Twitter using Gemini Vision...")
+
+        try:
+            genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+            model = genai.GenerativeModel("gemini-pro-vision")
+            response = model.generate_content(prompt)
+
+            image_path = None
+            if hasattr(response, "candidates"):
+                for candidate in response.candidates:
+                    if hasattr(candidate, "content") and hasattr(candidate.content, "parts"):
+                        for part in candidate.content.parts:
+                            if (
+                                hasattr(part, "inline_data")
+                                and hasattr(part.inline_data, "mime_type")
+                                and "image" in part.inline_data.mime_type
+                            ):
+                                image_data_base64 = part.inline_data.data
+                                image = Image.open(BytesIO(base64.b64decode(image_data_base64)))
+
+                                safe_title = "".join(c if c.isalnum() or c in ("", "-") else "" for c in topic_title)
+                                image_path = os.path.join(IMAGE_OUTPUT_DIR, f"{safe_title}_{int(time.time())}.png")
+                                image.save(image_path)
+                                print(f"✅ Unified image saved at: {image_path}")
+                                return image_path
+
+            print("⚠ No image data found in response.")
+            return None
+
+        except Exception as e:
+            print(f"⚠ Image generation failed: {e}")
+            return None
+    
 
     def run(self, topic_id: int, audience: str, tone: str):
         niche, topic, related_news, pdf_context = self.get_context(topic_id)

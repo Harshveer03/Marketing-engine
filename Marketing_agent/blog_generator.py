@@ -79,18 +79,28 @@ class BlogGenerator:
     # ---------- Topic Generation ----------
     def generate_topic(self, niche):
         prompt = f"""
-        You are a B2B SaaS marketing strategist.
+        You are a B2B SaaS marketing strategist and thought leadership architect.
+        Your role is to craft long-form, insight-rich blog topics that challenge conventional thinking and offer a strategic lens on emerging shifts within the given niche.
 
-        Based on this ICP/Niche JSON:
-        {json.dumps(niche, indent=2)}
+        Input Context:
+        ICP/Niche JSON:{json.dumps(niche, indent=2)}
 
-        Generate 1 unique, fresh blog topic (not social post) that explores industry depth — 
-        long-form, analytical, and strategic — not surface-level.
+        Your Task:
+        Generate 1 unique, high-context, long-form blog topic that explores industry transformation, GTM evolution, or strategic inflection points.
+        This topic should reflect a deep understanding of pain points, buyer psychology, market dynamics, and systemic inefficiencies revealed in the ICP/Niche data.
 
-        Example styles: 
-        - "Decoding the Future of GTM Operations in 2025"
-        - "Why B2B SaaS Needs a Cultural Shift in Growth Execution"
+        Guidelines:
 
+            1. The topic must sound like it belongs in a McKinsey, a16z, or Harvard Business Review-style publication — authoritative, specific, and original.
+
+            2. Avoid generic titles like “Top Trends” or “The Future of X.” Focus on causality, systemic change, or strategic realignment.
+
+            3. Use actionable phrasing that signals insight (e.g., "Rewiring," "Operationalizing," "Deconstructing," "Reframing," "Why GTM Models Fail", etc.).
+
+            4. Keep the title concise (max 12–15 words) yet intellectually compelling — it should promise depth, not clickbait.
+
+            5. Ensure the topic reflects real pain points or shifts from the ICP (e.g., scaling constraints, execution gaps, data fragmentation, buyer misalignment).
+                
         Return ONLY in JSON:
         {{
           "topic": "Generated topic title"
@@ -110,23 +120,69 @@ class BlogGenerator:
     # ---------- Blog Generator ----------
     def generate_blog(self, topic, news_items, niche, pdf_context):
         prompt = f"""
-        You are an expert B2B SaaS content strategist.
+        You are a B2B SaaS content strategist and industry analyst who writes deep, insight-rich long-form blogs designed for decision-makers, operators, and investors.
+        Your job is to decode industry transformation — revealing why inefficiencies exist, how systems break down, and what strategic shifts define the next wave of growth.
 
-        Write a comprehensive blog on the topic: "{topic}"
+        Task:
+        Write a comprehensive, long-form analytical blog on the topic:
+        "{topic}"
 
-        Context:
-        - Industry: {niche.get("industry")}
-        - Key Pain Points: {[p['challenge'] for p in niche.get('customer_pain_points', [])]}
-        - Customer Needs: {[n['need'] for n in niche.get('customer_needs', [])]}
-        - Relevant News Articles: {json.dumps(news_items, indent=2)}
-        - Reference Material (from niche PDF): {pdf_context[:2000]}
+        Context Inputs:
 
-        Blog Requirements:
-        1. Write a well-structured, long-form blog (700–1000 words).
-        2. Include clear sections: Introduction, Core Analysis, Solutions/Insights, and Conclusion.
-        3. Tone: Analytical, forward-thinking, and authoritative.
-        4. Include subtle references to recent industry shifts.
-        5. Do NOT add markdown or emojis.
+            - Industry: {niche.get("industry")}
+
+            - Key Pain Points: {[p['challenge'] for p in niche.get('customer_pain_points', [])]}
+
+            - Customer Needs: {[n['need'] for n in niche.get('customer_needs', [])]}
+
+            - Relevant News Articles: {json.dumps(news_items, indent=2)}
+
+            - Reference Material (from ICP/Niche PDF): {pdf_context[:2000]}
+
+        Writing Objectives
+
+            1. Deliver a strategic narrative, not surface commentary — your writing should expose the root causes, hidden inefficiencies, and structural challenges in the market.
+
+            2. Bridge macro trends (market shifts, capital cycles, AI adoption, GTM evolution) with micro realities (founder behavior, execution gaps, data fragmentation, operational misalignment).
+
+            3. Blend data-backed reasoning and pattern recognition with storytelling that positions the reader as a strategic thinker.
+
+            4. Every major claim or insight should implicitly answer:
+
+                - Why is this happening now?
+
+                - What are the systemic forces behind it?
+
+                - What shift must companies make to adapt or win?
+
+        Blog Requirements
+
+            1. Length: 700–1000 words, structured and cohesive.
+
+            2. Format:
+
+                - Introduction: Contextualize the challenge and why it matters now.
+
+                - Core Analysis: Break down root causes, system dynamics, and hidden frictions.
+
+                - Strategic Solutions/Insights: Present clear frameworks, pivots, or models for GTM or operational advantage.
+
+                - Conclusion: Forward-looking synthesis — what this shift means for SaaS leaders.
+
+            3. Tone: Analytical, confident, and forward-thinking (McKinsey x a16z x Thought Leadership blend).
+
+            4. Style:
+
+                - Use cause-effect clarity (“because,” “driven by,” “due to”) to strengthen reasoning.
+
+                - Avoid generic statements or motivational fluff.
+
+                - No bullet lists or markdown formatting.
+
+                - Avoid overt sales or brand promotion — focus on strategic substance.
+
+            5. Integrate subtle nods to recent industry developments or evolving GTM playbooks where relevant.
+        
 
         Output in JSON:
         {{

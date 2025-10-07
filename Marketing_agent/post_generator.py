@@ -6,6 +6,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import OllamaEmbeddings
 import google.generativeai as genai
+from google import genai
+from google.genai import types
+from PIL import Image
+from io import BytesIO
 import base64
 import time
 from PIL import Image
@@ -255,6 +259,8 @@ class ContentGenerator:
         return self.clean_response(response).get("youtube", {})
     
     def generate_post_image(self, topic, niche, tone, related_news):
+        """Generate a unified image for LinkedIn and Twitter using Gemini 2.5 Flash Image."""
+        
 
         os.makedirs(IMAGE_OUTPUT_DIR, exist_ok=True)
 
@@ -263,56 +269,49 @@ class ContentGenerator:
         news_context = " ".join([n.get("title", "") for n in related_news[:5]])
 
         prompt = (
-        f"Create a high-quality, visually refined 16:9 banner image for LinkedIn and Twitter (X) posts "
-        f"centered around the topic '{topic_title}' within the {industry} industry. "
-        f"Follow this detailed creative direction:\n\n"
-        f"Creative Direction:\n"
-        f"- Style: Futuristic, clean, and minimal — with depth through gradients, light abstraction, or intelligent tech-inspired geometry.\n"
-        f"- Tone: {tone} — reflect strategic confidence and sophistication rather than loudness or marketing flair.\n"
-        f"- Color Palette: Prefer muted modern tones (cool neutrals, gradients of blue, violet, gray, or soft metallics) that evoke trust and innovation.\n"
-        f"- Composition: Maintain strong negative space, elegant balance, and subtle motion cues or symmetry if possible.\n"
-        f"- Conceptually, the image should visually express transformation, intelligence, systems, or evolution — aligning with the analytical nature of B2B SaaS thought leadership.\n\n"
-        f"Content Rules:\n"
-        f"- Do NOT include any text, faces, people, or logos.\n"
-        f"- Abstract patterns, smooth shapes, gradient flows, or light energy themes are encouraged.\n"
-        f"- Avoid cliché tech imagery (no binary code, data grids, or circuit boards).\n\n"
-        f"Context for Inspiration:\n{news_context}\n\n"
-        f"Goal: Produce a premium, timeless banner image that represents thought-leadership — modern, credible, and insight-driven in its aesthetic."
-    )
+            f"Create a high-quality, visually refined 16:9 banner image for LinkedIn and Twitter (X) posts "
+            f"centered around the topic '{topic_title}' within the {industry} industry. "
+            f"Follow this detailed creative direction:\n\n"
+            f"Creative Direction:\n"
+            f"- Style: Futuristic, clean, and minimal — with depth through gradients, light abstraction, or intelligent tech-inspired geometry.\n"
+            f"- Tone: {tone} — reflect strategic confidence and sophistication rather than loudness or marketing flair.\n"
+            f"- Color Palette: Prefer muted modern tones (cool neutrals, gradients of blue, violet, gray, or soft metallics) that evoke trust and innovation.\n"
+            f"- Composition: Maintain strong negative space, elegant balance, and subtle motion cues or symmetry if possible.\n"
+            f"- Conceptually, the image should visually express transformation, intelligence, systems, or evolution — aligning with the analytical nature of B2B SaaS thought leadership.\n\n"
+            f"Content Rules:\n"
+            f"- Do NOT include any text, faces, people, or logos.\n"
+            f"- Abstract patterns, smooth shapes, gradient flows, or light energy themes are encouraged.\n"
+            f"- Avoid cliché tech imagery (no binary code, data grids, or circuit boards).\n\n"
+            f"Context for Inspiration:\n{news_context}\n\n"
+            f"Goal: Produce a premium, timeless banner image that represents thought-leadership — modern, credible, and insight-driven in its aesthetic."
+        )
 
-
-        print("🎨 Generating unified image for LinkedIn & Twitter using Gemini Vision...")
+        print("🎨 Generating unified image for LinkedIn & Twitter using Gemini 2.5 Flash Image...")
 
         try:
-            genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-            model = genai.GenerativeModel("gemini-pro-vision")
-            response = model.generate_content(prompt)
+            client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+            response = client.models.generate_content(
+                model="gemini-2.5-flash-image",
+                contents=[prompt],
+            )
 
             image_path = None
-            if hasattr(response, "candidates"):
-                for candidate in response.candidates:
-                    if hasattr(candidate, "content") and hasattr(candidate.content, "parts"):
-                        for part in candidate.content.parts:
-                            if (
-                                hasattr(part, "inline_data")
-                                and hasattr(part.inline_data, "mime_type")
-                                and "image" in part.inline_data.mime_type
-                            ):
-                                image_data_base64 = part.inline_data.data
-                                image = Image.open(BytesIO(base64.b64decode(image_data_base64)))
+            for part in response.candidates[0].content.parts:
+                if part.inline_data is not None:
+                    image = Image.open(BytesIO(part.inline_data.data))
+                    safe_title = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in topic_title)
+                    image_path = os.path.join(IMAGE_OUTPUT_DIR, f"{safe_title}_{int(time.time())}.png")
+                    image.save(image_path)
+                    print(f"✅ Unified image saved at: {image_path}")
+                    return image_path
 
-                                safe_title = "".join(c if c.isalnum() or c in ("", "-") else "" for c in topic_title)
-                                image_path = os.path.join(IMAGE_OUTPUT_DIR, f"{safe_title}_{int(time.time())}.png")
-                                image.save(image_path)
-                                print(f"✅ Unified image saved at: {image_path}")
-                                return image_path
-
-            print("⚠ No image data found in response.")
+            print("⚠️ No image data found in response.")
             return None
 
         except Exception as e:
-            print(f"⚠ Image generation failed: {e}")
+            print(f"⚠️ Image generation failed: {e}")
             return None
+
     
 
     def run(self, topic_id: int, audience: str, tone: str):
@@ -321,6 +320,8 @@ class ContentGenerator:
         linkedin_post = self.generate_linkedin_content(topic, related_news, niche, audience, tone, pdf_context)
         twitter_post = self.generate_twitter_content(topic, related_news, niche, audience, tone, pdf_context)
         youtube_post = self.generate_youtube_content(topic, related_news, niche, audience, tone, pdf_context)
+        post_image = self.generate_post_image(topic, niche, tone, related_news)
+
 
         os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -352,10 +353,10 @@ class ContentGenerator:
         youtube_file = os.path.join(OUTPUT_DIR, "youtube.json")
 
         with open(linkedin_file, "w", encoding="utf-8") as f:
-            json.dump(linkedin_data, f, indent=4, ensure_ascii=False)
+            json.dump({"topic": topic, "linkedin": linkedin_post, "image": post_image}, f, indent=4, ensure_ascii=False)
 
         with open(twitter_file, "w", encoding="utf-8") as f:
-            json.dump(twitter_data, f, indent=4, ensure_ascii=False)
+            json.dump({"topic": topic, "twitter": twitter_post, "image": post_image}, f, indent=4, ensure_ascii=False)
 
         with open(youtube_file, "w", encoding="utf-8") as f:
             json.dump(youtube_data, f, indent=4, ensure_ascii=False)
@@ -374,7 +375,7 @@ def main():
 
     topics = generator.load_json(TOPICS_FILE)
     if not topics:
-        print("⚠️ No topics found. Run topic_generator first.")
+        print("⚠ No topics found. Run topic_generator first.")
         return
 
     print("\nAvailable Topics:")

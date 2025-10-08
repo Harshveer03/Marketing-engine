@@ -14,6 +14,7 @@ import base64
 import time
 from PIL import Image
 from io import BytesIO
+from openai import OpenAI
 
 load_dotenv()
 
@@ -269,7 +270,7 @@ class ContentGenerator:
         news_context = " ".join([n.get("title", "") for n in related_news[:5]])
 
         prompt = (
-            f"Create a high-quality, visually refined 16:9 banner image for LinkedIn and Twitter (X) posts "
+            f"Create a high-quality, visually refined 16:9 image for LinkedIn and Twitter (X) posts "
             f"centered around the topic '{topic_title}' within the {industry} industry. "
             f"Follow this detailed creative direction:\n\n"
             f"Creative Direction:\n"
@@ -286,12 +287,12 @@ class ContentGenerator:
             f"Goal: Produce a premium, timeless banner image that represents thought-leadership — modern, credible, and insight-driven in its aesthetic."
         )
 
-        print("🎨 Generating unified image for LinkedIn & Twitter using Gemini 2.5 Flash Image...")
+        print("🎨 Generating unified image for LinkedIn & Twitter...")
 
         try:
-            client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+            client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY_1"))
             response = client.models.generate_content(
-                model="gemini-2.5-flash-image",
+                model="gemini-2.5-flash-image-preview",
                 contents=[prompt],
             )
 
@@ -320,7 +321,7 @@ class ContentGenerator:
         linkedin_post = self.generate_linkedin_content(topic, related_news, niche, audience, tone, pdf_context)
         twitter_post = self.generate_twitter_content(topic, related_news, niche, audience, tone, pdf_context)
         youtube_post = self.generate_youtube_content(topic, related_news, niche, audience, tone, pdf_context)
-        post_image = self.generate_post_image(topic, niche, tone, related_news)
+        #post_image = self.generate_post_image(topic, niche, tone, related_news)
 
 
         os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -353,10 +354,12 @@ class ContentGenerator:
         youtube_file = os.path.join(OUTPUT_DIR, "youtube.json")
 
         with open(linkedin_file, "w", encoding="utf-8") as f:
-            json.dump({"topic": topic, "linkedin": linkedin_post, "image": post_image}, f, indent=4, ensure_ascii=False)
+            #json.dump({"topic": topic, "linkedin": linkedin_post, "image": post_image}, f, indent=4, ensure_ascii=False)
+            json.dump(linkedin_data, f, indent=4, ensure_ascii=False)
 
         with open(twitter_file, "w", encoding="utf-8") as f:
-            json.dump({"topic": topic, "twitter": twitter_post, "image": post_image}, f, indent=4, ensure_ascii=False)
+            #json.dump({"topic": topic, "twitter": twitter_post, "image": post_image}, f, indent=4, ensure_ascii=False)
+            json.dump(twitter_data, f, indent=4, ensure_ascii=False)
 
         with open(youtube_file, "w", encoding="utf-8") as f:
             json.dump(youtube_data, f, indent=4, ensure_ascii=False)

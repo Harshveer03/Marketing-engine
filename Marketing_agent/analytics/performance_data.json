@@ -1,0 +1,54 @@
+[
+    {
+        "topic_id": 3,
+        "platform": "linkedin",
+        "title": "Elevate B2B Trust: Secure Your Market Position.",
+        "metrics": {
+            "impressions": 15691,
+            "likes": 65,
+            "comments": 41,
+            "shares": 43,
+            "engagement_rate": 0.009
+        },
+        "timestamp": "2025-10-12T10:31:36.268118"
+    },
+    {
+        "topic_id": 3,
+        "platform": "twitter",
+        "title": "Elevate B2B Trust: Secure Your Market Position.",
+        "metrics": {
+            "impressions": 18302,
+            "likes": 101,
+            "comments": 42,
+            "shares": 24,
+            "engagement_rate": 0.009
+        },
+        "timestamp": "2025-10-12T10:31:36.269178"
+    },
+    {
+        "topic_id": 3,
+        "platform": "youtube",
+        "title": "Elevate B2B Trust: Secure Your Market Position.",
+        "metrics": {
+            "impressions": 16044,
+            "likes": 259,
+            "comments": 58,
+            "shares": 29,
+            "engagement_rate": 0.022
+        },
+        "timestamp": "2025-10-12T10:31:36.270356"
+    },
+    {
+        "topic_id": null,
+        "platform": "blog",
+        "title": "Rewiring Your GTM DNA: The Foundational Shift from Generic Playbooks to Intelligence-Driven Behavioral Execution in Deep B2B SaaS",
+        "metrics": {
+            "impressions": 11344,
+            "likes": 59,
+            "comments": 5,
+            "shares": 44,
+            "engagement_rate": 0.01
+        },
+        "timestamp": "2025-10-12T10:31:36.272020"
+    }
+]

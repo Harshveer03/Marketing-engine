@@ -1,86 +1,119 @@
 import os
 import json
-from collections import defaultdict, Counter
-from datetime import datetime
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+load_dotenv()
 
 PERFORMANCE_FILE = "./analytics/performance_data.json"
-INSIGHTS_FILE = "./analytics/adaptive_insights.json"
+INSIGHTS_FILE = "./analytics/performance_insights.json"
 
-def load_performance_data(path):
-    if not os.path.exists(path):
-        print("⚠️ Performance data not found.")
-        return []
-    with open(path, "r", encoding="utf-8") as f:
-        try:
-            return json.load(f)
-        except json.JSONDecodeError:
-            print("⚠️ Could not parse performance data.")
+
+class LLMPerformanceAnalyzer:
+    def __init__(self, model="models/gemini-2.5-flash"):
+        self.llm = ChatGoogleGenerativeAI(model=model, temperature=0.3)
+
+    def load_json(self, path):
+        if not os.path.exists(path):
+            print(f"⚠️ No file found at {path}")
             return []
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
 
-def analyze_platform(records):
-    if not records:
-        return {}
+    def analyze_with_llm(self, data):
+        prompt = f"""
+        You are an expert AI performance analyst for marketing content.
 
-    # Compute average engagement
-    avg_engagement = sum(r["metrics"]["engagement_rate"] for r in records) / len(records)
-    
-    # Identify top-performing titles / topics
-    sorted_by_engagement = sorted(records, key=lambda r: r["metrics"]["engagement_rate"], reverse=True)
-    top_titles = [r["title"] for r in sorted_by_engagement[:3]]  # top 3
-    avoid_titles = [r["title"] for r in sorted_by_engagement[-3:]]  # bottom 3
-    
-    # Optional: analyze hashtags if available
-    hashtags = Counter()
-    for r in records:
-        if "hashtags" in r:
-            hashtags.update(r["hashtags"])
-    top_hashtags = [tag for tag, _ in hashtags.most_common(5)]
-    low_hashtags = [tag for tag, _ in hashtags.most_common()[-5:]]
+        Analyze the following dataset of post and blog performances across LinkedIn, Twitter, YouTube, and Blog:
+        Each record includes title, metrics, platform, and timestamp.
 
-    return {
-        "avg_engagement": round(avg_engagement, 3),
-        "top_titles": top_titles,
-        "avoid_titles": avoid_titles,
-        "top_hashtags": top_hashtags,
-        "low_hashtags": low_hashtags
-    }
+        Dataset:
+        {json.dumps(data, indent=2, ensure_ascii=False)}
 
-def generate_adaptive_insights(data):
-    platform_records = defaultdict(list)
-    for record in data:
-        platform_records[record["platform"]].append(record)
+        Your tasks:
+        1. Identify performance patterns — what types of **titles**, **tones**, or **topics** yield high engagement.
+        2. Determine which **platforms perform best**, and what kind of content thrives there.
+        3. Find the **top 3 highest-performing titles overall** and explain why they worked.
+        4. Suggest **data-driven recommendations** for each platform to improve future content.
 
-    insights = {}
-    for platform, records in platform_records.items():
-        insights[platform] = analyze_platform(records)
-    return insights
+        Format your response strictly as valid JSON:
+        {{
+          "summary": {{
+            "platforms": {{
+              "linkedin": {{
+                "avg_engagement": 0.0,
+                "insights": "...",
+                "recommendations": "...",
+                "top_titles": ["...", "..."]
+              }},
+              "twitter": {{
+                "avg_engagement": 0.0,
+                "insights": "...",
+                "recommendations": "...",
+                "top_titles": ["...", "..."]
+              }},
+              "youtube": {{
+                "avg_engagement": 0.0,
+                "insights": "...",
+                "recommendations": "...",
+                "top_titles": ["...", "..."]
+              }},
+              "blog": {{
+                "avg_engagement": 0.0,
+                "insights": "...",
+                "recommendations": "...",
+                "top_titles": ["...", "..."]
+              }}
+            }},
+            "global_insights": {{
+              "top_performing_titles": ["...", "...", "..."],
+              "common_success_factors": "...",
+              "overall_recommendation": "..."
+            }}
+          }}
+        }}
+        """
 
-def save_insights(insights, path=INSIGHTS_FILE):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(insights, f, indent=4, ensure_ascii=False)
-    print(f"✅ Adaptive insights saved to {path}")
+        response = self.llm.invoke(prompt).content
+        try:
+            return json.loads(response)
+        except json.JSONDecodeError:
+            print("⚠️ LLM returned invalid JSON, attempting to clean...")
+            start = response.find("{")
+            end = response.rfind("}") + 1
+            return json.loads(response[start:end])
 
-def main():
-    print("📊 Loading historical performance data...")
-    data = load_performance_data(PERFORMANCE_FILE)
-    if not data:
-        print("⚠️ No data to analyze. Exiting.")
-        return
+    def run(self):
+        print("📈 Running LLM-driven performance analysis...")
 
-    print("🧠 Analyzing engagement metrics...")
-    insights = generate_adaptive_insights(data)
-    
-    save_insights(insights)
+        data = self.load_json(PERFORMANCE_FILE)
+        if not data:
+            print("⚠️ No performance data found.")
+            return
 
-    # Optional: print summary for quick inspection
-    for platform, info in insights.items():
-        print(f"\n📌 {platform.upper()} Insights:")
-        print(f"Avg Engagement Rate: {info['avg_engagement']}")
-        print(f"Prioritize Titles: {info['top_titles']}")
-        print(f"Avoid Titles: {info['avoid_titles']}")
-        print(f"Top Hashtags: {info['top_hashtags']}")
-        print(f"Low Hashtags: {info['low_hashtags']}")
+        analysis = self.analyze_with_llm(data)
+
+        os.makedirs(os.path.dirname(INSIGHTS_FILE), exist_ok=True)
+        with open(INSIGHTS_FILE, "w", encoding="utf-8") as f:
+            json.dump(analysis, f, indent=4, ensure_ascii=False)
+
+        print(f"✅ AI-generated performance insights saved to {INSIGHTS_FILE}\n")
+
+        # Display summary in readable form
+        for platform, info in analysis["summary"]["platforms"].items():
+            print(f"📊 {platform.capitalize()}")
+            print(f"   Avg Engagement: {info.get('avg_engagement')}")
+            print(f"   Insights: {info.get('insights')}")
+            print(f"   Recommendations: {info.get('recommendations')}")
+            print(f"   Top Titles: {', '.join(info.get('top_titles', []))}\n")
+
+        global_summary = analysis["summary"]["global_insights"]
+        print("🌍 Global Insights:")
+        print(f"   🔝 Top Titles: {', '.join(global_summary['top_performing_titles'])}")
+        print(f"   💡 Common Success Factors: {global_summary['common_success_factors']}")
+        print(f"   🧭 Overall Recommendation: {global_summary['overall_recommendation']}")
+
 
 if __name__ == "__main__":
-    main()
+    analyzer = LLMPerformanceAnalyzer()
+    analyzer.run()

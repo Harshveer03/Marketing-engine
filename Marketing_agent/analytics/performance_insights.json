@@ -1,0 +1,47 @@
+{
+    "summary": {
+        "platforms": {
+            "linkedin": {
+                "avg_engagement": 0.009,
+                "insights": "The post 'Elevate B2B Trust: Secure Your Market Position.' on LinkedIn achieved an engagement rate of 0.009. While the topic is highly relevant for a professional audience, the engagement rate is relatively low compared to YouTube. It garnered a decent number of shares (43), suggesting value for professional networks, but lower likes and comments compared to its YouTube counterpart, indicating the content might not have fully leveraged LinkedIn's native features or encouraged deeper discussion.",
+                "recommendations": "To improve LinkedIn performance, consider incorporating native video, carousels, or document posts that offer quick, digestible insights. Focus on sparking conversation with direct questions in the post copy and encourage comments by tagging relevant companies or thought leaders. Experiment with different content formats for strategic B2B topics to see what resonates best with the professional audience.",
+                "top_titles": [
+                    "Elevate B2B Trust: Secure Your Market Position."
+                ]
+            },
+            "twitter": {
+                "avg_engagement": 0.009,
+                "insights": "The post 'Elevate B2B Trust: Secure Your Market Position.' on Twitter also had an engagement rate of 0.009, matching LinkedIn. It achieved the highest impressions (18302) among all posts, indicating good reach and visibility, but relatively low shares (24) compared to LinkedIn, suggesting the content might not have been compelling enough for retweets or deeper interaction despite its broad exposure.",
+                "recommendations": "Leverage Twitter's strength for quick, impactful messages and broad reach. For the 'Elevate B2B Trust' topic, break down key insights into tweet threads, use strong visuals (images/GIFs), and include relevant hashtags to increase discoverability. Implement polls or direct, concise questions to drive immediate engagement. Focus on concise, value-driven snippets that encourage clicks to a longer form (e.g., blog or YouTube video).",
+                "top_titles": [
+                    "Elevate B2B Trust: Secure Your Market Position."
+                ]
+            },
+            "youtube": {
+                "avg_engagement": 0.022,
+                "insights": "YouTube is the top-performing platform with an outstanding engagement rate of 0.022 for 'Elevate B2B Trust: Secure Your Market Position.' This title, likely representing a video, generated the highest likes (259) and comments (58) across all platforms. This strongly indicates that strategic B2B topics presented in a video format resonate exceptionally well with the audience, fostering strong interaction and perceived value.",
+                "recommendations": "Double down on video content for strategic B2B topics, as this is clearly a high-performing format. Optimize video descriptions with relevant keywords and clear calls to action (e.g., subscribe, visit blog, download resource). Experiment with different video lengths and formats (e.g., interviews, explainers, case studies) to maintain audience interest. Actively promote YouTube videos across other platforms to drive traffic and leverage its high engagement potential.",
+                "top_titles": [
+                    "Elevate B2B Trust: Secure Your Market Position."
+                ]
+            },
+            "blog": {
+                "avg_engagement": 0.01,
+                "insights": "The blog post 'Rewiring Your GTM DNA...' achieved an engagement rate of 0.01, placing it second overall. This indicates that long-form, highly technical, and in-depth content focused on specialized B2B SaaS topics is valued by the audience, leading to good shares (44) despite fewer comments (5) and likes (59) compared to the YouTube video. The title's complexity suggests it targets a niche, expert audience seeking deep thought leadership.",
+                "recommendations": "Continue producing high-quality, in-depth thought leadership content for specialized B2B topics. Focus on SEO optimization for these niche subjects to attract organic traffic from users actively seeking detailed information. Encourage comments by posing questions within the blog post and facilitating discussion. Explore repurposing key insights from blog content into shorter snippets for social media or into video formats for YouTube to maximize reach and engagement across platforms.",
+                "top_titles": [
+                    "Rewiring Your GTM DNA: The Foundational Shift from Generic Playbooks to Intelligence-Driven Behavioral Execution in Deep B2B SaaS"
+                ]
+            }
+        },
+        "global_insights": {
+            "top_performing_titles": [
+                "Elevate B2B Trust: Secure Your Market Position. (YouTube, 0.022 engagement)",
+                "Rewiring Your GTM DNA: The Foundational Shift from Generic Playbooks to Intelligence-Driven Behavioral Execution in Deep B2B SaaS (Blog, 0.01 engagement)",
+                "Elevate B2B Trust: Secure Your Market Position. (LinkedIn/Twitter, 0.009 engagement)"
+            ],
+            "common_success_factors": "High-performing content either offers clear, aspirational value propositions ('Elevate B2B Trust') with a direct benefit, or provides deep, specialized insights for a niche expert audience ('Rewiring Your GTM DNA'). The success is highly dependent on platform-content fit: the concise, benefit-driven title thrived in video format on YouTube, while the longer, technical title resonated as a deep dive on the blog. Both titles use strong, authoritative tones.",
+            "overall_recommendation": "Prioritize content creation based on platform strengths: leverage YouTube for high-engagement video content on strategic B2B topics and the blog for in-depth, technical thought leadership. For LinkedIn and Twitter, adapt content to be more native and interactive, focusing on quick value delivery and conversation starters. Repurpose high-performing content across platforms, tailoring the format, tone, and call-to-action to each channel's audience and best practices to maximize overall impact."
+        }
+    }
+}

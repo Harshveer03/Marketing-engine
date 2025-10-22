@@ -20,49 +20,61 @@ class LLMPerformanceAnalyzer:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
 
+    def preprocess_data(self, data):
+        """Normalize performance data — ensure each record has required keys."""
+        cleaned = []
+        for record in data:
+            cleaned.append({
+                "platform": record.get("platform", "unknown"),
+                "title": record.get("title", "Untitled"),
+                "metrics": record.get("metrics", {}),
+                "timestamp": record.get("timestamp", "")
+            })
+        return cleaned
+
     def analyze_with_llm(self, data):
         prompt = f"""
-        You are an expert AI performance analyst for marketing content.
+        You are an AI performance analyst for marketing content.
 
-        Analyze the following dataset of post and blog performances across LinkedIn, Twitter, YouTube, and Blog:
-        Each record includes title, metrics, platform, and timestamp.
+        Analyze the following dataset of **LinkedIn, Twitter, YouTube, and Blog** content performance:
+        Each record includes title, platform, and engagement metrics (impressions, likes, comments, shares, engagement_rate).
 
         Dataset:
         {json.dumps(data, indent=2, ensure_ascii=False)}
 
-        Your tasks:
-        1. Identify performance patterns — what types of **titles**, **tones**, or **topics** yield high engagement.
-        2. Determine which **platforms perform best**, and what kind of content thrives there.
-        3. Find the **top 3 highest-performing titles overall** and explain why they worked.
-        4. Suggest **data-driven recommendations** for each platform to improve future content.
+        Tasks:
+        1. Detect key patterns: what types of **titles**, **tones**, or **topics** drive higher engagement.
+        2. Identify which **platforms perform best**, and what kind of content succeeds there.
+        3. List the **top 3 best-performing titles** overall and briefly explain their success factors.
+        4. Suggest actionable, data-driven **recommendations** for each platform.
 
-        Format your response strictly as valid JSON:
+        Format output strictly as valid JSON:
         {{
           "summary": {{
             "platforms": {{
               "linkedin": {{
                 "avg_engagement": 0.0,
+                "top_titles": ["...", "..."],
                 "insights": "...",
-                "recommendations": "...",
-                "top_titles": ["...", "..."]
+                "recommendations": "..."
               }},
               "twitter": {{
                 "avg_engagement": 0.0,
+                "top_titles": ["...", "..."],
                 "insights": "...",
-                "recommendations": "...",
-                "top_titles": ["...", "..."]
+                "recommendations": "..."
               }},
               "youtube": {{
                 "avg_engagement": 0.0,
+                "top_titles": ["...", "..."],
                 "insights": "...",
-                "recommendations": "...",
-                "top_titles": ["...", "..."]
+                "recommendations": "..."
               }},
               "blog": {{
                 "avg_engagement": 0.0,
+                "top_titles": ["...", "..."],
                 "insights": "...",
-                "recommendations": "...",
-                "top_titles": ["...", "..."]
+                "recommendations": "..."
               }}
             }},
             "global_insights": {{
@@ -75,23 +87,29 @@ class LLMPerformanceAnalyzer:
         """
 
         response = self.llm.invoke(prompt).content
+
         try:
             return json.loads(response)
         except json.JSONDecodeError:
-            print("⚠️ LLM returned invalid JSON, attempting to clean...")
+            print("⚠️ LLM returned invalid JSON, attempting to repair...")
             start = response.find("{")
             end = response.rfind("}") + 1
-            return json.loads(response[start:end])
+            try:
+                return json.loads(response[start:end])
+            except Exception:
+                print("❌ Could not parse LLM response properly.")
+                return {"summary": {"platforms": {}, "global_insights": {}}}
 
     def run(self):
-        print("📈 Running LLM-driven performance analysis...")
+        print("📈 Running AI-driven performance analysis...\n")
 
         data = self.load_json(PERFORMANCE_FILE)
         if not data:
             print("⚠️ No performance data found.")
             return
 
-        analysis = self.analyze_with_llm(data)
+        processed_data = self.preprocess_data(data)
+        analysis = self.analyze_with_llm(processed_data)
 
         os.makedirs(os.path.dirname(INSIGHTS_FILE), exist_ok=True)
         with open(INSIGHTS_FILE, "w", encoding="utf-8") as f:
@@ -99,19 +117,24 @@ class LLMPerformanceAnalyzer:
 
         print(f"✅ AI-generated performance insights saved to {INSIGHTS_FILE}\n")
 
-        # Display summary in readable form
-        for platform, info in analysis["summary"]["platforms"].items():
+        # 🧠 Print summary for quick visibility
+        summary = analysis.get("summary", {})
+        platforms = summary.get("platforms", {})
+        for platform, info in platforms.items():
             print(f"📊 {platform.capitalize()}")
-            print(f"   Avg Engagement: {info.get('avg_engagement')}")
-            print(f"   Insights: {info.get('insights')}")
-            print(f"   Recommendations: {info.get('recommendations')}")
-            print(f"   Top Titles: {', '.join(info.get('top_titles', []))}\n")
+            print(f"   Avg Engagement: {info.get('avg_engagement', 0.0)}")
+            print(f"   Insights: {info.get('insights', 'N/A')}")
+            print(f"   Recommendations: {info.get('recommendations', 'N/A')}")
+            top_titles = info.get('top_titles', [])
+            if top_titles:
+                print(f"   Top Titles: {', '.join(top_titles)}")
+            print()
 
-        global_summary = analysis["summary"]["global_insights"]
+        global_summary = summary.get("global_insights", {})
         print("🌍 Global Insights:")
-        print(f"   🔝 Top Titles: {', '.join(global_summary['top_performing_titles'])}")
-        print(f"   💡 Common Success Factors: {global_summary['common_success_factors']}")
-        print(f"   🧭 Overall Recommendation: {global_summary['overall_recommendation']}")
+        print(f"   🔝 Top Titles: {', '.join(global_summary.get('top_performing_titles', []))}")
+        print(f"   💡 Common Success Factors: {global_summary.get('common_success_factors', 'N/A')}")
+        print(f"   🧭 Overall Recommendation: {global_summary.get('overall_recommendation', 'N/A')}")
 
 
 if __name__ == "__main__":

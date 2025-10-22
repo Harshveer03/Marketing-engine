@@ -1,154 +1,51 @@
 [
     {
-        "id": 1,
-        "title": "Mastering AI-Driven GTM for B2B SaaS Growth",
+        "title": "Future-proof your enterprise: Build systems AI cannot replicate.",
         "related_news": [
             {
-                "title": "How to build a GTM strategy that actually drives results at Disrupt 2025",
-                "url": "https://techcrunch.com/2025/09/24/how-to-build-a-gtm-strategy-that-actually-drives-results-at-techcrunch-disrupt-2025/",
+                "title": "How AI Has Changed the Rules of SaaS: What Every Founder Needs to Know. A Live Deep Dive.",
+                "url": "https://www.saastr.com/ai-just-changed-the-rules-of-saas-what-every-founder-needs-to-know-a-deep-dive-with-saas-operators/",
                 "description": null,
-                "publishedAt": "09/24/2025, 05:30 PM, +0000 UTC",
+                "publishedAt": "08/19/2025, 12:50 PM, +0000 UTC",
                 "source": "Google News",
-                "relevance_context": "“The  system  that  rewires  your  GTM  execution  across  conversations,  assets,  and  behavior  —  not  just  another  service  vendor.”  \nC.  Competitors  (True  Niche  Overlaps)  \n●  Clozd  (Win-loss)  →  Great  at  win-loss  research,  but  not  system  rewiring",
-                "similarity_score": 315.7131042480469
+                "relevance_context": "Type  Why  We  Avoid  Them  \nService  Agencies  \nTheir  delivery  model  rarely  generates  the  same  repeatable  transcript  volume  —  sales  is  mostly  referral,  not  system.  \nLegacy  SaaS  Bureaucratic  buying  cycles,  enterprise  overhead,  no  agile  GTM  iteration  culture.  \nHeavily  Regulated  SaaS  \nLegal/compliance  controls  delay  experimentation  +  rewrite  velocity.  \nAgencies  Acting  as  SaaS  \nOften  lack  real  product  IP  or  GTM  system  maturity.  \nSales-Only  Orgs  Selling  Commodities  \nThey  value  speed  >  nuance,  playbooks  >  insight.  \n \nIV.  Firmographic  Filters  —  Precision  Qualification  Grid",
+                "similarity_score": 296.13671875
             },
             {
-                "title": "GTM in The Age of AI: The Top 10 Learnings from ICONIQ’s 2025 B2B SaaS Report",
-                "url": "https://www.saastr.com/the-age-of-ai-the-top-10-gtm-learnings-from-iconiqs-2025-b2b-saas-report/",
+                "title": "How to Build a Solid Go-to-Market Strategy for 2025",
+                "url": "https://www.entrepreneur.com/growing-a-business/how-to-build-a-solid-go-to-market-strategy-for-2025/484635",
                 "description": null,
-                "publishedAt": "06/24/2025, 05:52 PM, +0000 UTC",
+                "publishedAt": "01/09/2025, 08:00 AM, +0000 UTC",
                 "source": "Google News",
-                "relevance_context": "“What  do  you  even  do?”  Say  what  surface  we  operate  on,  without  tech  jargon  \n“What  problem  do  you  solve  that  I  feel  right  now?”  Use  language  from  their  transcript  pain  or  GTM  guilt  \n“How  are  you  different  from  all  the  sales  tools/coaches  out  there?”  \nAnchor  our  execution  loop,  not  just  assets  \n“Why  should  I  care  now?”  Highlight  irreversible  cost  or  risk  if  they  delay  \nThis  results  in  a  5-layer  spine :  \n \nIII.  KLYRR  Messaging  Spine  (v1.0)  \n1.  Category  Claim  (What  We  Are)  \nKLYRR  is  a  GTM  behavior  rewiring  system  for  lean  B2B  SaaS  teams.   ( Alt  phrasing:  The  execution  layer  your  sales  tools  forgot  to  build. )  \n✅  Plain.  Not  fancy.  Crisp.  Not  clever.   ✅  Avoids  buzzwords  like  “AI-powered  sales  acceleration”  or  “360  enablement  platform”  \n \n2.  Problem  Thesis  (What  We  Solve)",
-                "similarity_score": 273.8809509277344
+                "relevance_context": "No  clue  what’s  failing  —  personalization,  CTA,  tone,  length?   Nobody  is  learning  from  the  sequence  results.  \n4.  Pipeline  Forecast  Is  Based  on  “Vibes”   \nSales  leader  guesses  win  rates.  Founder  says  “maybe  10%  close  rate.”   Nobody  has  timestamped  deal  drop-off  points.  \n5.  Calls  Are  Happening,  But  Coaching  Is  Repetitive",
+                "similarity_score": 384.6899719238281
             },
             {
-                "title": "Adapting your GTM to win the AI-driven buyer",
-                "url": "https://martech.org/adapting-your-gtm-to-win-the-ai-driven-buyer/",
+                "title": "From potential to performance: Using gen AI to conduct outside-in diligence",
+                "url": "https://www.mckinsey.com/capabilities/transformation/our-insights/from-potential-to-performance-using-gen-ai-to-conduct-outside-in-diligence",
                 "description": null,
-                "publishedAt": "07/31/2025, 07:00 AM, +0000 UTC",
+                "publishedAt": "09/05/2025, 07:00 AM, +0000 UTC",
                 "source": "Google News",
-                "relevance_context": "We  are  not  outsourced  talent.  We  are  embedded  interpreters  of  buyer  resistance,  messaging  risk,  and  revenue  friction  —  across  all  GTM  surfaces.  \nAI-Augmented,  Human-Verified  \nAll  outputs  are  powered  by  GPT,  but  structured  through  proprietary  frameworks  and  verified  by",
-                "similarity_score": 297.3421936035156
+                "relevance_context": "Transcript  Intelligence  \nCall  behavior  scoring,  timestamp  rewrites,  decision  signal  detection  \nDrill  Layer  VoiceGPT  drills,  async  practice,  weekly  rep  challenges  \nFeedback  System  Call/email  scoring,  coaching  protocol,  behavior  evolution  tracking  \nAll  of  these  tie  back  to  the  buyer’s  perception  of  risk,  urgency,  and  confidence  in  the  rep.  \n \nVIII.  Positioning  Summary  (Internal  Use)  \nAxis  KLYRR’s  Boundary  \nStrategic  vs  Tactical  \nTactical  first,  but  only  in  high-leverage  GTM  behaviors  \nTech  vs  Talent  Hybrid  —  but  not  a  talent  marketplace  or  AI  ops  consultant  \nContent  vs  System  \nNot  creators;  we  are  rewriters  of  performance-critical  content  inside  a  system",
+                "similarity_score": 328.0265808105469
             },
             {
-                "title": "Decoding B2B Growth Marketing and GTM Strategies with Abhishek G.P.",
-                "url": "https://learn.g2.com/professional-spotlight-abhishek-gp",
+                "title": "The Future of B2B Marketing: 11 Predictions for 2025, From New Playbooks to Strategic Brands and AI Agents",
+                "url": "https://www.marketingprofs.com/articles/2024/52430/b2b-marketing-future-predictions-jon-miller",
                 "description": null,
-                "publishedAt": "02/19/2025, 08:00 AM, +0000 UTC",
+                "publishedAt": "12/04/2024, 03:00 PM, +0000 UTC",
                 "source": "Google News",
-                "relevance_context": "“What  do  you  even  do?”  Say  what  surface  we  operate  on,  without  tech  jargon  \n“What  problem  do  you  solve  that  I  feel  right  now?”  Use  language  from  their  transcript  pain  or  GTM  guilt  \n“How  are  you  different  from  all  the  sales  tools/coaches  out  there?”  \nAnchor  our  execution  loop,  not  just  assets  \n“Why  should  I  care  now?”  Highlight  irreversible  cost  or  risk  if  they  delay  \nThis  results  in  a  5-layer  spine :  \n \nIII.  KLYRR  Messaging  Spine  (v1.0)  \n1.  Category  Claim  (What  We  Are)  \nKLYRR  is  a  GTM  behavior  rewiring  system  for  lean  B2B  SaaS  teams.   ( Alt  phrasing:  The  execution  layer  your  sales  tools  forgot  to  build. )  \n✅  Plain.  Not  fancy.  Crisp.  Not  clever.   ✅  Avoids  buzzwords  like  “AI-powered  sales  acceleration”  or  “360  enablement  platform”  \n \n2.  Problem  Thesis  (What  We  Solve)",
-                "similarity_score": 288.7201843261719
+                "relevance_context": "Call  feedback  Buyers  feel  emotionally  coached,  not  cornered  \nCold  email  reframes  Prospects  convert  faster  and  earlier  \nDiscovery  scoring  GTM  team  stops  coaching  vague  theory  \nVoiceGPT  drills  Team  performance  becomes  predictable,  observable  \nMessaging  system  Rep  fluency  becomes  a  source  of  pipeline  reliability  \nBuyer  perception  Trust,  confidence,  urgency  —  felt  at  every  touchpoint   \nSECTION  11:  Moat  Elements  to  Signal  Defensibility  \n“Anyone  can  mimic  outputs.  No  one  can  replicate  a  system  that  thinks,  rewires,  and  compounds  with  each  interaction.”  \n \nI.  Why  Defensibility  Matters  Now  \nIn  a  landscape  where:  \n●  AI  tools  are  abundant,   ●  playbooks  are  free,   ●  and  copywriting  gets  commoditized,   \nBuyers,  investors,  and  team  members  must  see  what  makes  KLYRR  non-replaceable .",
+                "similarity_score": 316.2004089355469
             },
             {
-                "title": "GTMfund closes $54-million USD Fund II to back more early-stage Canadian B2B SaaS startups",
-                "url": "https://betakit.com/gtmfund-closes-54-million-usd-fund-ii-to-back-more-early-stage-canadian-b2b-saas-startups/",
+                "title": "Data Shows Google AIO Is Citing Deeper Into Websites",
+                "url": "https://www.searchenginejournal.com/data-shows-google-aio-is-citing-deeper-into-websites/543325/",
                 "description": null,
-                "publishedAt": "02/10/2025, 08:00 AM, +0000 UTC",
+                "publishedAt": "04/01/2025, 07:00 AM, +0000 UTC",
                 "source": "Google News",
-                "relevance_context": "●   These  teams  are  building,  not  preserving.   ●  They’re  still  writing  their  GTM  playbook,  not  just  running  it.   ●  Founders  are  still  in  the  sales  seat  —  which  makes  rewiring  high-leverage  and  feedback  loops  fast.   \nSignals  to  Qualify:  \n●  Recently  raised  a  seed/Series  A/B  round  (Crunchbase,  TechCrunch,  LinkedIn  posts)   ●  Founder  is  still  replying  to  cold  emails  or  posting  in  founder  Slack  groups   ●  Website  language  is  still  founder-voiced  or  slightly  rough   \nDisqualify:  \n●  Series  C+  (bureaucratic,  execution  resistance)   ●  Bootstrapped  with  <$20K  MRR  and  no  growth  ambition   \n \n🔶  B.  Annual  Revenue  \nRange  $100K  –  $5M  ARR  \nWhy  it  matters:   \n●   These  companies  have  proven  value  delivery ,  but  haven’t  nailed  repeatable  GTM .",
-                "similarity_score": 301.407470703125
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "title": "Build Repeatable GTM Strategies for B2B Revenue Growth",
-        "related_news": [
-            {
-                "title": "How to build a GTM strategy that actually drives results at Disrupt 2025",
-                "url": "https://techcrunch.com/2025/09/24/how-to-build-a-gtm-strategy-that-actually-drives-results-at-techcrunch-disrupt-2025/",
-                "description": null,
-                "publishedAt": "09/24/2025, 05:30 PM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "“The  system  that  rewires  your  GTM  execution  across  conversations,  assets,  and  behavior  —  not  just  another  service  vendor.”  \nC.  Competitors  (True  Niche  Overlaps)  \n●  Clozd  (Win-loss)  →  Great  at  win-loss  research,  but  not  system  rewiring",
-                "similarity_score": 315.7131042480469
-            },
-            {
-                "title": "GTM in The Age of AI: The Top 10 Learnings from ICONIQ’s 2025 B2B SaaS Report",
-                "url": "https://www.saastr.com/the-age-of-ai-the-top-10-gtm-learnings-from-iconiqs-2025-b2b-saas-report/",
-                "description": null,
-                "publishedAt": "06/24/2025, 05:52 PM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "“What  do  you  even  do?”  Say  what  surface  we  operate  on,  without  tech  jargon  \n“What  problem  do  you  solve  that  I  feel  right  now?”  Use  language  from  their  transcript  pain  or  GTM  guilt  \n“How  are  you  different  from  all  the  sales  tools/coaches  out  there?”  \nAnchor  our  execution  loop,  not  just  assets  \n“Why  should  I  care  now?”  Highlight  irreversible  cost  or  risk  if  they  delay  \nThis  results  in  a  5-layer  spine :  \n \nIII.  KLYRR  Messaging  Spine  (v1.0)  \n1.  Category  Claim  (What  We  Are)  \nKLYRR  is  a  GTM  behavior  rewiring  system  for  lean  B2B  SaaS  teams.   ( Alt  phrasing:  The  execution  layer  your  sales  tools  forgot  to  build. )  \n✅  Plain.  Not  fancy.  Crisp.  Not  clever.   ✅  Avoids  buzzwords  like  “AI-powered  sales  acceleration”  or  “360  enablement  platform”  \n \n2.  Problem  Thesis  (What  We  Solve)",
-                "similarity_score": 273.8809509277344
-            },
-            {
-                "title": "Adapting your GTM to win the AI-driven buyer",
-                "url": "https://martech.org/adapting-your-gtm-to-win-the-ai-driven-buyer/",
-                "description": null,
-                "publishedAt": "07/31/2025, 07:00 AM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "We  are  not  outsourced  talent.  We  are  embedded  interpreters  of  buyer  resistance,  messaging  risk,  and  revenue  friction  —  across  all  GTM  surfaces.  \nAI-Augmented,  Human-Verified  \nAll  outputs  are  powered  by  GPT,  but  structured  through  proprietary  frameworks  and  verified  by",
-                "similarity_score": 297.3421936035156
-            },
-            {
-                "title": "Decoding B2B Growth Marketing and GTM Strategies with Abhishek G.P.",
-                "url": "https://learn.g2.com/professional-spotlight-abhishek-gp",
-                "description": null,
-                "publishedAt": "02/19/2025, 08:00 AM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "“What  do  you  even  do?”  Say  what  surface  we  operate  on,  without  tech  jargon  \n“What  problem  do  you  solve  that  I  feel  right  now?”  Use  language  from  their  transcript  pain  or  GTM  guilt  \n“How  are  you  different  from  all  the  sales  tools/coaches  out  there?”  \nAnchor  our  execution  loop,  not  just  assets  \n“Why  should  I  care  now?”  Highlight  irreversible  cost  or  risk  if  they  delay  \nThis  results  in  a  5-layer  spine :  \n \nIII.  KLYRR  Messaging  Spine  (v1.0)  \n1.  Category  Claim  (What  We  Are)  \nKLYRR  is  a  GTM  behavior  rewiring  system  for  lean  B2B  SaaS  teams.   ( Alt  phrasing:  The  execution  layer  your  sales  tools  forgot  to  build. )  \n✅  Plain.  Not  fancy.  Crisp.  Not  clever.   ✅  Avoids  buzzwords  like  “AI-powered  sales  acceleration”  or  “360  enablement  platform”  \n \n2.  Problem  Thesis  (What  We  Solve)",
-                "similarity_score": 288.7201843261719
-            },
-            {
-                "title": "GTMfund closes $54-million USD Fund II to back more early-stage Canadian B2B SaaS startups",
-                "url": "https://betakit.com/gtmfund-closes-54-million-usd-fund-ii-to-back-more-early-stage-canadian-b2b-saas-startups/",
-                "description": null,
-                "publishedAt": "02/10/2025, 08:00 AM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "●   These  teams  are  building,  not  preserving.   ●  They’re  still  writing  their  GTM  playbook,  not  just  running  it.   ●  Founders  are  still  in  the  sales  seat  —  which  makes  rewiring  high-leverage  and  feedback  loops  fast.   \nSignals  to  Qualify:  \n●  Recently  raised  a  seed/Series  A/B  round  (Crunchbase,  TechCrunch,  LinkedIn  posts)   ●  Founder  is  still  replying  to  cold  emails  or  posting  in  founder  Slack  groups   ●  Website  language  is  still  founder-voiced  or  slightly  rough   \nDisqualify:  \n●  Series  C+  (bureaucratic,  execution  resistance)   ●  Bootstrapped  with  <$20K  MRR  and  no  growth  ambition   \n \n🔶  B.  Annual  Revenue  \nRange  $100K  –  $5M  ARR  \nWhy  it  matters:   \n●   These  companies  have  proven  value  delivery ,  but  haven’t  nailed  repeatable  GTM .",
-                "similarity_score": 301.407470703125
-            }
-        ]
-    },
-    {
-        "id": 3,
-        "title": "Adapt GTM to Win the Modern AI-Driven B2B Buyer",
-        "related_news": [
-            {
-                "title": "How to build a GTM strategy that actually drives results at Disrupt 2025",
-                "url": "https://techcrunch.com/2025/09/24/how-to-build-a-gtm-strategy-that-actually-drives-results-at-techcrunch-disrupt-2025/",
-                "description": null,
-                "publishedAt": "09/24/2025, 05:30 PM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "“The  system  that  rewires  your  GTM  execution  across  conversations,  assets,  and  behavior  —  not  just  another  service  vendor.”  \nC.  Competitors  (True  Niche  Overlaps)  \n●  Clozd  (Win-loss)  →  Great  at  win-loss  research,  but  not  system  rewiring",
-                "similarity_score": 315.7131042480469
-            },
-            {
-                "title": "GTM in The Age of AI: The Top 10 Learnings from ICONIQ’s 2025 B2B SaaS Report",
-                "url": "https://www.saastr.com/the-age-of-ai-the-top-10-gtm-learnings-from-iconiqs-2025-b2b-saas-report/",
-                "description": null,
-                "publishedAt": "06/24/2025, 05:52 PM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "“What  do  you  even  do?”  Say  what  surface  we  operate  on,  without  tech  jargon  \n“What  problem  do  you  solve  that  I  feel  right  now?”  Use  language  from  their  transcript  pain  or  GTM  guilt  \n“How  are  you  different  from  all  the  sales  tools/coaches  out  there?”  \nAnchor  our  execution  loop,  not  just  assets  \n“Why  should  I  care  now?”  Highlight  irreversible  cost  or  risk  if  they  delay  \nThis  results  in  a  5-layer  spine :  \n \nIII.  KLYRR  Messaging  Spine  (v1.0)  \n1.  Category  Claim  (What  We  Are)  \nKLYRR  is  a  GTM  behavior  rewiring  system  for  lean  B2B  SaaS  teams.   ( Alt  phrasing:  The  execution  layer  your  sales  tools  forgot  to  build. )  \n✅  Plain.  Not  fancy.  Crisp.  Not  clever.   ✅  Avoids  buzzwords  like  “AI-powered  sales  acceleration”  or  “360  enablement  platform”  \n \n2.  Problem  Thesis  (What  We  Solve)",
-                "similarity_score": 273.8809509277344
-            },
-            {
-                "title": "Adapting your GTM to win the AI-driven buyer",
-                "url": "https://martech.org/adapting-your-gtm-to-win-the-ai-driven-buyer/",
-                "description": null,
-                "publishedAt": "07/31/2025, 07:00 AM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "We  are  not  outsourced  talent.  We  are  embedded  interpreters  of  buyer  resistance,  messaging  risk,  and  revenue  friction  —  across  all  GTM  surfaces.  \nAI-Augmented,  Human-Verified  \nAll  outputs  are  powered  by  GPT,  but  structured  through  proprietary  frameworks  and  verified  by",
-                "similarity_score": 297.3421936035156
-            },
-            {
-                "title": "Decoding B2B Growth Marketing and GTM Strategies with Abhishek G.P.",
-                "url": "https://learn.g2.com/professional-spotlight-abhishek-gp",
-                "description": null,
-                "publishedAt": "02/19/2025, 08:00 AM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "“What  do  you  even  do?”  Say  what  surface  we  operate  on,  without  tech  jargon  \n“What  problem  do  you  solve  that  I  feel  right  now?”  Use  language  from  their  transcript  pain  or  GTM  guilt  \n“How  are  you  different  from  all  the  sales  tools/coaches  out  there?”  \nAnchor  our  execution  loop,  not  just  assets  \n“Why  should  I  care  now?”  Highlight  irreversible  cost  or  risk  if  they  delay  \nThis  results  in  a  5-layer  spine :  \n \nIII.  KLYRR  Messaging  Spine  (v1.0)  \n1.  Category  Claim  (What  We  Are)  \nKLYRR  is  a  GTM  behavior  rewiring  system  for  lean  B2B  SaaS  teams.   ( Alt  phrasing:  The  execution  layer  your  sales  tools  forgot  to  build. )  \n✅  Plain.  Not  fancy.  Crisp.  Not  clever.   ✅  Avoids  buzzwords  like  “AI-powered  sales  acceleration”  or  “360  enablement  platform”  \n \n2.  Problem  Thesis  (What  We  Solve)",
-                "similarity_score": 288.7201843261719
-            },
-            {
-                "title": "GTMfund closes $54-million USD Fund II to back more early-stage Canadian B2B SaaS startups",
-                "url": "https://betakit.com/gtmfund-closes-54-million-usd-fund-ii-to-back-more-early-stage-canadian-b2b-saas-startups/",
-                "description": null,
-                "publishedAt": "02/10/2025, 08:00 AM, +0000 UTC",
-                "source": "Google News",
-                "relevance_context": "●   These  teams  are  building,  not  preserving.   ●  They’re  still  writing  their  GTM  playbook,  not  just  running  it.   ●  Founders  are  still  in  the  sales  seat  —  which  makes  rewiring  high-leverage  and  feedback  loops  fast.   \nSignals  to  Qualify:  \n●  Recently  raised  a  seed/Series  A/B  round  (Crunchbase,  TechCrunch,  LinkedIn  posts)   ●  Founder  is  still  replying  to  cold  emails  or  posting  in  founder  Slack  groups   ●  Website  language  is  still  founder-voiced  or  slightly  rough   \nDisqualify:  \n●  Series  C+  (bureaucratic,  execution  resistance)   ●  Bootstrapped  with  <$20K  MRR  and  no  growth  ambition   \n \n🔶  B.  Annual  Revenue  \nRange  $100K  –  $5M  ARR  \nWhy  it  matters:   \n●   These  companies  have  proven  value  delivery ,  but  haven’t  nailed  repeatable  GTM .",
-                "similarity_score": 301.407470703125
+                "relevance_context": "🔶  F.  Tool  Stack  \n|  Stack  Fit  |  Gong,  Fireflies,  Clari,  LSN,  Notion,  Apollo,  ChatGPT  |   |  Why  it  matters:  |  \n●  These  tools  generate  data,  but  not  intelligence   ●  KLYRR  plugs  in  to  interpret  +  act  on  this  underleveraged  data   \nSignals  to  Qualify:  \n●  Mentions  of  these  tools  in  job  descriptions  or  team  bios   ●  Sales  dashboards/screenshots  shared  in  interviews   \n \n🔶  G.  Geography  \n|  Primary  |  US,  UK,  Canada,  Singapore,  Israel,  Australia,  Germany,  Nordics  |   |  Secondary  |  India,  Eastern  Europe  (with  global  sales  ambition)  |   |  Why  it  matters:  |  \n●  These  markets  have  strong  AI  acceptance,  SaaS  maturity,  and  buyer  friction   ●  Reps  are  actually  selling ,  not  just  taking  orders   \nSignals  to  Qualify:  \n●  Selling  to  global  clients  (website  mentions  USD,  time  zone  clarity)   ●  Team  posts  in  English  with  Western  buyer  focus",
+                "similarity_score": 352.5213623046875
             }
         ]
     }

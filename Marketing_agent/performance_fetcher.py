@@ -5,7 +5,7 @@ from datetime import datetime
 
 PERFORMANCE_DIR = "./analytics"
 CONTENT_DIR = "./content/generated_content"
-BLOG_DIR = "./content/blogs"
+BLOGS_FILE = "./content/blogs/blogs.json"
 OUTPUT_FILE = os.path.join(PERFORMANCE_DIR, "performance_data.json")
 
 os.makedirs(PERFORMANCE_DIR, exist_ok=True)
@@ -23,22 +23,25 @@ def load_json_safe(path):
 
 
 def extract_metadata(platform, data):
-    """Extracts topic_id and title safely from JSON content."""
+    """Extracts title safely from platform JSON content."""
     if not data:
-        return None, "Untitled"
+        return "Untitled"
 
     if platform in ["linkedin", "twitter", "youtube"]:
-        return data.get("id"), data.get("title", "Untitled")
+        if isinstance(data, list):
+            # Take the last post entry if multiple exist
+            return data[-1].get("title", "Untitled")
+        elif isinstance(data, dict):
+            return data.get("title", "Untitled")
 
     if platform == "blog":
-        # Handle blog JSON structure — no fixed filename or topic_id
         if isinstance(data, dict):
-            return None, data.get("title", "Untitled")
-        else:
-            print("⚠️ Blog JSON not a valid object, skipping.")
-            return None, "Untitled"
+            return data.get("title", "Untitled")
+        elif isinstance(data, list):
+            # For blogs.json (list of all blogs)
+            return [b.get("title", "Untitled") for b in data]
 
-    return None, "Untitled"
+    return "Untitled"
 
 
 def generate_fake_metrics():
@@ -63,35 +66,56 @@ def collect_metrics():
 
     for platform in platforms:
         if platform == "blog":
-            # Get latest blog file
-            blog_files = [f for f in os.listdir(BLOG_DIR) if f.startswith("blog_") and f.endswith(".json")]
-            if not blog_files:
-                print("⚠️ No blog files found, skipping blog metrics.")
+            blog_data = load_json_safe(BLOGS_FILE)
+            if not blog_data or not isinstance(blog_data, list):
+                print("⚠️ No blogs found, skipping blog metrics.")
                 continue
 
-            latest_blog = max(blog_files, key=lambda f: os.path.getmtime(os.path.join(BLOG_DIR, f)))
-            data = load_json_safe(os.path.join(BLOG_DIR, latest_blog))
+            for blog in blog_data:
+                title = blog.get("title", "Untitled")
+                metrics = generate_fake_metrics()
+
+                record = {
+                    "platform": platform,
+                    "title": title,
+                    "metrics": metrics,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+
+                all_data.append(record)
+                print(f"📊 Collected metrics for blog: {title}")
+
         else:
             file_path = os.path.join(CONTENT_DIR, f"{platform}.json")
             data = load_json_safe(file_path)
+            if not data:
+                print(f"⚠️ Skipping {platform} — no content found.")
+                continue
 
-        if not data:
-            print(f"⚠️ Skipping {platform} — no content found.")
-            continue
-
-        topic_id, title = extract_metadata(platform, data)
-        metrics = generate_fake_metrics()
-
-        record = {
-            "topic_id": topic_id,
-            "platform": platform,
-            "title": title,
-            "metrics": metrics,
-            "timestamp": datetime.utcnow().isoformat()
-        }
-
-        all_data.append(record)
-        print(f"📊 Collected metrics for {platform}: {title}")
+            # Handle both list and dict data formats
+            if isinstance(data, list):
+                for entry in data:
+                    title = entry.get("title", "Untitled")
+                    metrics = generate_fake_metrics()
+                    record = {
+                        "platform": platform,
+                        "title": title,
+                        "metrics": metrics,
+                        "timestamp": datetime.utcnow().isoformat()
+                    }
+                    all_data.append(record)
+                    print(f"📊 Collected metrics for {platform}: {title}")
+            else:
+                title = data.get("title", "Untitled")
+                metrics = generate_fake_metrics()
+                record = {
+                    "platform": platform,
+                    "title": title,
+                    "metrics": metrics,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+                all_data.append(record)
+                print(f"📊 Collected metrics for {platform}: {title}")
 
     if all_data:
         existing = load_json_safe(OUTPUT_FILE) or []

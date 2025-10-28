@@ -16,7 +16,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 load_dotenv()
 
 VECTOR_DB_DIR = "./vectordb"
-OUTPUT_FILE = "./niche/niche_icp.json"
+OUTPUT_FILE = "./generated/niche_icp.json"
 
 # ----------- PROMPT -------------
 PROMPT_TEMPLATE = """

@@ -12,10 +12,10 @@ import requests
 load_dotenv()
 
 VECTOR_DB_DIR = "./vectordb"
-NICHE_FILE = "./niche/niche_icp.json"
-USED_TOPICS_FILE = "./topics/used_blog_topics.json"
-OUTPUT_FILE = "./content/blogs/blogs.json"
-FEEDBACK_FILE = "./analytics/feedback_context.json"
+NICHE_FILE = "./generated/niche_icp.json"
+USED_TOPICS_FILE = "./generated/topics/used_blog_topics.json"
+OUTPUT_FILE = "./generated/content/blogs/blogs.json"
+FEEDBACK_FILE = "./generated/analytics/feedback_context.json"
 SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 
 
@@ -37,11 +37,17 @@ class BlogGenerator:
     # ---------- Utility ----------
     def load_json(self, path):
         if not os.path.exists(path):
+            # Return appropriate default based on file type
+            if "niche" in path:
+                return {}
             return []
         with open(path, "r", encoding="utf-8") as f:
             try:
                 return json.load(f)
             except json.JSONDecodeError:
+                # Return appropriate default based on file type
+                if "niche" in path:
+                    return {}
                 return []
 
     def save_json(self, path, data):
@@ -91,6 +97,11 @@ class BlogGenerator:
 
     # ---------- Topic Generation ----------
     def generate_topic(self, niche):
+        # Ensure niche is a dictionary
+        if not isinstance(niche, dict):
+            print(f"⚠️ Warning: niche data is not a dictionary, got {type(niche)}")
+            niche = {}
+            
         feedback_text = (
             self.feedback.get("blog_feedback", "") + "\n" +
             self.feedback.get("global_success_factors", "") + "\n" +
@@ -130,11 +141,25 @@ class BlogGenerator:
 
     # ---------- Blog Generation ----------
     def generate_blog(self, topic, news_items, niche, pdf_context):
+        # Ensure niche is a dictionary
+        if not isinstance(niche, dict):
+            print(f"⚠️ Warning: niche data is not a dictionary, got {type(niche)}")
+            niche = {}
+        
         feedback_text = (
             self.feedback.get("blog_feedback", "") + "\n" +
             self.feedback.get("global_success_factors", "") + "\n" +
             self.feedback.get("overall_recommendation", "")
         )
+
+        # Safely extract pain points and needs
+        pain_points = []
+        if isinstance(niche.get('customer_pain_points'), list):
+            pain_points = [p.get('challenge', '') for p in niche.get('customer_pain_points', []) if isinstance(p, dict)]
+        
+        customer_needs = []
+        if isinstance(niche.get('customer_needs'), list):
+            customer_needs = [n.get('need', '') for n in niche.get('customer_needs', []) if isinstance(n, dict)]
 
         prompt = f"""
         You are an expert B2B SaaS content strategist.
@@ -142,9 +167,9 @@ class BlogGenerator:
         Write a comprehensive blog on the topic: "{topic}"
 
         Context:
-        - Industry: {niche.get("industry")}
-        - Key Pain Points: {[p['challenge'] for p in niche.get('customer_pain_points', [])]}
-        - Customer Needs: {[n['need'] for n in niche.get('customer_needs', [])]}
+        - Industry: {niche.get("industry", "B2B SaaS")}
+        - Key Pain Points: {pain_points}
+        - Customer Needs: {customer_needs}
         - Relevant News Articles: {json.dumps(news_items, indent=2)}
         - Reference Material (from niche PDF): {pdf_context[:2000]}
 

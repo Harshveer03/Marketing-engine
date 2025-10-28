@@ -1,3 +1,17 @@
+# Environment and API keys
 .env
+
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+
+# Development files
+.vscode/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

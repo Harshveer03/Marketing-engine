@@ -1,0 +1,538 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+  <!-- Stats Cards -->
+  <div class="col-md-3 mb-4">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">{{ stats.blogs }}</h4>
+            <p class="mb-0">Blog Posts</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-blog fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">{{ stats.social_posts }}</h4>
+            <p class="mb-0">Social Posts</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-share-alt fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">{{ stats.trends }}</h4>
+            <p class="mb-0">Trends Tracked</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-chart-line fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">
+              {% if performance %} {{
+              "%.1f"|format(performance.summary.platforms.linkedin.avg_engagement
+              * 100) }}% {% else %} N/A {% endif %}
+            </h4>
+            <p class="mb-0">Avg Engagement</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-heart fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-magic me-2"></i>Content Generation
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-primary w-100"
+              onclick="generateContent('blog')"
+            >
+              <i class="fas fa-blog me-2"></i>Generate Blog
+            </button>
+          </div>
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-success w-100"
+              onclick="generateContent('social')"
+            >
+              <i class="fas fa-share-alt me-2"></i>Generate Social
+            </button>
+          </div>
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-info w-100"
+              onclick="generateContent('trends')"
+            >
+              <i class="fas fa-chart-line me-2"></i>Fetch Trends
+            </button>
+          </div>
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-warning w-100"
+              onclick="generateContent('analysis')"
+            >
+              <i class="fas fa-analytics me-2"></i>Run Analysis
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Content Tabs -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <ul
+          class="nav nav-tabs card-header-tabs"
+          id="contentTabs"
+          role="tablist"
+        >
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active"
+              id="blogs-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#blogs"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-blog me-2"></i>Blogs
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="social-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#social"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-share-alt me-2"></i>Social Media
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="trends-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#trends"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-chart-line me-2"></i>Trends
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="performance-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#performance"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-analytics me-2"></i>Performance
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content" id="contentTabsContent">
+          <!-- Blogs Tab -->
+          <div class="tab-pane fade show active" id="blogs" role="tabpanel">
+            <div id="blogs-content">
+              <div class="text-center text-muted">
+                <i class="fas fa-blog fa-3x mb-3"></i>
+                <p>
+                  No blog posts generated yet. Click "Generate Blog" to create
+                  your first post.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Media Tab -->
+          <div class="tab-pane fade" id="social" role="tabpanel">
+            <div id="social-content">
+              <div class="text-center text-muted">
+                <i class="fas fa-share-alt fa-3x mb-3"></i>
+                <p>
+                  No social media content generated yet. Click "Generate Social"
+                  to create posts for all platforms.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trends Tab -->
+          <div class="tab-pane fade" id="trends" role="tabpanel">
+            <div id="trends-content">
+              <div class="text-center text-muted">
+                <i class="fas fa-chart-line fa-3x mb-3"></i>
+                <p>
+                  No trends data available. Click "Fetch Trends" to get the
+                  latest industry insights.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Tab -->
+          <div class="tab-pane fade" id="performance" role="tabpanel">
+            <div id="performance-content">
+              {% if performance %}
+              <div class="row">
+                {% for platform, data in performance.summary.platforms.items()
+                %}
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header">
+                      <h6 class="mb-0">{{ platform.title() }}</h6>
+                    </div>
+                    <div class="card-body">
+                      <p>
+                        <strong>Avg Engagement:</strong> {{
+                        "%.1f"|format(data.avg_engagement * 100) }}%
+                      </p>
+                      <p>
+                        <strong>Insights:</strong> {{ data.insights[:100] }}...
+                      </p>
+                      <p>
+                        <strong>Recommendations:</strong> {{
+                        data.recommendations[:100] }}...
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="text-center text-muted">
+                <i class="fas fa-analytics fa-3x mb-3"></i>
+                <p>
+                  No performance data available. Click "Run Analysis" to
+                  generate insights.
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Export Button -->
+<div class="row mt-4">
+  <div class="col-12 text-center">
+    <button class="btn btn-outline-primary btn-lg" onclick="exportContent()">
+      <i class="fas fa-download me-2"></i>Export All Content
+    </button>
+  </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <div class="spinner-border text-primary mb-3" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5 id="loading-message">Processing...</h5>
+        <p class="text-muted">This may take a few moments.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // Load content when tabs are clicked
+  document.addEventListener("DOMContentLoaded", function () {
+    loadContent("blogs");
+
+    // Add event listeners for tab clicks
+    document.querySelectorAll('[data-bs-toggle="tab"]').forEach((tab) => {
+      tab.addEventListener("shown.bs.tab", function (e) {
+        const target = e.target.getAttribute("data-bs-target").substring(1);
+        loadContent(target);
+      });
+    });
+  });
+
+  function generateContent(type) {
+    const messages = {
+      blog: "Generating blog post...",
+      social: "Generating social media content...",
+      trends: "Fetching latest trends...",
+      analysis: "Running performance analysis...",
+    };
+
+    showLoading(messages[type]);
+
+    fetch(`/generate/${type}`)
+      .then((response) => response.json())
+      .then((data) => {
+        hideLoading();
+        if (data.success) {
+          showSuccess(
+            `${
+              type.charAt(0).toUpperCase() + type.slice(1)
+            } generated successfully!`
+          );
+          // Refresh the current tab
+          const activeTab = document
+            .querySelector(".nav-link.active")
+            .getAttribute("data-bs-target")
+            .substring(1);
+          loadContent(activeTab);
+          // Update stats
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          showError(data.error || "Generation failed");
+        }
+      })
+      .catch((error) => {
+        hideLoading();
+        showError("Network error: " + error.message);
+      });
+  }
+
+  function loadContent(type) {
+    const contentDiv = document.getElementById(`${type}-content`);
+
+    fetch(`/content/${type}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length === 0) {
+          return; // Keep default empty message
+        }
+
+        let html = "";
+
+        if (type === "blogs") {
+          if (Array.isArray(data)) {
+            data.forEach((blog) => {
+              html += `
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">${blog.title}</h6>
+                                    <small class="text-muted">${new Date(
+                                      blog.timestamp
+                                    ).toLocaleDateString()}</small>
+                                </div>
+                                <div class="card-body">
+                                    <p>${blog.blog.substring(0, 300)}...</p>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="showFullContent('${
+                                      blog.title
+                                    }', \`${blog.blog.replace(/`/g, "\\`")}\`)">
+                                        Read Full Post
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+            });
+          }
+        } else if (type === "social") {
+          Object.keys(data).forEach((platform) => {
+            const posts = Array.isArray(data[platform])
+              ? data[platform]
+              : [data[platform]];
+            posts.forEach((post) => {
+              html += `
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">${
+                                      platform.charAt(0).toUpperCase() +
+                                      platform.slice(1)
+                                    }: ${post.title}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>${post.caption}</p>
+                                    <div class="mt-2">
+                                        ${
+                                          post.hashtags
+                                            ? post.hashtags
+                                                .map(
+                                                  (tag) =>
+                                                    `<span class="badge bg-primary me-1">${tag}</span>`
+                                                )
+                                                .join("")
+                                            : ""
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+            });
+          });
+        } else if (type === "trends") {
+          if (Array.isArray(data)) {
+            data.forEach((trend) => {
+              html += `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><a href="${
+                                      trend.url
+                                    }" target="_blank">${trend.title}</a></h6>
+                                    <p class="text-muted">${
+                                      trend.description ||
+                                      "No description available"
+                                    }</p>
+                                    <small class="text-muted">Source: ${
+                                      trend.source
+                                    } | ${trend.publishedAt}</small>
+                                </div>
+                            </div>
+                        `;
+            });
+          }
+        }
+
+        if (html) {
+          contentDiv.innerHTML = html;
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading content:", error);
+      });
+  }
+
+  function showFullContent(title, content) {
+    const modal = new bootstrap.Modal(
+      document.getElementById("contentModal") || createContentModal()
+    );
+    document.getElementById("contentModalTitle").textContent = title;
+    document.getElementById("contentModalBody").innerHTML = content.replace(
+      /\n/g,
+      "<br>"
+    );
+    modal.show();
+  }
+
+  function createContentModal() {
+    const modalHtml = `
+        <div class="modal fade" id="contentModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="contentModalTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="contentModalBody"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+    return document.getElementById("contentModal");
+  }
+
+  function exportContent() {
+    showLoading("Exporting content...");
+
+    fetch("/export")
+      .then((response) => response.json())
+      .then((data) => {
+        hideLoading();
+        if (data.error) {
+          showError(data.error);
+        } else {
+          // Download the data as JSON
+          const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `marketing_content_${
+            new Date().toISOString().split("T")[0]
+          }.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showSuccess("Content exported successfully!");
+        }
+      })
+      .catch((error) => {
+        hideLoading();
+        showError("Export failed: " + error.message);
+      });
+  }
+
+  function showLoading(message) {
+    document.getElementById("loading-message").textContent = message;
+    new bootstrap.Modal(document.getElementById("loadingModal")).show();
+  }
+
+  function hideLoading() {
+    const modal = bootstrap.Modal.getInstance(
+      document.getElementById("loadingModal")
+    );
+    if (modal) modal.hide();
+  }
+
+  function showSuccess(message) {
+    showAlert(message, "success");
+  }
+
+  function showError(message) {
+    showAlert(message, "danger");
+  }
+
+  function showAlert(message, type) {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    document.querySelector("main").insertAdjacentHTML("afterbegin", alertHtml);
+  }
+</script>
+{% endblock %}

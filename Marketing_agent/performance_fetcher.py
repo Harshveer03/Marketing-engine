@@ -3,9 +3,9 @@ import json
 import random
 from datetime import datetime
 
-PERFORMANCE_DIR = "./analytics"
-CONTENT_DIR = "./content/generated_content"
-BLOGS_FILE = "./content/blogs/blogs.json"
+PERFORMANCE_DIR = "./generated/analytics"
+CONTENT_DIR = "./generated/content/social"
+BLOGS_FILE = "./generated/content/blogs/blogs.json"
 OUTPUT_FILE = os.path.join(PERFORMANCE_DIR, "performance_data.json")
 
 os.makedirs(PERFORMANCE_DIR, exist_ok=True)

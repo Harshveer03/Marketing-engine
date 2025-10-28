@@ -9,14 +9,14 @@ from langchain_community.embeddings import OllamaEmbeddings
 
 load_dotenv()
 
-NEWS_FILE = "./news/filtered_news.json"
-TOPICS_FILE = "./topics/topics.json"
-NICHE_FILE = "./niche/niche_icp.json"
-OUTPUT_DIR = "./content/generated_content"
+NEWS_FILE = "./generated/news/filtered_news.json"
+TOPICS_FILE = "./generated/topics/topics.json"
+NICHE_FILE = "./generated/niche_icp.json"
+OUTPUT_DIR = "./generated/content/social"
 VECTOR_DB_DIR = "./vectordb"
 
 def load_feedback_context():
-    FEEDBACK_FILE = "./analytics/feedback_context.json"
+    FEEDBACK_FILE = "./generated/analytics/feedback_context.json"
     if not os.path.exists(FEEDBACK_FILE):
         print("⚠️ No feedback context found. Run feedback_loop.py first.")
         return {}
@@ -34,9 +34,18 @@ class ContentPipeline:
     # ---------- Utility ----------
     def load_json(self, path):
         if not os.path.exists(path):
+            # Return appropriate default based on file type
+            if "niche" in path:
+                return {}
             return []
         with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                # Return appropriate default based on file type
+                if "niche" in path:
+                    return {}
+                return []
 
     def save_json(self, path, data):
         os.makedirs(os.path.dirname(path), exist_ok=True)

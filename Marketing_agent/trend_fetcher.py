@@ -12,7 +12,7 @@ load_dotenv()
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
 VECTOR_DB_DIR = "./vectordb"
-OUTPUT_FILE = "./news/filtered_news.json"
+OUTPUT_FILE = "./generated/news/filtered_news.json"
 SERPAPI_KEY = os.getenv("SERPAPI_KEY")  # must be in .env
 
 
@@ -174,7 +174,7 @@ class TrendFetcher:
         return filtered[:top_k]
 
 
-    def run(self, icp_json_path="./niche/niche_icp.json"):
+    def run(self, icp_json_path="./generated/niche_icp.json"):
         with open(icp_json_path, "r") as f:
             icp_json = json.load(f)
 

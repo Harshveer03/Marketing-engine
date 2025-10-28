@@ -5,8 +5,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 
-PERFORMANCE_FILE = "./analytics/performance_data.json"
-INSIGHTS_FILE = "./analytics/performance_insights.json"
+PERFORMANCE_FILE = "./generated/analytics/performance_data.json"
+INSIGHTS_FILE = "./generated/analytics/performance_insights.json"
 
 
 class LLMPerformanceAnalyzer:

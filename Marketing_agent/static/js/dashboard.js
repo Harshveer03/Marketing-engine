@@ -5,10 +5,15 @@ let currentUser = null;
 let refreshInterval = null;
 let contentData = {}; // Store content data globally
 
-// Initialize dashboard
+// Initialize dashboard - Updated 2025-10-30 16:30
 document.addEventListener("DOMContentLoaded", function () {
+  console.log('Dashboard JavaScript loaded - Version 2025-10-30 16:30');
   initializeDashboard();
   setupEventListeners();
+  // Refresh stats on page load to ensure they're current
+  setTimeout(() => {
+    refreshStats();
+  }, 1000);
 });
 
 function initializeDashboard() {
@@ -76,7 +81,6 @@ function generateContent(type) {
 
   const messages = {
     blog: "Generating blog post...",
-    social: "Generating social media content...",
     trends: "Fetching latest trends...",
     analysis: "Running performance analysis...",
   };
@@ -99,20 +103,20 @@ function generateContent(type) {
       if (data.success) {
         showToast(
           "success",
-          `${
-            type.charAt(0).toUpperCase() + type.slice(1)
+          `${type.charAt(0).toUpperCase() + type.slice(1)
           } generated successfully!`
         );
 
         // Refresh the relevant tab
         setTimeout(() => {
           if (type === "blog") loadContent("blogs");
-          else if (type === "social") loadContent("social");
           else if (type === "trends") loadContent("trends");
           else if (type === "analysis") loadContent("performance");
 
-          // Refresh stats
-          refreshStats();
+          // Refresh stats with a longer delay to ensure file is written
+          setTimeout(() => {
+            refreshStats();
+          }, 500);
         }, 1000);
       } else {
         showToast("error", data.error || "Generation failed");
@@ -213,8 +217,8 @@ function renderBlogs(data) {
             </div>
             <div class="card-body">
                 <p class="card-text">${escapeHtml(
-                  blog.blog.substring(0, 300)
-                )}...</p>
+        blog.blog.substring(0, 300)
+      )}...</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <button class="btn btn-sm btn-outline-primary" onclick="showBlogModal(${index})">
                         <i class="fas fa-eye me-1"></i>Read Full Post
@@ -245,37 +249,35 @@ function renderSocialContent(data) {
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">
                             <i class="${platformIcon} me-2"></i>
-                            ${
-                              platform.charAt(0).toUpperCase() +
-                              platform.slice(1)
-                            }
+                            ${platform.charAt(0).toUpperCase() +
+        platform.slice(1)
+        }
                         </h6>
                         <small class="text-muted">${escapeHtml(
-                          post.title
-                        )}</small>
+          post.title
+        )}</small>
                     </div>
                     <div class="card-body">
                         <p class="card-text">${escapeHtml(post.caption)}</p>
-                        ${
-                          post.hashtags
-                            ? `
+                        ${post.hashtags
+          ? `
                             <div class="mt-2">
                                 ${post.hashtags
-                                  .map(
-                                    (tag) =>
-                                      `<span class="badge bg-primary me-1">${escapeHtml(
-                                        tag
-                                      )}</span>`
-                                  )
-                                  .join("")}
+            .map(
+              (tag) =>
+                `<span class="badge bg-primary me-1">${escapeHtml(
+                  tag
+                )}</span>`
+            )
+            .join("")}
                             </div>
                         `
-                            : ""
-                        }
+          : ""
+        }
                         <div class="mt-3">
                             <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('${escapeHtml(
-                              post.caption
-                            ).replace(/'/g, "\\'")}')">
+          post.caption
+        ).replace(/'/g, "\\'")}')">
                                 <i class="fas fa-copy me-1"></i>Copy Text
                             </button>
                         </div>
@@ -297,27 +299,25 @@ function renderTrends(data) {
         <div class="card content-card mb-3">
             <div class="card-body">
                 <h6 class="card-title">
-                    <a href="${
-                      trend.url
-                    }" target="_blank" class="text-decoration-none">
+                    <a href="${trend.url
+        }" target="_blank" class="text-decoration-none">
                         ${escapeHtml(trend.title)}
                         <i class="fas fa-external-link-alt ms-1 small"></i>
                     </a>
                 </h6>
                 <p class="card-text text-muted">${escapeHtml(
-                  trend.description || "No description available"
-                )}</p>
+          trend.description || "No description available"
+        )}</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <small class="text-muted">
                         <i class="fas fa-newspaper me-1"></i>
                         ${trend.source} | ${formatDate(trend.publishedAt)}
                     </small>
                     <span class="badge bg-info">
-                        Score: ${
-                          trend.similarity_score
-                            ? Math.round(trend.similarity_score)
-                            : "N/A"
-                        }
+                        Score: ${trend.similarity_score
+          ? Math.round(trend.similarity_score)
+          : "N/A"
+        }
                     </span>
                 </div>
             </div>
@@ -343,10 +343,9 @@ function renderPerformance(data) {
                     <div class="card-header">
                         <h6 class="mb-0">
                             <i class="${platformIcon} me-2"></i>
-                            ${
-                              platform.charAt(0).toUpperCase() +
-                              platform.slice(1)
-                            }
+                            ${platform.charAt(0).toUpperCase() +
+      platform.slice(1)
+      }
                         </h6>
                     </div>
                     <div class="card-body">
@@ -354,29 +353,28 @@ function renderPerformance(data) {
                             <div class="col-6">
                                 <div class="text-center">
                                     <h4 class="text-primary">${(
-                                      platformData.avg_engagement * 100
-                                    ).toFixed(1)}%</h4>
+        platformData.avg_engagement * 100
+      ).toFixed(1)}%</h4>
                                     <small class="text-muted">Avg Engagement</small>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="text-center">
-                                    <h4 class="text-success">${
-                                      platformData.top_titles
-                                        ? platformData.top_titles.length
-                                        : 0
-                                    }</h4>
+                                    <h4 class="text-success">${platformData.top_titles
+        ? platformData.top_titles.length
+        : 0
+      }</h4>
                                     <small class="text-muted">Top Posts</small>
                                 </div>
                             </div>
                         </div>
                         <hr>
                         <p><strong>Insights:</strong> ${escapeHtml(
-                          platformData.insights
-                        )}</p>
+        platformData.insights
+      )}</p>
                         <p><strong>Recommendations:</strong> ${escapeHtml(
-                          platformData.recommendations
-                        )}</p>
+        platformData.recommendations
+      )}</p>
                     </div>
                 </div>
             </div>
@@ -395,30 +393,29 @@ function renderPerformance(data) {
                 </div>
                 <div class="card-body">
                     <p><strong>Success Factors:</strong> ${escapeHtml(
-                      global.common_success_factors
-                    )}</p>
+      global.common_success_factors
+    )}</p>
                     <p><strong>Overall Recommendation:</strong> ${escapeHtml(
-                      global.overall_recommendation
-                    )}</p>
-                    ${
-                      global.top_performing_titles
-                        ? `
+      global.overall_recommendation
+    )}</p>
+                    ${global.top_performing_titles
+        ? `
                         <div class="mt-3">
                             <strong>Top Performing Titles:</strong>
                             <ul class="list-unstyled mt-2">
                                 ${global.top_performing_titles
-                                  .map(
-                                    (title) =>
-                                      `<li><i class="fas fa-star text-warning me-2"></i>${escapeHtml(
-                                        title
-                                      )}</li>`
-                                  )
-                                  .join("")}
+          .map(
+            (title) =>
+              `<li><i class="fas fa-star text-warning me-2"></i>${escapeHtml(
+                title
+              )}</li>`
+          )
+          .join("")}
                             </ul>
                         </div>
                     `
-                        : ""
-                    }
+        : ""
+      }
                 </div>
             </div>
         `;
@@ -583,9 +580,8 @@ function exportContent() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `marketing_content_${
-          new Date().toISOString().split("T")[0]
-        }.json`;
+        a.download = `marketing_content_${new Date().toISOString().split("T")[0]
+          }.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -599,22 +595,20 @@ function exportContent() {
 }
 
 function refreshStats() {
-  // Refresh page stats without full reload
-  fetch(window.location.href)
-    .then((response) => response.text())
-    .then((html) => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-
+  // Refresh stats using dedicated endpoint
+  console.log("🔄 Refreshing stats...");
+  fetch('/stats')
+    .then((response) => response.json())
+    .then((stats) => {
+      console.log("📊 Received stats:", stats);
       // Update stat cards
       const statCards = document.querySelectorAll(".card h4");
-      const newStatCards = doc.querySelectorAll(".card h4");
-
-      statCards.forEach((card, index) => {
-        if (newStatCards[index]) {
-          card.textContent = newStatCards[index].textContent;
-        }
-      });
+      if (statCards.length >= 3) {
+        console.log("📈 Updating UI - Blogs:", stats.blogs, "Social:", stats.social_posts, "Trends:", stats.trends);
+        statCards[0].textContent = stats.blogs || 0;
+        statCards[1].textContent = stats.social_posts || 0;
+        statCards[2].textContent = stats.trends || 0;
+      }
     })
     .catch((error) => {
       console.error("Error refreshing stats:", error);
@@ -628,18 +622,16 @@ function showToast(type, message) {
 
   const toastId = "toast-" + Date.now();
   const toastHtml = `
-        <div class="toast align-items-center text-white bg-${
-          type === "error" ? "danger" : type === "success" ? "success" : "info"
-        } border-0" role="alert" id="${toastId}">
+        <div class="toast align-items-center text-white bg-${type === "error" ? "danger" : type === "success" ? "success" : "info"
+    } border-0" role="alert" id="${toastId}">
             <div class="d-flex">
                 <div class="toast-body">
-                    <i class="fas fa-${
-                      type === "error"
-                        ? "exclamation-triangle"
-                        : type === "success"
-                        ? "check-circle"
-                        : "info-circle"
-                    } me-2"></i>
+                    <i class="fas fa-${type === "error"
+      ? "exclamation-triangle"
+      : type === "success"
+        ? "check-circle"
+        : "info-circle"
+    } me-2"></i>
                     ${message}
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -670,4 +662,155 @@ function createToastContainer() {
     `;
   document.body.insertAdjacentHTML("beforeend", containerHtml);
   return document.getElementById("toast-container");
+}
+// Dashboard Topic Selection Functions
+function showTopicSelection() {
+  console.log('showTopicSelection called - showing on dashboard');
+  
+  // Show the topic selection section
+  const topicSection = document.getElementById('topicSelectionSection');
+  topicSection.classList.remove('d-none');
+  
+  // Scroll to the section
+  topicSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  
+  // Show loading state
+  document.getElementById('topicLoading').classList.remove('d-none');
+  document.getElementById('topicSelectionContent').classList.add('d-none');
+  
+  // Load topics
+  fetch('/generate_topics')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const topicList = document.getElementById('topicList');
+        topicList.innerHTML = ''; // Clear existing content
+        
+        data.topics.forEach((topic, index) => {
+          const relatedCount = topic.related_news ? topic.related_news.length : 0;
+          topicList.innerHTML += `
+            <div class="card mb-3 topic-card" style="cursor: pointer;" onclick="selectTopic(${index})">
+              <div class="card-body">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="dashboardTopic" value="${index}" id="dashboardTopic${index}">
+                  <label class="form-check-label w-100" for="dashboardTopic${index}">
+                    <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
+                    <small class="text-muted">
+                      <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
+                    </small>
+                  </label>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        // Show content and hide loading
+        document.getElementById('topicLoading').classList.add('d-none');
+        document.getElementById('topicSelectionContent').classList.remove('d-none');
+        
+      } else {
+        showToast('error', data.error || 'Failed to load topics');
+        hideTopicSelection();
+      }
+    })
+    .catch(error => {
+      showToast('error', 'Failed to load topics: ' + error.message);
+      hideTopicSelection();
+    });
+}
+
+function selectTopic(index) {
+  // Select the radio button
+  const radio = document.getElementById(`dashboardTopic${index}`);
+  radio.checked = true;
+  
+  // Remove selected class from all cards
+  document.querySelectorAll('.topic-card').forEach(card => {
+    card.classList.remove('border-success', 'bg-light');
+  });
+  
+  // Add selected class to clicked card
+  const selectedCard = radio.closest('.topic-card');
+  selectedCard.classList.add('border-success', 'bg-light');
+  
+  // Enable generate button
+  document.getElementById('generateSocialBtn').disabled = false;
+}
+
+function hideTopicSelection() {
+  const topicSection = document.getElementById('topicSelectionSection');
+  topicSection.classList.add('d-none');
+  
+  // Reset form
+  document.querySelectorAll('input[name="dashboardTopic"]').forEach(radio => {
+    radio.checked = false;
+  });
+  document.getElementById('generateSocialBtn').disabled = true;
+  
+  // Remove selected styling
+  document.querySelectorAll('.topic-card').forEach(card => {
+    card.classList.remove('border-success', 'bg-light');
+  });
+}
+
+function generateSocialFromDashboard() {
+  const selectedTopic = document.querySelector('input[name="dashboardTopic"]:checked');
+  const tone = document.getElementById('toneSelect').value;
+  const audience = document.getElementById('audienceSelect').value;
+  
+  if (!selectedTopic) {
+    showToast('error', 'Please select a topic');
+    return;
+  }
+  
+  // Show loading state
+  const generateBtn = document.getElementById('generateSocialBtn');
+  const originalText = generateBtn.innerHTML;
+  generateBtn.disabled = true;
+  generateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
+  
+  showToast('info', 'Generating social content... This may take a few moments.');
+  
+  // Generate content with selections
+  fetch('/generate_social_with_selection', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      topic_index: parseInt(selectedTopic.value),
+      tone: tone,
+      audience: audience
+    })
+  })
+    .then(response => response.json())
+    .then(data => {
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = originalText;
+      
+      if (data.success) {
+        showToast('success', 'Social content generated successfully!');
+        
+        // Hide topic selection
+        hideTopicSelection();
+        
+        // Switch to social tab and refresh content
+        const socialTab = document.getElementById('social-tab');
+        const socialTabInstance = new bootstrap.Tab(socialTab);
+        socialTabInstance.show();
+        
+        setTimeout(() => {
+          loadContent('social');
+          refreshStats();
+        }, 1000);
+      } else {
+        showToast('error', data.error || 'Failed to generate content');
+      }
+    })
+    .catch(error => {
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = originalText;
+      showToast('error', 'Failed to generate content: ' + error.message);
+    });
 }

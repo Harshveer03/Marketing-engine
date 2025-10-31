@@ -130,9 +130,21 @@ class BlogGenerator:
         }}
         """
         response = self.llm.invoke(prompt).content
-        match = re.search(r"\{.*\}", response, re.S)
-        data = json.loads(match.group()) if match else {"topic": response.strip()}
-        return data["topic"]
+        
+        try:
+            match = re.search(r"\{.*\}", response, re.DOTALL)
+            if match:
+                json_str = match.group()
+                data = json.loads(json_str)
+                return data.get("topic", response.strip())
+            else:
+                # Fallback if no JSON found
+                return response.strip()
+        except json.JSONDecodeError as e:
+            print(f"⚠️ Topic generation JSON parsing error: {e}")
+            print(f"Raw response: {response[:200]}...")
+            # Return a cleaned version of the response
+            return response.strip().replace('"', '').replace('\n', ' ')[:100]
 
     # ---------- PDF Context ----------
     def build_pdf_context(self, query_text):
@@ -191,45 +203,74 @@ class BlogGenerator:
         }}
         """
         response = self.llm.invoke(prompt).content
-        match = re.search(r"\{.*\}", response, re.S)
-        data = json.loads(match.group()) if match else {"blog": response.strip()}
+        
+        # Try to extract and parse JSON with better error handling
+        try:
+            match = re.search(r"\{.*\}", response, re.DOTALL)
+            if match:
+                json_str = match.group()
+                data = json.loads(json_str)
+            else:
+                # Fallback if no JSON found
+                data = {
+                    "title": topic,
+                    "outline": ["Introduction", "Analysis", "Solutions", "Conclusion"],
+                    "blog": response.strip()
+                }
+        except json.JSONDecodeError as e:
+            print(f"⚠️ JSON parsing error: {e}")
+            print(f"Raw response: {response[:500]}...")
+            # Fallback with safe data
+            data = {
+                "title": topic,
+                "outline": ["Introduction", "Analysis", "Solutions", "Conclusion"],
+                "blog": response.strip()
+            }
+        
         return data
 
     # ---------- Execution Flow ----------
     def run(self, mode="manual"):
-        niche = self.load_json(NICHE_FILE)
-        used_topics = self.load_json(USED_TOPICS_FILE)
+        try:
+            niche = self.load_json(NICHE_FILE)
+            used_topics = self.load_json(USED_TOPICS_FILE)
 
-        if mode == "manual":
-            topic = input("Enter your blog topic: ").strip()
-            news_items = self.fetch_news(topic)
-        else:
-            print("🤖 Generating new blog topic from niche...")
-            topic = self.generate_topic(niche)
-
-            while any(self.is_similar(topic, t["title"]) for t in used_topics):
-                print("⚠️ Duplicate topic detected, regenerating...")
+            if mode == "manual":
+                topic = input("Enter your blog topic: ").strip()
+                news_items = self.fetch_news(topic)
+            else:
+                print("🤖 Generating new blog topic from niche...")
                 topic = self.generate_topic(niche)
 
-            news_items = self.fetch_news(topic)
-            self.append_json(USED_TOPICS_FILE, {"title": topic, "generated_on": datetime.utcnow().isoformat()})
+                while any(self.is_similar(topic, t.get("title", "")) for t in used_topics if isinstance(t, dict)):
+                    print("⚠️ Duplicate topic detected, regenerating...")
+                    topic = self.generate_topic(niche)
 
-        pdf_context = self.build_pdf_context(topic)
-        blog_data = self.generate_blog(topic, news_items, niche, pdf_context)
+                news_items = self.fetch_news(topic)
+                self.append_json(USED_TOPICS_FILE, {"title": topic, "generated_on": datetime.utcnow().isoformat()})
 
-        # ✅ Append new blog to single JSON file
-        blog_entry = {
-            "title": blog_data.get("title", topic),
-            "outline": blog_data.get("outline", []),
-            "blog": blog_data.get("blog", ""),
-            "news": news_items,
-            "timestamp": datetime.utcnow().isoformat()
-        }
-        self.append_json(OUTPUT_FILE, blog_entry)
+            pdf_context = self.build_pdf_context(topic)
+            blog_data = self.generate_blog(topic, news_items, niche, pdf_context)
 
-        print(f"\n✅ Blog appended to: {OUTPUT_FILE}")
-        print(f"📝 Title: {blog_entry['title']}")
-        return blog_entry
+            # ✅ Append new blog to single JSON file
+            blog_entry = {
+                "title": blog_data.get("title", topic),
+                "outline": blog_data.get("outline", []),
+                "blog": blog_data.get("blog", ""),
+                "news": news_items,
+                "timestamp": datetime.utcnow().isoformat()
+            }
+            self.append_json(OUTPUT_FILE, blog_entry)
+
+            print(f"\n✅ Blog appended to: {OUTPUT_FILE}")
+            print(f"📝 Title: {blog_entry['title']}")
+            return blog_entry
+            
+        except Exception as e:
+            print(f"❌ Error in blog generation: {e}")
+            import traceback
+            traceback.print_exc()
+            return {"title": "Error generating blog", "error": str(e)}
 
 
 if __name__ == "__main__":

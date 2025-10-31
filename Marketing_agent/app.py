@@ -5,39 +5,13 @@ import threading
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
-# Import your existing modules - with error handling
-try:
-    from blog_generator import BlogGenerator
-    from post_generator import ContentPipeline
-    from trend_fetcher import TrendFetcher
-    from performance_fetcher import collect_metrics
-    from performance_analyzer import LLMPerformanceAnalyzer
-    from feedback_loop import FeedbackLoop
-except ImportError as e:
-    print(f"Warning: Some modules could not be imported: {e}")
-    # Create dummy classes for development
-    class BlogGenerator:
-        def run(self, mode="automatic"):
-            return {"title": "Demo Blog Post"}
-    
-    class ContentPipeline:
-        def run(self):
-            return True
-    
-    class TrendFetcher:
-        def run(self, path):
-            return []
-    
-    def collect_metrics():
-        return True
-    
-    class LLMPerformanceAnalyzer:
-        def run(self):
-            return True
-    
-    class FeedbackLoop:
-        def run(self):
-            return True
+# Import your existing modules
+from blog_generator import BlogGenerator
+from post_generator import ContentPipeline
+from trend_fetcher import TrendFetcher
+from performance_fetcher import collect_metrics
+from performance_analyzer import LLMPerformanceAnalyzer
+from feedback_loop import FeedbackLoop
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-change-this'
@@ -118,11 +92,13 @@ def load_content_stats():
     for blog_file in blog_files:
         if os.path.exists(blog_file):
             try:
-                with open(blog_file, "r") as f:
+                with open(blog_file, "r", encoding="utf-8") as f:
                     blogs = json.load(f)
                     stats["blogs"] = len(blogs) if isinstance(blogs, list) else 1
+                    print(f"📊 Found {stats['blogs']} blogs in {blog_file}")
                 break
-            except:
+            except Exception as e:
+                print(f"Error reading {blog_file}: {e}")
                 pass
     
     # Count social posts - check both locations
@@ -136,8 +112,12 @@ def load_content_stats():
                 try:
                     with open(file_path, "r") as f:
                         posts = json.load(f)
-                        stats["social_posts"] += len(posts) if isinstance(posts, list) else 1
-                except:
+                        if isinstance(posts, list):
+                            stats["social_posts"] += len(posts)
+                        else:
+                            stats["social_posts"] += 1
+                except Exception as e:
+                    print(f"Error reading {file_path}: {e}")
                     pass
     
     # Count trends - check both locations
@@ -272,11 +252,23 @@ def generate_content(content_type):
         if content_type == 'blog':
             generator = BlogGenerator()
             result = generator.run(mode="automatic")
+            print(f"📝 Blog generation result: {result}")
+            
+            # Verify the file was created
+            blog_file = "./generated/content/blogs/blogs.json"
+            if os.path.exists(blog_file):
+                with open(blog_file, "r") as f:
+                    blogs = json.load(f)
+                    print(f"✅ Blog file exists with {len(blogs)} blogs")
+            else:
+                print(f"❌ Blog file not found at {blog_file}")
+            
             return jsonify({'success': True, 'title': result.get('title', 'Blog Generated')})
         
         elif content_type == 'social':
             pipeline = ContentPipeline()
-            pipeline.run()
+            result = pipeline.run()
+            print(f"Social content generation result: {result}")
             return jsonify({'success': True, 'message': 'Social content generated for all platforms'})
         
         elif content_type == 'trends':
@@ -387,6 +379,111 @@ def export_content():
         return jsonify(export_data)
         
     except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/stats')
+def get_stats():
+    """Get current content statistics"""
+    try:
+        stats = load_content_stats()
+        print(f"📊 Stats endpoint called - returning: {stats}")
+        return jsonify(stats)
+    except Exception as e:
+        print(f"❌ Error in stats endpoint: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/generate_topics')
+def generate_topics():
+    """Generate topics for social content selection"""
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        from post_generator import ContentPipeline
+        
+        # Create pipeline instance
+        pipeline = ContentPipeline()
+        
+        # Call the generate_topics method directly (not run())
+        topics = pipeline.generate_topics()
+        
+        # Topics generated successfully for web UI
+        
+        return jsonify({'success': True, 'topics': topics})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/generate_social_with_selection', methods=['POST'])
+def generate_social_with_selection():
+    """Generate social content with user selections"""
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        topic_index = data.get('topic_index')
+        tone = data.get('tone', 'professional')
+        audience = data.get('audience', 'Founders')
+        
+        if topic_index is None:
+            return jsonify({'error': 'Missing topic selection'}), 400
+        
+        from post_generator import ContentPipeline
+        pipeline = ContentPipeline()
+        
+        # Generate topics to get the selected one
+        topics = pipeline.generate_topics()
+        if topic_index >= len(topics):
+            return jsonify({'error': 'Invalid topic index'}), 400
+        
+        selected_topic = topics[topic_index]
+        
+        # Save the selected topic
+        pipeline.save_json("./generated/topics/topics.json", [{"title": selected_topic["title"], "related_news": selected_topic.get("related_news", [])}])
+        
+        # Get context and generate content
+        niche, pdf_context = pipeline.get_context(selected_topic)
+        
+        # Generate content for all platforms
+        linkedin = pipeline.generate_linkedin(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context)
+        twitter = pipeline.generate_twitter(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context)
+        youtube = pipeline.generate_youtube(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context)
+        
+        # Save content to files
+        import os
+        output_dir = "./generated/content/social"
+        os.makedirs(output_dir, exist_ok=True)
+        
+        linkedin_data = {
+            "title": selected_topic["title"],
+            "caption": linkedin.get("caption", ""),
+            "hashtags": linkedin.get("hashtags", [])
+        }
+        
+        twitter_data = {
+            "title": selected_topic["title"],
+            "caption": twitter.get("tweet", ""),
+            "hashtags": twitter.get("hashtags", [])
+        }
+        
+        youtube_data = {
+            "title": selected_topic["title"],
+            "script_intro": youtube.get("script_intro", ""),
+            "caption": youtube.get("description", ""),
+            "hashtags": youtube.get("tags", [])
+        }
+        
+        pipeline.append_json(os.path.join(output_dir, "linkedin.json"), linkedin_data)
+        pipeline.append_json(os.path.join(output_dir, "twitter.json"), twitter_data)
+        pipeline.append_json(os.path.join(output_dir, "youtube.json"), youtube_data)
+        
+        return jsonify({'success': True, 'message': 'Social content generated successfully'})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
         return jsonify({'error': str(e)}), 500
 
 @app.route('/reset')

@@ -2,50 +2,46 @@
     "summary": {
         "platforms": {
             "linkedin": {
-                "avg_engagement": 0.024,
+                "avg_engagement": 0.016,
                 "top_titles": [
-                    "Boost GTM efficiency: Drive pipeline certainty amid slowing growth.",
-                    "Transform operating models for agile GTM execution and growth."
+                    "AI transforms market execution: Is your SaaS strategy agile?"
                 ],
-                "insights": "LinkedIn's professional audience highly values content that offers clear, direct solutions to pressing business challenges. The title 'Boost GTM efficiency...' significantly outperformed others, indicating a strong preference for benefit-driven, problem-solving content. Strategic transformation topics also resonate, but direct value propositions drive higher engagement.",
-                "recommendations": "Prioritize content that addresses specific pain points (e.g., 'slowing growth') and offers tangible benefits (e.g., 'pipeline certainty'). Use action-oriented language in titles. Encourage professional discussions by posing questions or inviting comments on strategic insights. Leverage LinkedIn's professional context by sharing case studies or expert opinions."
+                "insights": "The single LinkedIn post, while covering a highly relevant topic (AI, SaaS strategy), showed moderate engagement. LinkedIn users typically seek professional insights, thought leadership, and networking opportunities. The question-based title is a good start for engagement.",
+                "recommendations": "Focus on thought-provoking content that sparks professional discussion. Leverage industry trends, case studies, and practical applications of AI in SaaS. Encourage comments and shares by posing direct questions or sharing expert opinions. Consider longer-form posts or articles for deeper dives into strategic topics relevant to B2B SaaS leaders."
             },
             "twitter": {
-                "avg_engagement": 0.034,
+                "avg_engagement": 0.092,
                 "top_titles": [
-                    "Transform operating models for agile GTM execution and growth.",
-                    "Boost GTM efficiency: Drive pipeline certainty amid slowing growth."
+                    "AI transforms market execution: Is your SaaS strategy agile?"
                 ],
-                "insights": "Twitter shows the highest average engagement, particularly for concise and impactful titles that hint at significant change or efficiency. The highest-performing tweet, 'Transform operating models...', suggests that strong, forward-looking statements can capture attention and drive quick interactions in a fast-paced feed. Brevity and immediate relevance are key.",
-                "recommendations": "Continue to craft short, punchy titles that convey a strong message of transformation, efficiency, or growth. Experiment with different angles for the same core message to see what resonates most. Utilize relevant hashtags and consider threads for slightly deeper dives, ensuring the initial tweet is highly engaging to hook the audience."
+                "insights": "Twitter demonstrated exceptionally high engagement for the 'AI transforms market execution' post. The concise, question-based title likely captured attention quickly, aligning perfectly with Twitter's fast-paced consumption style and encouraging immediate interaction.",
+                "recommendations": "Continue to craft concise, impactful, and question-driven tweets. Leverage trending hashtags relevant to AI, SaaS, and GTM to increase visibility. Encourage quick interactions (likes, retweets, replies) by presenting clear, thought-provoking statements or questions. Consider using visuals or short video clips to enhance engagement on this platform."
             },
             "youtube": {
-                "avg_engagement": 0.026,
+                "avg_engagement": 0.03,
                 "top_titles": [
-                    "Transform operating models for agile GTM execution and growth.",
-                    "Boost GTM efficiency: Drive pipeline certainty amid slowing growth."
+                    "AI transforms market execution: Is your SaaS strategy agile?"
                 ],
-                "insights": "YouTube content performs well when titles suggest strategic insights or explanations of complex topics. The 'Transform operating models...' title achieved high engagement, indicating that video is an effective medium for breaking down and illustrating strategic shifts. Viewers likely seek in-depth understanding that video can provide.",
-                "recommendations": "Produce video content that visually and verbally explains complex strategic concepts like 'transforming operating models' or 'agile GTM execution'. Focus on providing frameworks, step-by-step guides, or expert interviews. Optimize video titles, descriptions, and tags for discoverability, and include clear calls to action for likes, comments, and subscriptions."
+                "insights": "The YouTube content, sharing the same title, achieved a decent engagement rate. Video content thrives on visual storytelling and clear explanations. The title suggests a topic suitable for an explanatory or discussion-based video, which aligns with YouTube's audience expectations.",
+                "recommendations": "Develop engaging video content that provides value, whether through tutorials, expert interviews, or deep dives into SaaS strategy and AI. Optimize video titles, descriptions, and tags for searchability. Include clear calls to action (subscribe, like, comment, share) and consider interactive elements or Q&A sessions to boost engagement."
             },
             "blog": {
-                "avg_engagement": 0.012,
+                "avg_engagement": 0.0275,
                 "top_titles": [
-                    "Beyond Last-Touch: Architecting a Full-Funnel Revenue Intelligence Framework for Sustainable B2B SaaS Growth",
-                    "From Data Overload to Execution Edge: Architecting a Revenue-First GTM System for B2B SaaS"
+                    "Rewiring Revenue: The Strategic Imperative for a Data-Driven GTM Operating System in B2B SaaS"
                 ],
-                "insights": "Blog content, while having the lowest average engagement rate (typical for long-form content), succeeds with descriptive, solution-oriented titles that promise in-depth analysis and frameworks. Titles addressing specific B2B SaaS challenges and offering 'architecting' solutions resonate, indicating a readership seeking comprehensive thought leadership.",
-                "recommendations": "Continue to develop long-form, authoritative content with detailed titles that clearly communicate the depth and value of the article. Focus on niche, strategic topics like 'Revenue Intelligence' and 'B2B SaaS frameworks'. Ensure content delivers on the promise of the title with actionable insights and robust analysis. Promote blog posts strategically on other platforms, tailoring the social copy to each platform's audience."
+                "insights": "Blog content shows varied but generally good engagement. The title 'Rewiring Revenue...' performed significantly better (0.038 vs 0.017), indicating a strong resonance with strategic, data-driven B2B SaaS topics and benefit-oriented headlines. Blog readers are likely seeking in-depth knowledge and actionable strategies.",
+                "recommendations": "Prioritize in-depth, authoritative articles that offer strategic insights and actionable advice for B2B SaaS professionals. Use strong, benefit-driven headlines that clearly articulate the value proposition and the problem being solved. Incorporate data, case studies, and expert opinions to build credibility. Optimize for SEO and encourage comments for community building and further discussion."
             }
         },
         "global_insights": {
             "top_performing_titles": [
-                "Transform operating models for agile GTM execution and growth.",
-                "Boost GTM efficiency: Drive pipeline certainty amid slowing growth.",
-                "Beyond Last-Touch: Architecting a Full-Funnel Revenue Intelligence Framework for Sustainable B2B SaaS Growth"
+                "AI transforms market execution: Is your SaaS strategy agile? (Twitter)",
+                "Rewiring Revenue: The Strategic Imperative for a Data-Driven GTM Operating System in B2B SaaS (Blog)",
+                "AI transforms market execution: Is your SaaS strategy agile? (YouTube)"
             ],
-            "common_success_factors": "High-performing content consistently addresses critical B2B challenges related to 'GTM execution', 'efficiency', 'growth', and 'revenue intelligence'. Titles that promise transformation, offer clear benefits, or provide strategic frameworks tend to drive higher engagement. The tone is generally strategic, problem-solution oriented, and focused on delivering tangible business value.",
-            "overall_recommendation": "To maximize content performance, tailor content strategy to each platform's audience and format, while maintaining a consistent focus on high-value B2B topics. Emphasize problem-solving and strategic transformation in titles. For social platforms, prioritize concise, impactful messaging, and for long-form content, ensure titles clearly signal depth and comprehensive solutions. Continuously analyze engagement metrics to refine content themes and delivery."
+            "common_success_factors": "High-performing content consistently features titles that are either question-based, directly engaging the audience and prompting self-reflection ('Is your SaaS strategy agile?'), or employ strong, action-oriented language with clear strategic implications ('Rewiring Revenue', 'Strategic Imperative'). Topics centered around AI, data-driven GTM, and B2B SaaS revenue transformation resonate strongly with the target audience. Content that promises strategic value or addresses critical challenges for B2B SaaS professionals tends to drive higher engagement.",
+            "overall_recommendation": "Develop a cohesive content strategy that prioritizes core topics like AI's impact on market execution, data-driven GTM, and B2B SaaS revenue optimization. Tailor content format, length, and tone to each platform's unique audience and consumption patterns. Experiment with both question-based and benefit-driven headlines to maximize click-through and engagement. Consistently analyze platform-specific metrics to refine content strategy and optimize performance across all channels."
         }
     }
 }

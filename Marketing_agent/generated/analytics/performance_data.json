@@ -1,194 +1,62 @@
 [
     {
         "platform": "linkedin",
-        "title": "Transform operating models for agile GTM execution and growth.",
+        "title": "AI transforms market execution: Is your SaaS strategy agile?",
         "metrics": {
-            "impressions": 12366,
-            "likes": 59,
-            "comments": 29,
-            "shares": 44,
-            "engagement_rate": 0.011
-        },
-        "timestamp": "2025-10-26T09:22:23.068377"
-    },
-    {
-        "platform": "twitter",
-        "title": "Transform operating models for agile GTM execution and growth.",
-        "metrics": {
-            "impressions": 12368,
-            "likes": 206,
-            "comments": 54,
-            "shares": 48,
-            "engagement_rate": 0.025
-        },
-        "timestamp": "2025-10-26T09:22:23.090012"
-    },
-    {
-        "platform": "youtube",
-        "title": "Transform operating models for agile GTM execution and growth.",
-        "metrics": {
-            "impressions": 7772,
-            "likes": 275,
-            "comments": 58,
-            "shares": 14,
-            "engagement_rate": 0.045
-        },
-        "timestamp": "2025-10-26T09:22:23.115132"
-    },
-    {
-        "platform": "blog",
-        "title": "Beyond Last-Touch: Architecting a Full-Funnel Revenue Intelligence Framework for Sustainable B2B SaaS Growth",
-        "metrics": {
-            "impressions": 5417,
-            "likes": 50,
-            "comments": 30,
-            "shares": 17,
-            "engagement_rate": 0.018
-        },
-        "timestamp": "2025-10-26T09:22:23.145249"
-    },
-    {
-        "platform": "linkedin",
-        "title": "Transform operating models for agile GTM execution and growth.",
-        "metrics": {
-            "impressions": 15654,
-            "likes": 202,
-            "comments": 45,
-            "shares": 9,
+            "impressions": 12416,
+            "likes": 155,
+            "comments": 10,
+            "shares": 28,
             "engagement_rate": 0.016
         },
-        "timestamp": "2025-10-26T09:24:19.228137"
+        "timestamp": "2025-10-30T09:12:44.971417"
     },
     {
         "platform": "twitter",
-        "title": "Transform operating models for agile GTM execution and growth.",
+        "title": "AI transforms market execution: Is your SaaS strategy agile?",
         "metrics": {
-            "impressions": 4999,
-            "likes": 248,
-            "comments": 10,
-            "shares": 49,
-            "engagement_rate": 0.061
-        },
-        "timestamp": "2025-10-26T09:24:19.229425"
-    },
-    {
-        "platform": "youtube",
-        "title": "Transform operating models for agile GTM execution and growth.",
-        "metrics": {
-            "impressions": 18508,
-            "likes": 97,
-            "comments": 30,
-            "shares": 28,
-            "engagement_rate": 0.008
-        },
-        "timestamp": "2025-10-26T09:24:19.230559"
-    },
-    {
-        "platform": "blog",
-        "title": "Beyond Last-Touch: Architecting a Full-Funnel Revenue Intelligence Framework for Sustainable B2B SaaS Growth",
-        "metrics": {
-            "impressions": 16113,
-            "likes": 108,
-            "comments": 10,
-            "shares": 8,
-            "engagement_rate": 0.008
-        },
-        "timestamp": "2025-10-26T09:24:19.231694"
-    },
-    {
-        "platform": "linkedin",
-        "title": "Transform operating models for agile GTM execution and growth.",
-        "metrics": {
-            "impressions": 17214,
-            "likes": 158,
-            "comments": 54,
-            "shares": 7,
-            "engagement_rate": 0.013
-        },
-        "timestamp": "2025-10-26T09:38:26.232857"
-    },
-    {
-        "platform": "linkedin",
-        "title": "Boost GTM efficiency: Drive pipeline certainty amid slowing growth.",
-        "metrics": {
-            "impressions": 5616,
-            "likes": 292,
-            "comments": 24,
-            "shares": 6,
-            "engagement_rate": 0.057
-        },
-        "timestamp": "2025-10-26T09:38:26.233057"
-    },
-    {
-        "platform": "twitter",
-        "title": "Transform operating models for agile GTM execution and growth.",
-        "metrics": {
-            "impressions": 6016,
-            "likes": 149,
+            "impressions": 3404,
+            "likes": 283,
             "comments": 20,
-            "shares": 14,
-            "engagement_rate": 0.03
+            "shares": 10,
+            "engagement_rate": 0.092
         },
-        "timestamp": "2025-10-26T09:38:26.233483"
-    },
-    {
-        "platform": "twitter",
-        "title": "Boost GTM efficiency: Drive pipeline certainty amid slowing growth.",
-        "metrics": {
-            "impressions": 14813,
-            "likes": 247,
-            "comments": 32,
-            "shares": 19,
-            "engagement_rate": 0.02
-        },
-        "timestamp": "2025-10-26T09:38:26.233776"
+        "timestamp": "2025-10-30T09:12:44.972549"
     },
     {
         "platform": "youtube",
-        "title": "Transform operating models for agile GTM execution and growth.",
+        "title": "AI transforms market execution: Is your SaaS strategy agile?",
         "metrics": {
-            "impressions": 15430,
-            "likes": 293,
-            "comments": 6,
-            "shares": 5,
-            "engagement_rate": 0.02
-        },
-        "timestamp": "2025-10-26T09:38:26.234544"
-    },
-    {
-        "platform": "youtube",
-        "title": "Boost GTM efficiency: Drive pipeline certainty amid slowing growth.",
-        "metrics": {
-            "impressions": 7867,
-            "likes": 168,
-            "comments": 46,
-            "shares": 21,
+            "impressions": 10604,
+            "likes": 260,
+            "comments": 31,
+            "shares": 30,
             "engagement_rate": 0.03
         },
-        "timestamp": "2025-10-26T09:38:26.234713"
+        "timestamp": "2025-10-30T09:12:44.973216"
     },
     {
         "platform": "blog",
-        "title": "Beyond Last-Touch: Architecting a Full-Funnel Revenue Intelligence Framework for Sustainable B2B SaaS Growth",
+        "title": "Beyond Dashboards: Engineering GTM's Prescriptive Layer to Transform Underleveraged Data into Revenue-Driving Action",
         "metrics": {
-            "impressions": 17121,
-            "likes": 66,
-            "comments": 15,
-            "shares": 47,
-            "engagement_rate": 0.007
+            "impressions": 13699,
+            "likes": 158,
+            "comments": 50,
+            "shares": 26,
+            "engagement_rate": 0.017
         },
-        "timestamp": "2025-10-26T09:38:26.235661"
+        "timestamp": "2025-10-30T09:12:44.974298"
     },
     {
         "platform": "blog",
-        "title": "From Data Overload to Execution Edge: Architecting a Revenue-First GTM System for B2B SaaS",
+        "title": "Rewiring Revenue: The Strategic Imperative for a Data-Driven GTM Operating System in B2B SaaS",
         "metrics": {
-            "impressions": 9722,
-            "likes": 94,
-            "comments": 37,
-            "shares": 18,
-            "engagement_rate": 0.015
+            "impressions": 6918,
+            "likes": 195,
+            "comments": 55,
+            "shares": 10,
+            "engagement_rate": 0.038
         },
-        "timestamp": "2025-10-26T09:38:26.235925"
+        "timestamp": "2025-10-30T09:12:44.975043"
     }
 ]

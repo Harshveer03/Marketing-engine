@@ -204,6 +204,47 @@ body {
   background: #a8a8a8;
 }
 
+/* Topic Selection Styles */
+.topic-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.topic-card:hover {
+  border-color: #28a745;
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.topic-card.border-success {
+  border-color: #28a745 !important;
+  background-color: #f8fff9 !important;
+}
+
+.topic-card .form-check-input:checked {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.topic-card .form-check-label {
+  cursor: pointer;
+}
+
+#topicSelectionSection {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Progress Bar */
 .progress {
   height: 8px;

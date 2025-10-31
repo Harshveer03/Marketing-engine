@@ -129,10 +129,6 @@ class ContentPipeline:
                 )
             ][:5]
 
-        print("\n🧠 Generated Topics:")
-        for idx, t in enumerate(topics, start=1):
-            print(f"{idx}. {t['title']} ({len(t['related_news'])} related articles)")
-
         return topics
 
     # ---------- Context Builders ----------

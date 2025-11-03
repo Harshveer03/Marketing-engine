@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 load_dotenv()
 
@@ -18,7 +18,7 @@ def create_embeddings():
     print("🔄 Creating embeddings from your document...")
     
     # Initialize embeddings
-    embedding = OllamaEmbeddings(model="nomic-embed-text")
+    embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     
     # Find PDF files
     pdf_files = [f for f in os.listdir(PDF_DIR) if f.endswith('.pdf')]

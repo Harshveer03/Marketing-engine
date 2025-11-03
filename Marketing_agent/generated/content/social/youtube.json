@@ -1,58 +1,19 @@
 [
     {
-        "title": "AI transforms market execution: Is your SaaS strategy agile?",
-        "script_intro": "Is your B2B SaaS Go-To-Market strategy delivering diminishing returns, despite increased investment? The traditional playbook is fundamentally broken in today's AI-transformed world. Founders, if you're battling high GTM churn, stagnant conversions, or struggle to turn vast data from tools like Gong into *actionable* intelligence, manual RevOps and generic playbooks simply lack the agility you need. This video reveals how AI can systematically decode your revenue bottlenecks, operationalize data-driven insights, and empower your team with continuous, precision coaching. Discover how to build an agile, revenue-first GTM strategy that truly scales in this new era. Keep watching!",
-        "caption": "Traditional B2B SaaS GTM strategies are failing founders, leading to high churn and underleveraged data. This video explores how AI is transforming market execution, providing a systematic approach to decode revenue bottlenecks, operationalize insights, and empower your GTM team with precision coaching. Learn to build an agile, revenue-first GTM strategy that truly scales in today's competitive landscape.",
+        "title": "Rewire GTM: Boost Sales Productivity, Forecast Accuracy Now.",
+        "script_intro": "Is your institution's growth strategy truly delivering on its promise, or are you wrestling with the same old challenges in a rapidly evolving educational landscape? Many education leaders are discovering that traditional approaches to student acquisition, donor engagement, and program development are no longer yielding predictable results. You're investing heavily in outreach and technology, yet still facing stagnant enrollment, donor fatigue, or difficulty turning valuable data into actionable insights for student success and financial stability. This isn't just about working harder; it's about working smarter. Join us as we explore 'Rewire GTM' – a systematic, data-driven framework designed specifically for education CXOs. We'll show you how to transform raw institutional data into actionable intelligence, boosting your team's productivity and achieving unparalleled accuracy in your strategic forecasts. Discover how to move beyond fragmented efforts to build a cohesive, high-performing engagement engine that ensures your institution's enduring success. Stay tuned to unlock the blueprint for predictable growth and impact.",
+        "caption": "Education CXOs, are you ready to revolutionize your institution's growth? This video introduces 'Rewire GTM,' a systematic framework tailored for the education sector, designed to transform how you approach student acquisition, donor engagement, and strategic planning. Learn how to leverage your existing data to boost team productivity, achieve precise forecast accuracy, and ensure sustainable institutional success in today's dynamic environment.",
         "hashtags": [
-            "AI GTM Strategy",
-            "SaaS Go-To-Market",
-            "Agile GTM",
-            "B2B SaaS Growth",
-            "GTM Data Analytics",
-            "Revenue Operations",
-            "SaaS Founders"
-        ]
-    },
-    {
-        "title": "AI Drives Sales Behavior: Optimize GTM Performance.",
-        "script_intro": "Founders, let's be brutally honest: your traditional GTM strategy is failing you. Hard. The old playbook of endless SDRs and generic scripts? It's burning cash and yielding diminishing returns. You're drowning in GTM data from your tech stack, but it's just noise, not actionable intelligence. And scaling effective, high-quality GTM support? It feels impossible. But what if AI could transform this chaos? What if it could decode your GTM, rewire sales behavior, and operationalize insights with surgical precision? In this video, we'll reveal the systematic approach to leverage AI to optimize your GTM performance, turn data into predictable revenue, and finally empower your team. Don't just survive; dominate. Keep watching.",
-        "caption": "Are traditional GTM strategies failing your Deep B2B SaaS? This video reveals how AI can revolutionize your Go-To-Market performance, empowering founders to decode GTM data, rewire sales behavior, and achieve predictable revenue. Discover a systematic approach to optimize GTM execution and scale your team's capabilities with data-driven insights.",
-        "hashtags": [
-            "AI GTM Strategy",
-            "B2B SaaS Go-To-Market",
-            "Sales Behavior AI",
-            "GTM Optimization",
-            "Revenue Operations AI",
-            "Founder GTM Playbook",
-            "Deep B2B SaaS Sales"
-        ]
-    },
-    {
-        "title": "Predictable Revenue: End B2B Sales Guesswork with Data.",
-        "script_intro": "Is your B2B SaaS GTM feeling less like a growth engine and more like a black box of unpredictable outcomes? You've invested in the best tech, hired top talent, yet conversion rates are stagnant, sales cycles are dragging, and that 'predictable revenue' feels like a myth. The old ways of scaling with brute-force SDRs and generic playbooks are simply *failing* in today's hyper-competitive market. And all that rich GTM data? It's sitting there, raw, unyielding, exposing problems without offering a single solution. We're here to tell you: it doesn't have to be guesswork. This isn't about another piecemeal fix. It's about a systematic approach to decode, rewire, and execute revenue-first GTM, transforming your data into a relentless, predictable growth machine. Stay with us, and discover how to finally operationalize your GTM insights, empower your teams with continuous, data-driven coaching, and build a future where predictable revenue isn't a hope, but a *guarantee*.",
-        "caption": "Tired of unpredictable B2B SaaS GTM results? This video reveals how to end sales guesswork by transforming raw GTM data into actionable intelligence, driving predictable revenue and superior execution. Discover a systematic, data-driven approach to optimize your GTM strategy, enhance team performance through continuous coaching, and overcome the limitations of outdated methods. Essential viewing for CXOs ready to scale with certainty.",
-        "hashtags": [
-            "Predictable Revenue",
-            "B2B SaaS GTM Strategy",
-            "Data-Driven Sales",
-            "Go-To-Market Optimization",
-            "SaaS Revenue Growth",
-            "GTM Data Analytics",
-            "CXO Sales Strategy"
-        ]
-    },
-    {
-        "title": "Stop GTM Guesswork: Systematize Sales Behavior for Growth.",
-        "script_intro": "Are you a B2B SaaS CXO navigating a Go-To-Market landscape where traditional strategies are failing to deliver, despite significant investment? The old playbook of brute-force SDR hiring, generic playbooks, and manual RevOps analysis is no longer effective. You're likely drowning in data from tools like Gong and Clari, yet struggling to translate it into actionable insights that actually improve sales behavior and drive predictable revenue.\n\nWhat if you could stop the GTM guesswork and instead, implement a systematic approach to decode, rewire, and execute revenue-first GTM? A system that transforms raw data into a continuous engine for performance improvement and scalable sales excellence. In this video, we'll unveil the framework to achieve exactly that, moving beyond fragmented solutions to operationalize your GTM for unprecedented growth. Stay tuned.",
-        "caption": "For B2B SaaS CXOs, traditional GTM strategies are failing, leaving critical data underleveraged and growth stalled. This video reveals how to systematize sales behavior, transforming raw GTM data into actionable intelligence for continuous team improvement and predictable revenue growth. Discover a cohesive approach to decode, rewire, and execute your Go-To-Market for sustainable success.",
-        "hashtags": [
-            "B2B SaaS GTM",
-            "Go-To-Market Strategy",
-            "Sales Behavior",
-            "Revenue Operations",
-            "GTM Data Analytics",
-            "SaaS Growth",
-            "CXO Strategy"
-        ]
+            "Education strategy",
+            "Higher education leadership",
+            "Institutional growth",
+            "Student enrollment strategy",
+            "Donor engagement",
+            "Education CXO",
+            "Data-driven education"
+        ],
+        "industry": "Education",
+        "tone": "professional",
+        "audience": "CXOs"
     }
 ]

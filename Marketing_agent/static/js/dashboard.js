@@ -72,6 +72,13 @@ function refreshCurrentTab() {
 
 // Content generation functions
 function generateContent(type) {
+  // This function is kept for backward compatibility with other buttons
+  // Blog generation now uses showBlogTopicSelection() instead
+  if (type === 'blog') {
+    showBlogTopicSelection();
+    return;
+  }
+  
   const button = event.target;
   const originalText = button.innerHTML;
 
@@ -686,8 +693,13 @@ function showTopicSelection() {
         const topicList = document.getElementById('topicList');
         topicList.innerHTML = ''; // Clear existing content
         
+        // Debug: Log the topics we received
+        console.log('📋 Received topics:', data.topics);
+        
         data.topics.forEach((topic, index) => {
           const relatedCount = topic.related_news ? topic.related_news.length : 0;
+          console.log(`📝 Topic ${index}: ${topic.title}`);
+          
           topicList.innerHTML += `
             <div class="card mb-3 topic-card" style="cursor: pointer;" onclick="selectTopic(${index})">
               <div class="card-body">
@@ -705,6 +717,9 @@ function showTopicSelection() {
           `;
         });
         
+        // Set default industry based on current niche (if available)
+        setDefaultIndustry();
+        
         // Show content and hide loading
         document.getElementById('topicLoading').classList.add('d-none');
         document.getElementById('topicSelectionContent').classList.remove('d-none');
@@ -721,9 +736,15 @@ function showTopicSelection() {
 }
 
 function selectTopic(index) {
+  console.log(`🎯 User selected topic index: ${index}`);
+  
   // Select the radio button
   const radio = document.getElementById(`dashboardTopic${index}`);
   radio.checked = true;
+  
+  // Debug: Log the selected topic details
+  const topicTitle = radio.closest('.topic-card').querySelector('h6').textContent;
+  console.log(`📝 Selected topic title: "${topicTitle}"`);
   
   // Remove selected class from all cards
   document.querySelectorAll('.topic-card').forEach(card => {
@@ -756,6 +777,7 @@ function hideTopicSelection() {
 
 function generateSocialFromDashboard() {
   const selectedTopic = document.querySelector('input[name="dashboardTopic"]:checked');
+  const industry = document.getElementById('industrySelect').value;
   const tone = document.getElementById('toneSelect').value;
   const audience = document.getElementById('audienceSelect').value;
   
@@ -770,7 +792,19 @@ function generateSocialFromDashboard() {
   generateBtn.disabled = true;
   generateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
   
-  showToast('info', 'Generating social content... This may take a few moments.');
+  showToast('info', `Generating social content for ${industry}... This may take a few moments.`);
+  
+  // Debug: Log what we're sending
+  const requestData = {
+    topic_index: parseInt(selectedTopic.value),
+    industry: industry,
+    tone: tone,
+    audience: audience
+  };
+  
+  console.log('🚀 Sending request:', requestData);
+  console.log('📝 Selected topic element:', selectedTopic);
+  console.log('🔢 Topic index:', selectedTopic.value);
   
   // Generate content with selections
   fetch('/generate_social_with_selection', {
@@ -778,11 +812,7 @@ function generateSocialFromDashboard() {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      topic_index: parseInt(selectedTopic.value),
-      tone: tone,
-      audience: audience
-    })
+    body: JSON.stringify(requestData)
   })
     .then(response => response.json())
     .then(data => {
@@ -802,6 +832,234 @@ function generateSocialFromDashboard() {
         
         setTimeout(() => {
           loadContent('social');
+          refreshStats();
+        }, 1000);
+      } else {
+        showToast('error', data.error || 'Failed to generate content');
+      }
+    })
+    .catch(error => {
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = originalText;
+      showToast('error', 'Failed to generate content: ' + error.message);
+    });
+}
+
+// Set default industry based on current business context
+function setDefaultIndustry() {
+  // Map common business contexts to industry options
+  const industryMappings = {
+    'saas': 'IT & Dev',
+    'software': 'IT & Dev', 
+    'technology': 'IT & Dev',
+    'fintech': 'Fintech',
+    'finance': 'Fintech',
+    'healthcare': 'Healthcare',
+    'education': 'Education',
+    'retail': 'Retail',
+    'ecommerce': 'Retail',
+    'logistics': 'Logistics',
+    'real estate': 'Real Estate',
+    'marketing': 'Sales/Marketing',
+    'sales': 'Sales/Marketing',
+    'hr': 'HRTech',
+    'legal': 'Legal',
+    'media': 'Media',
+    'travel': 'Travel',
+    'energy': 'Energy',
+    'agriculture': 'Agritech',
+    'government': 'Government'
+  };
+  
+  // Try to detect industry from page content or use default
+  const pageText = document.body.textContent.toLowerCase();
+  let detectedIndustry = 'IT & Dev'; // Default
+  
+  for (const [keyword, industry] of Object.entries(industryMappings)) {
+    if (pageText.includes(keyword)) {
+      detectedIndustry = industry;
+      break;
+    }
+  }
+  
+  // Set the detected industry as selected for both social and blog
+  const industrySelect = document.getElementById('industrySelect');
+  if (industrySelect) {
+    industrySelect.value = detectedIndustry;
+  }
+  
+  const blogIndustrySelect = document.getElementById('blogIndustrySelect');
+  if (blogIndustrySelect) {
+    blogIndustrySelect.value = detectedIndustry;
+  }
+}
+
+// Blog Topic Selection Functions
+function showBlogTopicSelection() {
+  console.log('showBlogTopicSelection called - showing on dashboard');
+  
+  // Hide social topic selection if it's open
+  const socialTopicSection = document.getElementById('topicSelectionSection');
+  socialTopicSection.classList.add('d-none');
+  
+  // Show the blog topic selection section
+  const blogTopicSection = document.getElementById('blogTopicSelectionSection');
+  blogTopicSection.classList.remove('d-none');
+  
+  // Scroll to the section
+  blogTopicSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  
+  // Show loading state
+  document.getElementById('blogTopicLoading').classList.remove('d-none');
+  document.getElementById('blogTopicSelectionContent').classList.add('d-none');
+  
+  // Load topics
+  fetch('/generate_topics')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const topicList = document.getElementById('blogTopicList');
+        topicList.innerHTML = ''; // Clear existing content
+        
+        // Debug: Log the topics we received
+        console.log('📋 Received blog topics:', data.topics);
+        
+        data.topics.forEach((topic, index) => {
+          const relatedCount = topic.related_news ? topic.related_news.length : 0;
+          console.log(`📝 Blog Topic ${index}: ${topic.title}`);
+          
+          topicList.innerHTML += `
+            <div class="card mb-3 blog-topic-card" style="cursor: pointer;" onclick="selectBlogTopic(${index})">
+              <div class="card-body">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="dashboardBlogTopic" value="${index}" id="dashboardBlogTopic${index}">
+                  <label class="form-check-label w-100" for="dashboardBlogTopic${index}">
+                    <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
+                    <small class="text-muted">
+                      <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
+                    </small>
+                  </label>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        // Set default industry based on current business context
+        setDefaultIndustry();
+        
+        // Show content and hide loading
+        document.getElementById('blogTopicLoading').classList.add('d-none');
+        document.getElementById('blogTopicSelectionContent').classList.remove('d-none');
+        
+      } else {
+        showToast('error', data.error || 'Failed to load topics');
+        hideBlogTopicSelection();
+      }
+    })
+    .catch(error => {
+      showToast('error', 'Failed to load topics: ' + error.message);
+      hideBlogTopicSelection();
+    });
+}
+
+function selectBlogTopic(index) {
+  console.log(`🎯 User selected blog topic index: ${index}`);
+  
+  // Select the radio button
+  const radio = document.getElementById(`dashboardBlogTopic${index}`);
+  radio.checked = true;
+  
+  // Debug: Log the selected topic details
+  const topicTitle = radio.closest('.blog-topic-card').querySelector('h6').textContent;
+  console.log(`📝 Selected blog topic title: "${topicTitle}"`);
+  
+  // Remove selected class from all cards
+  document.querySelectorAll('.blog-topic-card').forEach(card => {
+    card.classList.remove('border-primary', 'bg-light');
+  });
+  
+  // Add selected class to clicked card
+  const selectedCard = radio.closest('.blog-topic-card');
+  selectedCard.classList.add('border-primary', 'bg-light');
+  
+  // Enable generate button
+  document.getElementById('generateBlogBtn').disabled = false;
+}
+
+function hideBlogTopicSelection() {
+  const blogTopicSection = document.getElementById('blogTopicSelectionSection');
+  blogTopicSection.classList.add('d-none');
+  
+  // Reset form
+  document.querySelectorAll('input[name="dashboardBlogTopic"]').forEach(radio => {
+    radio.checked = false;
+  });
+  document.getElementById('generateBlogBtn').disabled = true;
+  
+  // Remove selected styling
+  document.querySelectorAll('.blog-topic-card').forEach(card => {
+    card.classList.remove('border-primary', 'bg-light');
+  });
+}
+
+function generateBlogFromDashboard() {
+  const selectedTopic = document.querySelector('input[name="dashboardBlogTopic"]:checked');
+  const industry = document.getElementById('blogIndustrySelect').value;
+  const tone = document.getElementById('blogToneSelect').value;
+  const audience = document.getElementById('blogAudienceSelect').value;
+  
+  if (!selectedTopic) {
+    showToast('error', 'Please select a topic');
+    return;
+  }
+  
+  // Show loading state
+  const generateBtn = document.getElementById('generateBlogBtn');
+  const originalText = generateBtn.innerHTML;
+  generateBtn.disabled = true;
+  generateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
+  
+  showToast('info', `Generating blog content for ${industry}... This may take a few moments.`);
+  
+  // Debug: Log what we're sending
+  const requestData = {
+    topic_index: parseInt(selectedTopic.value),
+    industry: industry,
+    tone: tone,
+    audience: audience
+  };
+  
+  console.log('🚀 Sending blog request:', requestData);
+  console.log('📝 Selected blog topic element:', selectedTopic);
+  console.log('🔢 Blog topic index:', selectedTopic.value);
+  
+  // Generate content with selections
+  fetch('/generate_blog_with_selection', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestData)
+  })
+    .then(response => response.json())
+    .then(data => {
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = originalText;
+      
+      if (data.success) {
+        showToast('success', 'Blog content generated successfully!');
+        
+        // Hide topic selection
+        hideBlogTopicSelection();
+        
+        // Switch to blogs tab and refresh content
+        const blogsTab = document.getElementById('blogs-tab');
+        const blogsTabInstance = new bootstrap.Tab(blogsTab);
+        blogsTabInstance.show();
+        
+        setTimeout(() => {
+          loadContent('blogs');
           refreshStats();
         }, 1000);
       } else {

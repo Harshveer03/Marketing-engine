@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import asyncio
 from dotenv import load_dotenv
 from datetime import datetime
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -27,9 +28,36 @@ def load_feedback_context():
 class ContentPipeline:
     def __init__(self, model="models/gemini-2.5-flash", embedding_model="nomic-embed-text"):
         self.llm = ChatGoogleGenerativeAI(model=model, temperature=0.7)
-        self.embeddings = OllamaEmbeddings(model=embedding_model)
-        self.vectordb = FAISS.load_local(VECTOR_DB_DIR, self.embeddings, allow_dangerous_deserialization=True)
+        self.vectordb = None
         self.feedback = load_feedback_context()
+        
+        # Load vector database in a thread-safe way
+        self._load_vector_db_safe(embedding_model)
+    
+    def _load_vector_db_safe(self, embedding_model):
+        """Load vector database in a thread-safe manner"""
+        try:
+            # Create a new event loop for this thread if needed
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_closed():
+                    raise RuntimeError("Event loop is closed")
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            
+            # Use a simpler approach - load without embeddings first
+            import os
+            if os.path.exists(VECTOR_DB_DIR):
+                # Try to load with minimal embedding operations
+                self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
+                self.vectordb = FAISS.load_local(VECTOR_DB_DIR, self.embeddings, allow_dangerous_deserialization=True)
+                print("✅ Vector database loaded successfully")
+            else:
+                print("⚠️ Vector database directory not found")
+        except Exception as e:
+            print(f"⚠️ Vector database not available: {e}")
+            print("📝 Content generation will work without PDF context")
 
     # ---------- Utility ----------
     def load_json(self, path):
@@ -134,10 +162,52 @@ class ContentPipeline:
     # ---------- Context Builders ----------
     def get_context(self, topic):
         niche = self.load_json(NICHE_FILE)
-        query_text = topic["title"]
-        pdf_docs = self.vectordb.similarity_search(query_text, k=10)
-        pdf_context = "\n".join([doc.page_content for doc in pdf_docs])
+        
+        # Create rich context from niche data instead of vector search
+        pdf_context = self._build_context_from_niche(niche)
+        
+        # Try vector search as fallback if available
+        if self.vectordb:
+            try:
+                query_text = topic["title"]
+                pdf_docs = self.vectordb.similarity_search(query_text, k=3)
+                vector_context = "\n".join([doc.page_content for doc in pdf_docs])
+                pdf_context = f"{pdf_context}\n\nAdditional Context:\n{vector_context}"
+            except Exception as e:
+                print(f"Vector search failed, using niche context: {e}")
+        
         return niche, pdf_context
+    
+    def _build_context_from_niche(self, niche):
+        """Build rich context from niche data"""
+        context_parts = []
+        
+        if niche.get("industry"):
+            context_parts.append(f"Industry: {niche['industry']}")
+        
+        if niche.get("value_proposition"):
+            context_parts.append(f"Value Proposition: {niche['value_proposition']}")
+        
+        if niche.get("customer_pain_points"):
+            pain_points = []
+            for pain in niche["customer_pain_points"]:
+                if isinstance(pain, dict) and pain.get("challenge"):
+                    pain_points.append(pain["challenge"])
+            if pain_points:
+                context_parts.append(f"Customer Pain Points: {'; '.join(pain_points)}")
+        
+        if niche.get("customer_needs"):
+            needs = []
+            for need in niche["customer_needs"]:
+                if isinstance(need, dict) and need.get("need"):
+                    needs.append(need["need"])
+            if needs:
+                context_parts.append(f"Customer Needs: {'; '.join(needs)}")
+        
+        if niche.get("target_audience"):
+            context_parts.append(f"Target Audience: {', '.join(niche['target_audience'])}")
+        
+        return "\n".join(context_parts)
 
     def _format_pain_points(self, niche):
         pain_points_list = []
@@ -158,18 +228,28 @@ class ContentPipeline:
         return ', '.join([item['need'] for item in niche.get('customer_needs', [])])
 
     # ---------- Content Generation ----------
-    def generate_linkedin(self, topic, related_news, niche, audience, tone, pdf_context):
-        feedback_text = self.feedback.get("linkedin_feedback", "")
-        pain_points = self._format_pain_points(niche)
-        needs = self._format_needs(niche)
-        prompt = f"""
+    def generate_linkedin(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
+        try:
+            feedback_text = self.feedback.get("linkedin_feedback", "")
+            pain_points = self._format_pain_points(niche)
+            needs = self._format_needs(niche)
+            
+            # Use provided industry or fall back to niche industry
+            target_industry = industry or niche.get("industry", "Technology")
+            
+            # Debug: Ensure we're using the correct topic
+            topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
+            print(f"📝 LinkedIn: Generating content for topic: '{topic_title}'")
+            
+            prompt = f"""
         You are an AI assistant specialized in crafting high-impact LinkedIn posts for CXO and industry audiences.
 
         Your Task:
-        Create a LinkedIn post on the topic: "{topic['title']}"
+        Create a LinkedIn post on the topic: "{topic_title}"
 
         Context Provided:
-        -Industry: {niche.get("industry")}
+        -Target Industry: {target_industry}
+        -Original Industry Context: {niche.get("industry")}
         -Pain Points: {pain_points}
         -Needs: {needs}
         -Target Audience: {audience}
@@ -182,14 +262,15 @@ class ContentPipeline:
 
         Requirements:
             1. Write a professional, insight-driven caption (≤ 200 words).
-            2. Ensure the content is engaging, authoritative, and strategically valuable for decision-makers.
-            3. Highlight industry pain points, emerging needs, or opportunities with clarity.
+            2. Ensure the content is engaging, authoritative, and strategically valuable for decision-makers in {target_industry}.
+            3. Highlight {target_industry}-specific pain points, emerging needs, or opportunities with clarity.
             4. Incorporate storytelling or thought-leadership hooks to maximize engagement.
-            5. Add 5–7 relevant, high-impact hashtags tailored to the industry and audience.
+            5. Add 5–7 relevant, high-impact hashtags tailored to the {target_industry} industry and {audience} audience.
             6. Maintain a credible, CXO-level voice (avoid fluff, generic advice, or overselling).
+            7. Reference {target_industry} trends, challenges, or opportunities where relevant.
 
         Goal:
-        - The post should educate, provoke thought, and position the brand/author as a trusted authority in the space.
+        - The post should educate, provoke thought, and position the brand/author as a trusted authority in the {target_industry} space.
 
         Output in JSON:
         {{
@@ -198,19 +279,39 @@ class ContentPipeline:
             "hashtags": ["#", "#"]
           }}
         }}
-        """
-        return self.clean_response(self.llm.invoke(prompt).content).get("linkedin", {})
+            """
+            
+            response = self.llm.invoke(prompt).content
+            result = self.clean_response(response).get("linkedin", {})
+            print(f"✅ LinkedIn content generated successfully")
+            return result
+        except Exception as e:
+            print(f"❌ Error generating LinkedIn content: {e}")
+            return {
+                "caption": f"Exciting developments in {target_industry}! The topic '{topic_title}' is reshaping how we approach business strategy. What are your thoughts on this trend?",
+                "hashtags": [f"#{target_industry.replace(' ', '').replace('&', '')}", "#Innovation", "#Strategy", "#Growth", "#Leadership"]
+            }
 
-    def generate_twitter(self, topic, related_news, niche, audience, tone, pdf_context):
-        feedback_text = self.feedback.get("twitter_feedback", "")
-        pain_points = ', '.join([p.get('challenge', '') for p in niche.get('customer_pain_points', [])])
-        needs = self._format_needs(niche)
-        prompt = f"""
+    def generate_twitter(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
+        try:
+            feedback_text = self.feedback.get("twitter_feedback", "")
+            pain_points = ', '.join([p.get('challenge', '') for p in niche.get('customer_pain_points', [])])
+            needs = self._format_needs(niche)
+            
+            # Use provided industry or fall back to niche industry
+            target_industry = industry or niche.get("industry", "Technology")
+            
+            # Debug: Ensure we're using the correct topic
+            topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
+            print(f"🐦 Twitter: Generating content for topic: '{topic_title}'")
+            
+            prompt = f"""
         You are an AI assistant specialized in writing high-impact Twitter (X) posts for industry leaders.
 
-        Task: Create a tweet on "{topic['title']}"
+        Task: Create a tweet on "{topic_title}"
         Context:
-        -Industry: {niche.get("industry")}
+        -Target Industry: {target_industry}
+        -Original Industry Context: {niche.get("industry")}
         -Pain Points: {pain_points}
         -Needs: {needs}
         -Audience: {audience}
@@ -222,12 +323,13 @@ class ContentPipeline:
         Requirements:
             1. Must fit within 280 characters.
             2. Be punchy, concise, and attention-grabbing — avoid filler or generic phrasing.
-            3. Deliver a sharp insight, challenge, or opportunity that resonates with CXO-level readers.
-            4. Include 2–3 trending, relevant hashtags.
+            3. Deliver a sharp insight, challenge, or opportunity that resonates with {target_industry} CXO-level readers.
+            4. Include 2–3 trending, relevant hashtags specific to {target_industry}.
             5. Style should be thought-leadership driven (not just promotional).
+            6. Reference {target_industry} context where possible.
 
         Goal:
-        The tweet should spark conversation, showcase authority, and connect industry pain points with strategic opportunities in a way that encourages engagement.
+        The tweet should spark conversation, showcase authority, and connect {target_industry} pain points with strategic opportunities in a way that encourages engagement.
 
         Output in JSON:
         {{
@@ -236,20 +338,40 @@ class ContentPipeline:
             "hashtags": ["#", "#"]
           }}
         }}
-        """
-        return self.clean_response(self.llm.invoke(prompt).content).get("twitter", {})
+            """
+            
+            response = self.llm.invoke(prompt).content
+            result = self.clean_response(response).get("twitter", {})
+            print(f"✅ Twitter content generated successfully")
+            return result
+        except Exception as e:
+            print(f"❌ Error generating Twitter content: {e}")
+            return {
+                "tweet": f"{topic_title} is transforming {target_industry}. Are you ready for what's next?",
+                "hashtags": [f"#{target_industry.replace(' ', '').replace('&', '')}", "#Innovation", "#Growth"]
+            }
 
-    def generate_youtube(self, topic, related_news, niche, audience, tone, pdf_context):
-        feedback_text = self.feedback.get("youtube_feedback", "")
-        pain_points = self._format_pain_points(niche)
-        needs = self._format_needs(niche)
-        prompt = f"""
+    def generate_youtube(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
+        try:
+            feedback_text = self.feedback.get("youtube_feedback", "")
+            pain_points = self._format_pain_points(niche)
+            needs = self._format_needs(niche)
+            
+            # Use provided industry or fall back to niche industry
+            target_industry = industry or niche.get("industry", "Technology")
+            
+            # Debug: Ensure we're using the correct topic
+            topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
+            print(f"📺 YouTube: Generating content for topic: '{topic_title}'")
+            
+            prompt = f"""
         You are an AI assistant specialized in creating YouTube video scripts and descriptions.
 
-        Task: Generate a YouTube video intro and description for "{topic['title']}"
+        Task: Generate a YouTube video intro and description for "{topic_title}"
 
         Context:
-        -Industry: {niche.get("industry")}
+        -Target Industry: {target_industry}
+        -Original Industry Context: {niche.get("industry")}
         -Pain Points: {pain_points}
         -Needs: {needs}
         -Audience: {audience}
@@ -260,20 +382,20 @@ class ContentPipeline:
 
         Requirements:
         1. Script Intro (30–45 seconds):
-            - Hook the audience with a compelling, curiosity-driven opening line.
-            - Briefly highlight industry pain points and why they matter now.
-            - Introduce the value or solution your company/content will bring.
+            - Hook the audience with a compelling, curiosity-driven opening line relevant to {target_industry}.
+            - Briefly highlight {target_industry} pain points and why they matter now.
+            - Introduce the value or solution your company/content will bring to {target_industry}.
             - End with a reason to keep watching (tease what’s coming).
         2. Video Description (2–3 sentences):
-            - Provide a clear, SEO-friendly summary of the video.
-            - Emphasize value for the target audience and why they should watch.
+            - Provide a clear, SEO-friendly summary of the video for {target_industry} professionals.
+            - Emphasize value for the {target_industry} {audience} and why they should watch.
             - Keep professional, concise, and engagement-driven.
         3. SEO Tags (5–7 keywords):
-            - Must be relevant, search-optimized, and niche-specific.
-            - Should cover industry trends, pain points, and opportunities.
+            - Must be relevant, search-optimized, and {target_industry}-specific.
+            - Should cover {target_industry} trends, pain points, and opportunities.
 
         Goal:
-            Produce an engaging, professional intro and description that not only retains viewers but also boosts discoverability on YouTube search.
+            Produce an engaging, professional intro and description that not only retains {target_industry} viewers but also boosts discoverability on YouTube search for {target_industry} content.
         
         Output in JSON:
         {{
@@ -283,8 +405,19 @@ class ContentPipeline:
             "tags": ["tag1", "tag2"]
           }}
         }}
-        """
-        return self.clean_response(self.llm.invoke(prompt).content).get("youtube", {})
+            """
+            
+            response = self.llm.invoke(prompt).content
+            result = self.clean_response(response).get("youtube", {})
+            print(f"✅ YouTube content generated successfully")
+            return result
+        except Exception as e:
+            print(f"❌ Error generating YouTube content: {e}")
+            return {
+                "script_intro": f"Welcome back! Today we're diving deep into {topic_title} and how it's revolutionizing {target_industry}. If you're a {audience.lower()} looking to stay ahead of the curve, this video is for you. Let's explore what this means for your business strategy.",
+                "description": f"Discover how {topic_title} is transforming {target_industry} and what it means for your business strategy.",
+                "tags": [target_industry.replace(' ', ''), "Strategy", "Innovation", "Business", "Growth"]
+            }
 
     # ---------- Pipeline Run ----------
     def run(self):

@@ -5,7 +5,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_genai import (
     GoogleGenerativeAIEmbeddings,
     ChatGoogleGenerativeAI
@@ -95,7 +95,7 @@ Context:
 # ----------- FUNCTIONS -------------
 def load_faiss_index():
     """Load existing FAISS index"""
-    embeddings = OllamaEmbeddings(model="nomic-embed-text")
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vectordb = FAISS.load_local(VECTOR_DB_DIR, embeddings, allow_dangerous_deserialization=True)
     return vectordb
 

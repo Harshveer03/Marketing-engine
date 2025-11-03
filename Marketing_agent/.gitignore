@@ -6,12 +6,23 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
+*.pyo
 
 # Development files
 .vscode/
+.idea/
 *.log
+*.tmp
+*.temp
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# Test files
+test_*.py
+*_test.py
+
+# Documentation (development)
+CLEAN_STRUCTURE.md
+DASHBOARD_STATUS.md

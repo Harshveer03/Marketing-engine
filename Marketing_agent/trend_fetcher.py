@@ -4,7 +4,7 @@ import json
 import requests
 from datetime import datetime
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 
@@ -17,8 +17,8 @@ SERPAPI_KEY = os.getenv("SERPAPI_KEY")  # must be in .env
 
 
 class TrendFetcher:
-    def __init__(self, model="models/gemini-2.0-flash", embedding_model="nomic-embed-text"):
-        self.embeddings = OllamaEmbeddings(model=embedding_model)
+    def __init__(self, model="models/gemini-2.0-flash", embedding_model="models/embedding-001"):
+        self.embeddings = GoogleGenerativeAIEmbeddings(model=embedding_model)
         self.vectordb = FAISS.load_local(
             VECTOR_DB_DIR, self.embeddings, allow_dangerous_deserialization=True
         )

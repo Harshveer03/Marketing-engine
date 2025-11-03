@@ -93,10 +93,19 @@ def load_content_stats():
         if os.path.exists(blog_file):
             try:
                 with open(blog_file, "r", encoding="utf-8") as f:
-                    blogs = json.load(f)
-                    stats["blogs"] = len(blogs) if isinstance(blogs, list) else 1
-                    print(f"📊 Found {stats['blogs']} blogs in {blog_file}")
+                    content = f.read().strip()
+                    if content:  # Check if file has content
+                        blogs = json.loads(content)
+                        stats["blogs"] = len(blogs) if isinstance(blogs, list) else 1
+                        print(f"📊 Found {stats['blogs']} blogs in {blog_file}")
+                    else:
+                        print(f"📊 Empty blog file: {blog_file}")
                 break
+            except json.JSONDecodeError as e:
+                print(f"Error reading {blog_file}: {e}")
+                # Initialize empty file
+                with open(blog_file, "w", encoding="utf-8") as f:
+                    json.dump([], f)
             except Exception as e:
                 print(f"Error reading {blog_file}: {e}")
                 pass
@@ -110,12 +119,21 @@ def load_content_stats():
             file_path = f"{social_dir}/{platform}"
             if os.path.exists(file_path):
                 try:
-                    with open(file_path, "r") as f:
-                        posts = json.load(f)
-                        if isinstance(posts, list):
-                            stats["social_posts"] += len(posts)
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        content = f.read().strip()
+                        if content:  # Check if file has content
+                            posts = json.loads(content)
+                            if isinstance(posts, list):
+                                stats["social_posts"] += len(posts)
+                            else:
+                                stats["social_posts"] += 1
                         else:
-                            stats["social_posts"] += 1
+                            print(f"📊 Empty social file: {file_path}")
+                except json.JSONDecodeError as e:
+                    print(f"Error reading {file_path}: {e}")
+                    # Initialize empty file
+                    with open(file_path, "w", encoding="utf-8") as f:
+                        json.dump([], f)
                 except Exception as e:
                     print(f"Error reading {file_path}: {e}")
                     pass
@@ -407,7 +425,15 @@ def generate_topics():
         # Call the generate_topics method directly (not run())
         topics = pipeline.generate_topics()
         
-        # Topics generated successfully for web UI
+        # Store topics for later use in content generation
+        stored_topics_file = "./generated/topics/current_session_topics.json"
+        os.makedirs(os.path.dirname(stored_topics_file), exist_ok=True)
+        with open(stored_topics_file, "w", encoding="utf-8") as f:
+            json.dump(topics, f, indent=2, ensure_ascii=False)
+        
+        print(f"🎯 Generated and stored {len(topics)} topics for user selection")
+        for i, topic in enumerate(topics):
+            print(f"  {i}: {topic['title']}")
         
         return jsonify({'success': True, 'topics': topics})
     except Exception as e:
@@ -423,9 +449,14 @@ def generate_social_with_selection():
     
     try:
         data = request.get_json()
+        print(f"📥 Received request data: {data}")
+        
         topic_index = data.get('topic_index')
+        industry = data.get('industry', 'IT & Dev')
         tone = data.get('tone', 'professional')
         audience = data.get('audience', 'Founders')
+        
+        print(f"🔢 Topic index: {topic_index}, Industry: {industry}, Tone: {tone}, Audience: {audience}")
         
         if topic_index is None:
             return jsonify({'error': 'Missing topic selection'}), 400
@@ -433,53 +464,169 @@ def generate_social_with_selection():
         from post_generator import ContentPipeline
         pipeline = ContentPipeline()
         
-        # Generate topics to get the selected one
-        topics = pipeline.generate_topics()
+        # Load the previously generated topics from session storage
+        stored_topics_file = "./generated/topics/current_session_topics.json"
+        if os.path.exists(stored_topics_file):
+            with open(stored_topics_file, "r", encoding="utf-8") as f:
+                topics = json.load(f)
+            print(f"📂 Loaded {len(topics)} topics from session storage")
+            for i, topic in enumerate(topics):
+                print(f"  {i}: {topic['title']}")
+        else:
+            print(f"❌ Session topics file not found: {stored_topics_file}")
+            return jsonify({'error': 'No topics found. Please refresh and try again.'}), 400
+        
         if topic_index >= len(topics):
-            return jsonify({'error': 'Invalid topic index'}), 400
+            print(f"❌ Invalid topic index {topic_index}, only {len(topics)} topics available")
+            return jsonify({'error': f'Invalid topic index {topic_index}. Available: 0-{len(topics)-1}'}), 400
         
         selected_topic = topics[topic_index]
+        print(f"🎯 User selected topic #{topic_index}: '{selected_topic['title']}'")
+        print(f"📰 Related news items: {len(selected_topic.get('related_news', []))}")
         
         # Save the selected topic
         pipeline.save_json("./generated/topics/topics.json", [{"title": selected_topic["title"], "related_news": selected_topic.get("related_news", [])}])
         
         # Get context and generate content
-        niche, pdf_context = pipeline.get_context(selected_topic)
+        try:
+            niche, pdf_context = pipeline.get_context(selected_topic)
+        except Exception as e:
+            print(f"Error getting context: {e}")
+            return jsonify({'error': f'Failed to get context: {str(e)}'}), 500
         
-        # Generate content for all platforms
-        linkedin = pipeline.generate_linkedin(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context)
-        twitter = pipeline.generate_twitter(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context)
-        youtube = pipeline.generate_youtube(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context)
+        # Generate content for all platforms using the selected topic
+        print(f"🚀 Generating content for topic: '{selected_topic['title']}'")
+        print(f"📊 Industry: {industry}, Tone: {tone}, Audience: {audience}")
+        
+        linkedin = pipeline.generate_linkedin(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
+        twitter = pipeline.generate_twitter(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
+        youtube = pipeline.generate_youtube(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
         
         # Save content to files
-        import os
         output_dir = "./generated/content/social"
         os.makedirs(output_dir, exist_ok=True)
         
+        # Save content with the selected topic title
+        topic_title = selected_topic["title"]
+        
         linkedin_data = {
-            "title": selected_topic["title"],
+            "title": topic_title,
             "caption": linkedin.get("caption", ""),
-            "hashtags": linkedin.get("hashtags", [])
+            "hashtags": linkedin.get("hashtags", []),
+            "industry": industry,
+            "tone": tone,
+            "audience": audience
         }
         
         twitter_data = {
-            "title": selected_topic["title"],
+            "title": topic_title,
             "caption": twitter.get("tweet", ""),
-            "hashtags": twitter.get("hashtags", [])
+            "hashtags": twitter.get("hashtags", []),
+            "industry": industry,
+            "tone": tone,
+            "audience": audience
         }
         
         youtube_data = {
-            "title": selected_topic["title"],
+            "title": topic_title,
             "script_intro": youtube.get("script_intro", ""),
             "caption": youtube.get("description", ""),
-            "hashtags": youtube.get("tags", [])
+            "hashtags": youtube.get("tags", []),
+            "industry": industry,
+            "tone": tone,
+            "audience": audience
         }
+        
+        print(f"💾 Saving content for topic: '{topic_title}'")
         
         pipeline.append_json(os.path.join(output_dir, "linkedin.json"), linkedin_data)
         pipeline.append_json(os.path.join(output_dir, "twitter.json"), twitter_data)
         pipeline.append_json(os.path.join(output_dir, "youtube.json"), youtube_data)
         
         return jsonify({'success': True, 'message': 'Social content generated successfully'})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/generate_blog_with_selection', methods=['POST'])
+def generate_blog_with_selection():
+    """Generate blog content with user selections"""
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        print(f"📥 Received blog request data: {data}")
+        
+        topic_index = data.get('topic_index')
+        industry = data.get('industry', 'IT & Dev')
+        tone = data.get('tone', 'professional')
+        audience = data.get('audience', 'Founders')
+        
+        print(f"🔢 Blog topic index: {topic_index}, Industry: {industry}, Tone: {tone}, Audience: {audience}")
+        
+        if topic_index is None:
+            return jsonify({'error': 'Missing topic selection'}), 400
+        
+        from blog_generator import BlogGenerator
+        generator = BlogGenerator()
+        
+        # Load the previously generated topics from session storage
+        stored_topics_file = "./generated/topics/current_session_topics.json"
+        if os.path.exists(stored_topics_file):
+            with open(stored_topics_file, "r", encoding="utf-8") as f:
+                topics = json.load(f)
+            print(f"📂 Loaded {len(topics)} topics from session storage for blog")
+            for i, topic in enumerate(topics):
+                print(f"  {i}: {topic['title']}")
+        else:
+            print(f"❌ Session topics file not found: {stored_topics_file}")
+            return jsonify({'error': 'No topics found. Please refresh and try again.'}), 400
+        
+        if topic_index >= len(topics):
+            print(f"❌ Invalid topic index {topic_index}, only {len(topics)} topics available")
+            return jsonify({'error': f'Invalid topic index {topic_index}. Available: 0-{len(topics)-1}'}), 400
+        
+        selected_topic = topics[topic_index]
+        print(f"🎯 User selected blog topic #{topic_index}: '{selected_topic['title']}'")
+        print(f"📰 Related news items: {len(selected_topic.get('related_news', []))}")
+        
+        # Generate blog content using the selected topic
+        print(f"🚀 Generating blog for topic: '{selected_topic['title']}'")
+        print(f"📊 Industry: {industry}, Tone: {tone}, Audience: {audience}")
+        
+        # Get niche data and context
+        niche = generator.load_json("./generated/niche_icp.json")
+        pdf_context = generator.build_pdf_context(selected_topic['title'], niche)
+        
+        # Generate blog with industry context
+        blog_data = generator.generate_blog_with_industry(
+            selected_topic['title'], 
+            selected_topic.get('related_news', []), 
+            niche, 
+            pdf_context,
+            industry,
+            tone,
+            audience
+        )
+        
+        # Save blog content
+        blog_entry = {
+            "title": blog_data.get("title", selected_topic['title']),
+            "outline": blog_data.get("outline", []),
+            "blog": blog_data.get("blog", ""),
+            "news": selected_topic.get('related_news', []),
+            "industry": industry,
+            "tone": tone,
+            "audience": audience,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        print(f"💾 Saving blog for topic: '{blog_entry['title']}'")
+        generator.append_json("./generated/content/blogs/blogs.json", blog_entry)
+        
+        return jsonify({'success': True, 'message': 'Blog content generated successfully', 'title': blog_entry['title']})
     except Exception as e:
         import traceback
         traceback.print_exc()

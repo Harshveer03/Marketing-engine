@@ -92,7 +92,7 @@
           <div class="col-md-3 mb-2">
             <button
               class="btn btn-primary w-100"
-              onclick="generateContent('blog')"
+              onclick="showBlogTopicSelection()"
             >
               <i class="fas fa-blog me-2"></i>Generate Blog
             </button>
@@ -119,7 +119,7 @@
   </div>
 </div>
 
-<!-- Topic Selection Section (Hidden by default) -->
+<!-- Social Topic Selection Section (Hidden by default) -->
 <div class="row mb-4 d-none" id="topicSelectionSection">
   <div class="col-12">
     <div class="card border-success">
@@ -148,6 +148,28 @@
             </div>
             <div class="col-md-4">
               <div class="mb-3">
+                <label class="form-label">Industry:</label>
+                <select class="form-select" id="industrySelect">
+                  <option value="IT & Dev">IT & Development</option>
+                  <option value="Sales/Marketing">Sales/Marketing</option>
+                  <option value="Fintech">Fintech</option>
+                  <option value="Billing">Billing</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Logistics">Logistics</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="HRTech">HRTech</option>
+                  <option value="Real Estate">Real Estate</option>
+                  <option value="Agritech">Agritech</option>
+                  <option value="Energy">Energy</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Legal">Legal</option>
+                  <option value="Media">Media</option>
+                  <option value="Government">Government</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
                 <label class="form-label">Tone:</label>
                 <select class="form-select" id="toneSelect">
                   <option value="professional">Professional</option>
@@ -173,6 +195,90 @@
             </button>
             <button type="button" class="btn btn-success" id="generateSocialBtn" disabled onclick="generateSocialFromDashboard()">
               <i class="fas fa-magic me-2"></i>Generate Social Content
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Topic Selection Section (Hidden by default) -->
+<div class="row mb-4 d-none" id="blogTopicSelectionSection">
+  <div class="col-12">
+    <div class="card border-primary">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-blog me-2"></i>Select Topic for Blog Content
+        </h5>
+      </div>
+      <div class="card-body">
+        <!-- Loading State -->
+        <div id="blogTopicLoading" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Generating topics...</span>
+          </div>
+          <p class="mt-2 text-muted">Analyzing trends and generating topics...</p>
+        </div>
+        
+        <!-- Topic Selection Content -->
+        <div id="blogTopicSelectionContent" class="d-none">
+          <div class="row">
+            <div class="col-md-8">
+              <h6 class="mb-3">Choose a topic:</h6>
+              <div id="blogTopicList" class="mb-3">
+                <!-- Topics will be populated here -->
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Industry:</label>
+                <select class="form-select" id="blogIndustrySelect">
+                  <option value="IT & Dev">IT & Development</option>
+                  <option value="Sales/Marketing">Sales/Marketing</option>
+                  <option value="Fintech">Fintech</option>
+                  <option value="Billing">Billing</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Logistics">Logistics</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="HRTech">HRTech</option>
+                  <option value="Real Estate">Real Estate</option>
+                  <option value="Agritech">Agritech</option>
+                  <option value="Energy">Energy</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Legal">Legal</option>
+                  <option value="Media">Media</option>
+                  <option value="Government">Government</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Tone:</label>
+                <select class="form-select" id="blogToneSelect">
+                  <option value="professional">Professional</option>
+                  <option value="casual">Casual</option>
+                  <option value="bold">Bold</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Target Audience:</label>
+                <select class="form-select" id="blogAudienceSelect">
+                  <option value="CXOs">CXOs</option>
+                  <option value="Founders">Founders</option>
+                  <option value="Marketers">Marketers</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <button type="button" class="btn btn-outline-secondary" onclick="hideBlogTopicSelection()">
+              <i class="fas fa-times me-2"></i>Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="generateBlogBtn" disabled onclick="generateBlogFromDashboard()">
+              <i class="fas fa-blog me-2"></i>Generate Blog Content
             </button>
           </div>
         </div>

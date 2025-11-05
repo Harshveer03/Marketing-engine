@@ -204,6 +204,25 @@ body {
   background: #a8a8a8;
 }
 
+/* Social Media Sub-Navigation */
+#socialTabs .nav-link {
+  border: none;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+}
+
+#socialTabs .nav-link.active {
+  background-color: transparent;
+  border-bottom: 3px solid #0d6efd;
+  color: #0d6efd;
+}
+
+#socialTabs .nav-link:hover {
+  color: #0d6efd;
+  background-color: #f8f9fa;
+}
+
 /* Topic Selection Styles */
 .topic-card {
   transition: all 0.3s ease;

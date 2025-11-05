@@ -55,9 +55,20 @@
         <div class="d-flex justify-content-between">
           <div>
             <h4 class="mb-0">
-              {% if performance %} {{
-              "%.1f"|format(performance.summary.platforms.linkedin.avg_engagement
-              * 100) }}% {% else %} N/A {% endif %}
+              {% if performance and performance.summary and performance.summary.platforms %}
+                {% set platforms = performance.summary.platforms %}
+                {% set engagement_values = [] %}
+                {% for platform, data in platforms.items() %}
+                  {% if engagement_values.append(data.avg_engagement) %}{% endif %}
+                {% endfor %}
+                {% if engagement_values %}
+                  {{ "%.1f"|format((engagement_values|sum / engagement_values|length) * 100) }}%
+                {% else %}
+                  N/A
+                {% endif %}
+              {% else %}
+                N/A
+              {% endif %}
             </h4>
             <p class="mb-0">Avg Engagement</p>
           </div>
@@ -364,13 +375,80 @@
 
           <!-- Social Media Tab -->
           <div class="tab-pane fade" id="social" role="tabpanel">
-            <div id="social-content">
-              <div class="text-center text-muted">
-                <i class="fas fa-share-alt fa-3x mb-3"></i>
-                <p>
-                  No social media content generated yet. Click "Generate Social"
-                  to create posts for all platforms.
-                </p>
+            <!-- Social Media Sub-Navigation -->
+            <div class="card mb-3">
+              <div class="card-header p-0">
+                <ul class="nav nav-tabs card-header-tabs" id="socialTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link active"
+                      id="linkedin-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#linkedin"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-linkedin me-2"></i>LinkedIn
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="twitter-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#twitter"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-twitter me-2"></i>Twitter
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="youtube-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#youtube"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-youtube me-2"></i>YouTube
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="socialTabsContent">
+                  <!-- LinkedIn Content -->
+                  <div class="tab-pane fade show active" id="linkedin" role="tabpanel">
+                    <div id="linkedin-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-linkedin fa-3x mb-3"></i>
+                        <p>No LinkedIn content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Twitter Content -->
+                  <div class="tab-pane fade" id="twitter" role="tabpanel">
+                    <div id="twitter-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-twitter fa-3x mb-3"></i>
+                        <p>No Twitter content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- YouTube Content -->
+                  <div class="tab-pane fade" id="youtube" role="tabpanel">
+                    <div id="youtube-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-youtube fa-3x mb-3"></i>
+                        <p>No YouTube content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -457,188 +535,79 @@
     </div>
   </div>
 </div>
+
+<!-- Content Modal -->
+<div class="modal fade" id="contentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contentModalTitle">Blog Title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="contentModalBody" style="max-height: 70vh; overflow-y: auto;">
+        Blog content will appear here...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="copyModalContent()">
+          <i class="fas fa-copy me-1"></i>Copy Content
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %} {% block scripts %}
 <script>
-  // Load content when tabs are clicked
+  // Dashboard initialization - delegated to external JS file
   document.addEventListener("DOMContentLoaded", function () {
-    loadContent("blogs");
+    console.log('Dashboard template loaded, delegating to external JS...');
+    
+    // The external dashboard.js file will handle all initialization
+    // Just ensure we load the initial content after a short delay
+    setTimeout(() => {
+      if (typeof loadContent === 'function') {
+        loadContent("blogs");
+      }
+    }, 500);
 
-    // Add event listeners for tab clicks
-    document.querySelectorAll('[data-bs-toggle="tab"]').forEach((tab) => {
+    // Add event listeners for main tab clicks
+    document.querySelectorAll('#contentTabs [data-bs-toggle="tab"]').forEach((tab) => {
       tab.addEventListener("shown.bs.tab", function (e) {
         const target = e.target.getAttribute("data-bs-target").substring(1);
-        loadContent(target);
+        console.log('Main tab clicked:', target);
+        if (target === "social") {
+          // Load LinkedIn content by default when social tab is opened
+          if (typeof loadSocialContent === 'function') {
+            loadSocialContent("linkedin");
+          }
+        } else {
+          if (typeof loadContent === 'function') {
+            loadContent(target);
+          }
+        }
+      });
+    });
+
+    // Add event listeners for social sub-tab clicks
+    document.querySelectorAll('#socialTabs [data-bs-toggle="tab"]').forEach((tab) => {
+      tab.addEventListener("shown.bs.tab", function (e) {
+        const target = e.target.getAttribute("data-bs-target").substring(1);
+        console.log('Social sub-tab clicked:', target);
+        if (typeof loadSocialContent === 'function') {
+          loadSocialContent(target);
+        }
       });
     });
   });
 
-  function generateContent(type) {
-    const messages = {
-      blog: "Generating blog post...",
-      social: "Generating social media content...",
-      trends: "Fetching latest trends...",
-      analysis: "Running performance analysis...",
-    };
+  // generateContent function is handled by external dashboard.js
 
-    showLoading(messages[type]);
+  // loadContent function is handled by external dashboard.js
 
-    fetch(`/generate/${type}`)
-      .then((response) => response.json())
-      .then((data) => {
-        hideLoading();
-        if (data.success) {
-          showSuccess(
-            `${
-              type.charAt(0).toUpperCase() + type.slice(1)
-            } generated successfully!`
-          );
-          // Refresh the current tab
-          const activeTab = document
-            .querySelector(".nav-link.active")
-            .getAttribute("data-bs-target")
-            .substring(1);
-          loadContent(activeTab);
-          // Update stats
-          setTimeout(() => location.reload(), 1000);
-        } else {
-          showError(data.error || "Generation failed");
-        }
-      })
-      .catch((error) => {
-        hideLoading();
-        showError("Network error: " + error.message);
-      });
-  }
+  // loadSocialContent function is handled by external dashboard.js
 
-  function loadContent(type) {
-    const contentDiv = document.getElementById(`${type}-content`);
-
-    fetch(`/content/${type}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length === 0) {
-          return; // Keep default empty message
-        }
-
-        let html = "";
-
-        if (type === "blogs") {
-          if (Array.isArray(data)) {
-            data.forEach((blog) => {
-              html += `
-                            <div class="card mb-3">
-                                <div class="card-header">
-                                    <h6 class="mb-0">${blog.title}</h6>
-                                    <small class="text-muted">${new Date(
-                                      blog.timestamp
-                                    ).toLocaleDateString()}</small>
-                                </div>
-                                <div class="card-body">
-                                    <p>${blog.blog.substring(0, 300)}...</p>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="showFullContent('${
-                                      blog.title
-                                    }', \`${blog.blog.replace(/`/g, "\\`")}\`)">
-                                        Read Full Post
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-            });
-          }
-        } else if (type === "social") {
-          Object.keys(data).forEach((platform) => {
-            const posts = Array.isArray(data[platform])
-              ? data[platform]
-              : [data[platform]];
-            posts.forEach((post) => {
-              html += `
-                            <div class="card mb-3">
-                                <div class="card-header">
-                                    <h6 class="mb-0">${
-                                      platform.charAt(0).toUpperCase() +
-                                      platform.slice(1)
-                                    }: ${post.title}</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p>${post.caption}</p>
-                                    <div class="mt-2">
-                                        ${
-                                          post.hashtags
-                                            ? post.hashtags
-                                                .map(
-                                                  (tag) =>
-                                                    `<span class="badge bg-primary me-1">${tag}</span>`
-                                                )
-                                                .join("")
-                                            : ""
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-            });
-          });
-        } else if (type === "trends") {
-          if (Array.isArray(data)) {
-            data.forEach((trend) => {
-              html += `
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h6><a href="${
-                                      trend.url
-                                    }" target="_blank">${trend.title}</a></h6>
-                                    <p class="text-muted">${
-                                      trend.description ||
-                                      "No description available"
-                                    }</p>
-                                    <small class="text-muted">Source: ${
-                                      trend.source
-                                    } | ${trend.publishedAt}</small>
-                                </div>
-                            </div>
-                        `;
-            });
-          }
-        }
-
-        if (html) {
-          contentDiv.innerHTML = html;
-        }
-      })
-      .catch((error) => {
-        console.error("Error loading content:", error);
-      });
-  }
-
-  function showFullContent(title, content) {
-    const modal = new bootstrap.Modal(
-      document.getElementById("contentModal") || createContentModal()
-    );
-    document.getElementById("contentModalTitle").textContent = title;
-    document.getElementById("contentModalBody").innerHTML = content.replace(
-      /\n/g,
-      "<br>"
-    );
-    modal.show();
-  }
-
-  function createContentModal() {
-    const modalHtml = `
-        <div class="modal fade" id="contentModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="contentModalTitle"></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body" id="contentModalBody"></div>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML("beforeend", modalHtml);
-    return document.getElementById("contentModal");
-  }
+  // All utility functions are handled by external dashboard.js
+  // Keep only essential template-specific functions here
 
   function exportContent() {
     showLoading("Exporting content...");

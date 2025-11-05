@@ -2,10 +2,12 @@ import os
 import re
 import json
 import requests
+import asyncio
 from datetime import datetime
 from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import OllamaEmbeddings
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,8 +19,8 @@ SERPAPI_KEY = os.getenv("SERPAPI_KEY")  # must be in .env
 
 
 class TrendFetcher:
-    def __init__(self, model="models/gemini-2.0-flash", embedding_model="models/embedding-001"):
-        self.embeddings = GoogleGenerativeAIEmbeddings(model=embedding_model)
+    def __init__(self, model="models/gemini-2.0-flash", embedding_model="nomic-embed-text"):
+        self.embeddings = OllamaEmbeddings(model=embedding_model)
         self.vectordb = FAISS.load_local(
             VECTOR_DB_DIR, self.embeddings, allow_dangerous_deserialization=True
         )
@@ -53,18 +55,29 @@ class TrendFetcher:
         ["B2B SaaS GTM trends", "SaaS churn issues", "AI in SaaS", "SaaS CXO strategy", "SaaS growth 2025"]
         """
 
-        response = self.llm.invoke(prompt).content.strip()
-        match = re.search(r"\[.*\]", response, re.S)
-        queries = json.loads(match.group()) if match else [f"{industry} trends"]
+        try:
+            # Ensure we have an event loop for async operations
+            try:
+                loop = asyncio.get_event_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            
+            response = self.llm.invoke(prompt).content.strip()
+            match = re.search(r"\[.*\]", response, re.S)
+            queries = json.loads(match.group()) if match else [f"{industry} trends"]
 
-        cleaned = []
-        for q in queries:
-            q = re.sub(r"[^a-zA-Z0-9\s]", "", q).strip()
-            words = q.split()
-            if 2 <= len(words) <= 4:
-                cleaned.append(" ".join(words))
+            cleaned = []
+            for q in queries:
+                q = re.sub(r"[^a-zA-Z0-9\s]", "", q).strip()
+                words = q.split()
+                if 2 <= len(words) <= 4:
+                    cleaned.append(" ".join(words))
 
-        return cleaned if cleaned else [f"{industry} trends"]
+            return cleaned if cleaned else [f"{industry} trends"]
+        except Exception as e:
+            print(f"Error in build_queries: {e}")
+            return [f"{industry} trends"]
 
 
     def fetch_serpapi(self, query: str, source: str = "google_news", num: int = 5) -> dict:
@@ -161,43 +174,73 @@ class TrendFetcher:
             text = f"{item.get('title','')} {item.get('description','')}".lower()
 
             keyword_hit = any(kw in text for kw in keywords if kw)
-            docs_and_scores = self.vectordb.similarity_search_with_score(text, k=1)
-            semantic_hit = docs_and_scores and docs_and_scores[0][1] >= threshold
+            
+            try:
+                # Ensure we have an event loop for async operations
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                
+                docs_and_scores = self.vectordb.similarity_search_with_score(text, k=1)
+                semantic_hit = docs_and_scores and docs_and_scores[0][1] >= threshold
 
-            if keyword_hit or semantic_hit:
-                filtered.append({
-                    **item,
-                    "relevance_context": docs_and_scores[0][0].page_content if docs_and_scores else "",
-                    "similarity_score": float(docs_and_scores[0][1]) if docs_and_scores else None,
-                })
+                if keyword_hit or semantic_hit:
+                    filtered.append({
+                        **item,
+                        "relevance_context": docs_and_scores[0][0].page_content if docs_and_scores else "",
+                        "similarity_score": float(docs_and_scores[0][1]) if docs_and_scores else None,
+                    })
+            except Exception as e:
+                print(f"Error in similarity search for item: {e}")
+                # If similarity search fails, still include items with keyword hits
+                if keyword_hit:
+                    filtered.append({
+                        **item,
+                        "relevance_context": "",
+                        "similarity_score": None,
+                    })
 
         return filtered[:top_k]
 
 
     def run(self, icp_json_path="./generated/niche_icp.json"):
-        with open(icp_json_path, "r") as f:
-            icp_json = json.load(f)
+        try:
+            # Ensure we have an event loop for the entire run
+            try:
+                loop = asyncio.get_event_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            
+            with open(icp_json_path, "r") as f:
+                icp_json = json.load(f)
 
-        queries = self.build_queries(icp_json)
-        print(f"🔍 Queries: {queries}")
+            queries = self.build_queries(icp_json)
+            print(f"🔍 Queries: {queries}")
 
-        all_items = []
-        for q in queries:
-            raw = self.fetch_serpapi(q, source="google_news")
-            print(f"📥 google_news returned {len(raw) if isinstance(raw, dict) else 0} keys for query '{q}'")
-            items = self.parse_results(raw, source="google_news")
-            print(f"   Parsed {len(items)} items from google_news")
-            all_items.extend(items)
+            all_items = []
+            for q in queries:
+                raw = self.fetch_serpapi(q, source="google_news")
+                print(f"📥 google_news returned {len(raw) if isinstance(raw, dict) else 0} keys for query '{q}'")
+                items = self.parse_results(raw, source="google_news")
+                print(f"   Parsed {len(items)} items from google_news")
+                all_items.extend(items)
 
-        # ✅ only top 10 will be returned
-        filtered = self.relevance_filter(all_items, icp_json, top_k=10)
+            # ✅ only top 10 will be returned
+            filtered = self.relevance_filter(all_items, icp_json, top_k=10)
 
-        os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            json.dump(filtered, f, indent=4)
+            os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+            with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+                json.dump(filtered, f, indent=4)
 
-        print(f"✅ Saved {len(filtered)} relevant trends to {OUTPUT_FILE}")
-        return filtered
+            print(f"✅ Saved {len(filtered)} relevant trends to {OUTPUT_FILE}")
+            return filtered
+        except Exception as e:
+            print(f"Error in TrendFetcher.run: {e}")
+            # Return empty list if everything fails
+            return []
 
 
 if __name__ == "__main__":

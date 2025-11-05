@@ -5,11 +5,40 @@ let currentUser = null;
 let refreshInterval = null;
 let contentData = {}; // Store content data globally
 
-// Initialize dashboard - Updated 2025-10-30 16:30
+// Initialize dashboard - Updated 2025-11-04 16:30
 document.addEventListener("DOMContentLoaded", function () {
-  console.log('Dashboard JavaScript loaded - Version 2025-10-30 16:30');
+  console.log('Dashboard JavaScript loaded - Version 2025-11-04 16:30');
   initializeDashboard();
   setupEventListeners();
+  
+  // Load initial content
+  setTimeout(() => {
+    loadContent("blogs");
+  }, 500);
+  
+  // Add event listeners for main tab clicks
+  document.querySelectorAll('#contentTabs [data-bs-toggle="tab"]').forEach((tab) => {
+    tab.addEventListener("shown.bs.tab", function (e) {
+      const target = e.target.getAttribute("data-bs-target").substring(1);
+      console.log('Main tab clicked:', target);
+      if (target === "social") {
+        // Load LinkedIn content by default when social tab is opened
+        loadSocialContent("linkedin");
+      } else {
+        loadContent(target);
+      }
+    });
+  });
+
+  // Add event listeners for social sub-tab clicks
+  document.querySelectorAll('#socialTabs [data-bs-toggle="tab"]').forEach((tab) => {
+    tab.addEventListener("shown.bs.tab", function (e) {
+      const target = e.target.getAttribute("data-bs-target").substring(1);
+      console.log('Social sub-tab clicked:', target);
+      loadSocialContent(target);
+    });
+  });
+  
   // Refresh stats on page load to ensure they're current
   setTimeout(() => {
     refreshStats();
@@ -216,7 +245,19 @@ function renderBlogs(data) {
 
   return data
     .map(
-      (blog, index) => `
+      (blog, index) => {
+        // Handle case where blog content might be JSON string
+        let blogContent = blog.blog;
+        if (typeof blogContent === 'string' && blogContent.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(blogContent);
+            blogContent = parsed.blog || blogContent;
+          } catch (e) {
+            // If parsing fails, use original content
+          }
+        }
+        
+        return `
         <div class="card content-card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">${escapeHtml(blog.title)}</h6>
@@ -224,7 +265,7 @@ function renderBlogs(data) {
             </div>
             <div class="card-body">
                 <p class="card-text">${escapeHtml(
-        blog.blog.substring(0, 300)
+        blogContent.substring(0, 300)
       )}...</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <button class="btn btn-sm btn-outline-primary" onclick="showBlogModal(${index})">
@@ -236,7 +277,8 @@ function renderBlogs(data) {
                 </div>
             </div>
         </div>
-    `
+    `;
+      }
     )
     .join("");
 }
@@ -295,6 +337,90 @@ function renderSocialContent(data) {
   });
 
   return html;
+}
+
+function loadSocialContent(platform) {
+  const contentDiv = document.getElementById(`${platform}-content`);
+  
+  // Show loading spinner
+  contentDiv.innerHTML = `
+    <div class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2 text-muted">Loading ${platform} content...</p>
+    </div>
+  `;
+
+  fetch('/content/social')
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data || !data[platform]) {
+        contentDiv.innerHTML = `
+          <div class="text-center text-muted">
+            <i class="fab fa-${platform} fa-3x mb-3"></i>
+            <p>No ${platform.charAt(0).toUpperCase() + platform.slice(1)} content generated yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const posts = Array.isArray(data[platform]) ? data[platform] : [data[platform]];
+      let html = "";
+
+      posts.forEach((post) => {
+        html += `
+          <div class="card content-card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h6 class="mb-0">${escapeHtml(post.title)}</h6>
+              <small class="text-muted">
+                <i class="fab fa-${platform} me-1"></i>
+                ${platform.charAt(0).toUpperCase() + platform.slice(1)}
+              </small>
+            </div>
+            <div class="card-body">
+              <p class="card-text">${escapeHtml(post.caption)}</p>
+              ${post.hashtags ? `
+                <div class="mt-2">
+                  ${post.hashtags.map(tag => 
+                    `<span class="badge bg-primary me-1">${escapeHtml(tag)}</span>`
+                  ).join('')}
+                </div>
+              ` : ''}
+              ${post.script_intro ? `
+                <div class="mt-3">
+                  <h6>Script Intro:</h6>
+                  <p class="text-muted">${escapeHtml(post.script_intro)}</p>
+                </div>
+              ` : ''}
+              <div class="mt-3">
+                <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('${escapeHtml(post.caption).replace(/'/g, "\\'")}')">
+                  <i class="fas fa-copy me-1"></i>Copy Text
+                </button>
+                ${post.script_intro ? `
+                  <button class="btn btn-sm btn-outline-info ms-2" onclick="copyToClipboard('${escapeHtml(post.script_intro).replace(/'/g, "\\'")}')">
+                    <i class="fas fa-copy me-1"></i>Copy Script
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      contentDiv.innerHTML = html;
+    })
+    .catch((error) => {
+      contentDiv.innerHTML = `
+        <div class="text-center text-danger">
+          <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+          <p>Error loading ${platform} content: ${error.message}</p>
+          <button class="btn btn-outline-primary" onclick="loadSocialContent('${platform}')">
+            <i class="fas fa-redo me-2"></i>Retry
+          </button>
+        </div>
+      `;
+    });
 }
 
 function renderTrends(data) {
@@ -468,14 +594,29 @@ function renderEmptyState(type, contentDiv) {
 // Blog-specific functions
 function showBlogModal(index) {
   const blogs = contentData.blogs;
-  if (!blogs || !blogs[index]) return;
+  if (!blogs || !blogs[index]) {
+    showToast('error', 'Blog content not found. Please refresh the page.');
+    return;
+  }
 
   const blog = blogs[index];
+  let blogContent = blog.blog;
+  
+  // Handle case where blog content might be JSON string
+  if (typeof blogContent === 'string' && blogContent.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(blogContent);
+      blogContent = parsed.blog || blogContent;
+    } catch (e) {
+      // If parsing fails, use original content
+    }
+  }
+  
   const modal = new bootstrap.Modal(
     document.getElementById("contentModal") || createContentModal()
   );
   document.getElementById("contentModalTitle").textContent = blog.title;
-  document.getElementById("contentModalBody").innerHTML = blog.blog.replace(
+  document.getElementById("contentModalBody").innerHTML = blogContent.replace(
     /\n/g,
     "<br>"
   );
@@ -487,7 +628,19 @@ function copyBlogContent(index) {
   if (!blogs || !blogs[index]) return;
 
   const blog = blogs[index];
-  copyToClipboard(blog.blog);
+  let blogContent = blog.blog;
+  
+  // Handle case where blog content might be JSON string
+  if (typeof blogContent === 'string' && blogContent.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(blogContent);
+      blogContent = parsed.blog || blogContent;
+    } catch (e) {
+      // If parsing fails, use original content
+    }
+  }
+  
+  copyToClipboard(blogContent);
 }
 
 // Utility functions
@@ -831,7 +984,8 @@ function generateSocialFromDashboard() {
         socialTabInstance.show();
         
         setTimeout(() => {
-          loadContent('social');
+          // Load LinkedIn content by default
+          loadSocialContent('linkedin');
           refreshStats();
         }, 1000);
       } else {

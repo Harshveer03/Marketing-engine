@@ -54,7 +54,7 @@ class BlogGenerator:
             import os
             if os.path.exists(VECTOR_DB_DIR):
                 # Try to load with minimal embedding operations
-                self.embeddings = OllamaEmbeddingsEmbeddings(model=embedding_model)
+                self.embeddings = OllamaEmbeddings(model=embedding_model)
                 self.vectordb = FAISS.load_local(VECTOR_DB_DIR, self.embeddings, allow_dangerous_deserialization=True)
                 print("✅ Vector database loaded successfully")
             else:
@@ -248,6 +248,111 @@ class BlogGenerator:
         
         return "\n".join(context_parts)
 
+    def _clean_json_string(self, json_str):
+        """Clean JSON string to handle control characters and formatting issues"""
+        import json as json_module
+        
+        # First, try to find and extract just the JSON content
+        try:
+            # Remove any leading/trailing whitespace and non-JSON content
+            json_str = json_str.strip()
+            
+            # Find the actual JSON object boundaries
+            start = json_str.find('{')
+            end = json_str.rfind('}') + 1
+            
+            if start != -1 and end > start:
+                json_str = json_str[start:end]
+            
+            # Replace problematic characters that might break JSON parsing
+            # Handle unescaped newlines in strings
+            json_str = re.sub(r'(?<!\\)\n', '\\n', json_str)
+            json_str = re.sub(r'(?<!\\)\r', '\\r', json_str)
+            json_str = re.sub(r'(?<!\\)\t', '\\t', json_str)
+            
+            # Handle unescaped quotes (this is tricky, so we'll be conservative)
+            # Only replace quotes that are clearly not part of JSON structure
+            json_str = re.sub(r'(?<!\\)"(?=\w)', '\\"', json_str)
+            
+            return json_str
+            
+        except Exception as e:
+            print(f"Error cleaning JSON string: {e}")
+            return json_str
+    
+    def _extract_content_manually(self, response, topic):
+        """Manually extract content when JSON parsing fails"""
+        try:
+            print(f"🔧 Attempting manual content extraction for topic: {topic}")
+            
+            # Try to extract title
+            title_match = re.search(r'"title":\s*"([^"]*)"', response)
+            title = title_match.group(1) if title_match else topic
+            
+            # Try to extract blog content - improved regex to handle nested JSON
+            # Look for the blog content within the JSON structure
+            blog_match = re.search(r'"blog":\s*"(.*?)"\s*(?:,\s*"|\s*})', response, re.DOTALL)
+            if blog_match:
+                blog_content = blog_match.group(1)
+                # Clean up escaped characters
+                blog_content = blog_content.replace('\\"', '"').replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r')
+                print(f"✅ Successfully extracted blog content ({len(blog_content)} characters)")
+            else:
+                # Alternative approach: try to find content between blog field markers
+                blog_start = response.find('"blog": "')
+                if blog_start != -1:
+                    blog_start += len('"blog": "')
+                    # Find the end of the blog content (look for closing quote followed by comma or brace)
+                    blog_end = response.find('"}', blog_start)
+                    if blog_end == -1:
+                        blog_end = response.find('",', blog_start)
+                    if blog_end != -1:
+                        blog_content = response[blog_start:blog_end]
+                        blog_content = blog_content.replace('\\"', '"').replace('\\n', '\n').replace('\\t', '\t')
+                        print(f"✅ Extracted blog content using alternative method ({len(blog_content)} characters)")
+                    else:
+                        # Last resort: use the whole response but clean it up
+                        blog_content = response.strip()
+                        # Remove JSON structure markers
+                        blog_content = re.sub(r'^\{.*?"blog":\s*"', '', blog_content, flags=re.DOTALL)
+                        blog_content = re.sub(r'"\s*\}.*$', '', blog_content, flags=re.DOTALL)
+                        blog_content = blog_content.replace('\\"', '"').replace('\\n', '\n')
+                        print(f"⚠️ Used fallback extraction method ({len(blog_content)} characters)")
+                else:
+                    # If no blog field found, use the whole response
+                    blog_content = response.strip()
+                    print(f"⚠️ No blog field found, using entire response ({len(blog_content)} characters)")
+            
+            # Try to extract outline
+            outline_match = re.search(r'"outline":\s*\[(.*?)\]', response)
+            if outline_match:
+                outline_str = outline_match.group(1)
+                # Clean up the outline items
+                outline_items = []
+                for item in outline_str.split(','):
+                    clean_item = item.strip().strip('"').strip("'")
+                    if clean_item:
+                        outline_items.append(clean_item)
+                outline = outline_items if outline_items else ["Introduction", "Analysis", "Solutions", "Conclusion"]
+            else:
+                outline = ["Introduction", "Analysis", "Solutions", "Conclusion"]
+            
+            print(f"📝 Manual extraction complete - Title: {title}, Outline items: {len(outline)}")
+            
+            return {
+                "title": title,
+                "outline": outline,
+                "blog": blog_content
+            }
+            
+        except Exception as e:
+            print(f"❌ Error in manual content extraction: {e}")
+            return {
+                "title": topic,
+                "outline": ["Introduction", "Analysis", "Solutions", "Conclusion"],
+                "blog": "Content extraction failed. Please regenerate this blog post."
+            }
+
     # ---------- Blog Generation ----------
     def generate_blog(self, topic, news_items, niche, pdf_context):
         # Ensure niche is a dictionary
@@ -320,6 +425,8 @@ class BlogGenerator:
             match = re.search(r"\{.*\}", response, re.DOTALL)
             if match:
                 json_str = match.group()
+                # Clean the JSON string to handle control characters
+                json_str = self._clean_json_string(json_str)
                 data = json.loads(json_str)
             else:
                 # Fallback if no JSON found
@@ -331,12 +438,8 @@ class BlogGenerator:
         except json.JSONDecodeError as e:
             print(f"⚠️ JSON parsing error: {e}")
             print(f"Raw response: {response[:500]}...")
-            # Fallback with safe data
-            data = {
-                "title": topic,
-                "outline": ["Introduction", "Analysis", "Solutions", "Conclusion"],
-                "blog": response.strip()
-            }
+            # Try to extract content manually as fallback
+            data = self._extract_content_manually(response, topic)
         
         return data
     
@@ -422,6 +525,8 @@ class BlogGenerator:
             match = re.search(r"\{.*\}", response, re.DOTALL)
             if match:
                 json_str = match.group()
+                # Clean the JSON string to handle control characters
+                json_str = self._clean_json_string(json_str)
                 data = json.loads(json_str)
             else:
                 # Fallback if no JSON found
@@ -433,12 +538,8 @@ class BlogGenerator:
         except json.JSONDecodeError as e:
             print(f"⚠️ JSON parsing error: {e}")
             print(f"Raw response: {response[:500]}...")
-            # Fallback with safe data
-            data = {
-                "title": topic,
-                "outline": ["Introduction", "Analysis", "Solutions", "Conclusion"],
-                "blog": response.strip()
-            }
+            # Try to extract content manually as fallback
+            data = self._extract_content_manually(response, topic)
         
         return data
     

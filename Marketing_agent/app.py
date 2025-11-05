@@ -515,7 +515,8 @@ def generate_social_with_selection():
             "hashtags": linkedin.get("hashtags", []),
             "industry": industry,
             "tone": tone,
-            "audience": audience
+            "audience": audience,
+            "timestamp": datetime.now().isoformat()
         }
         
         twitter_data = {
@@ -524,7 +525,8 @@ def generate_social_with_selection():
             "hashtags": twitter.get("hashtags", []),
             "industry": industry,
             "tone": tone,
-            "audience": audience
+            "audience": audience,
+            "timestamp": datetime.now().isoformat()
         }
         
         youtube_data = {
@@ -534,7 +536,8 @@ def generate_social_with_selection():
             "hashtags": youtube.get("tags", []),
             "industry": industry,
             "tone": tone,
-            "audience": audience
+            "audience": audience,
+            "timestamp": datetime.now().isoformat()
         }
         
         print(f"💾 Saving content for topic: '{topic_title}'")

@@ -445,20 +445,23 @@ class ContentPipeline:
         linkedin_data = {
             "title": selected_topic["title"],
             "caption": linkedin.get("caption", ""),
-            "hashtags": linkedin.get("hashtags", [])
+            "hashtags": linkedin.get("hashtags", []),
+            "timestamp": datetime.now().isoformat()
         }
 
         twitter_data = {
             "title": selected_topic["title"],
             "caption": twitter.get("tweet", ""),
-            "hashtags": twitter.get("hashtags", [])
+            "hashtags": twitter.get("hashtags", []),
+            "timestamp": datetime.now().isoformat()
         }
 
         youtube_data = {
             "title": selected_topic["title"],
             "script_intro": youtube.get("script_intro", ""),
             "caption": youtube.get("description", ""),
-            "hashtags": youtube.get("tags", [])
+            "hashtags": youtube.get("tags", []),
+            "timestamp": datetime.now().isoformat()
         }
 
         self.append_json(os.path.join(OUTPUT_DIR, "linkedin.json"), linkedin_data)

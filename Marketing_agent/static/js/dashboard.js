@@ -10,12 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log('Dashboard JavaScript loaded - Version 2025-11-04 16:30');
   initializeDashboard();
   setupEventListeners();
-  
+
   // Load initial content
   setTimeout(() => {
     loadContent("blogs");
   }, 500);
-  
+
   // Add event listeners for main tab clicks
   document.querySelectorAll('#contentTabs [data-bs-toggle="tab"]').forEach((tab) => {
     tab.addEventListener("shown.bs.tab", function (e) {
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
       loadSocialContent(target);
     });
   });
-  
+
   // Refresh stats on page load to ensure they're current
   setTimeout(() => {
     refreshStats();
@@ -107,7 +107,7 @@ function generateContent(type) {
     showBlogTopicSelection();
     return;
   }
-  
+
   const button = event.target;
   const originalText = button.innerHTML;
 
@@ -256,7 +256,7 @@ function renderBlogs(data) {
             // If parsing fails, use original content
           }
         }
-        
+
         return `
         <div class="card content-card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -265,8 +265,8 @@ function renderBlogs(data) {
             </div>
             <div class="card-body">
                 <p class="card-text">${escapeHtml(
-        blogContent.substring(0, 300)
-      )}...</p>
+          blogContent.substring(0, 300)
+        )}...</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <button class="btn btn-sm btn-outline-primary" onclick="showBlogModal(${index})">
                         <i class="fas fa-eye me-1"></i>Read Full Post
@@ -302,9 +302,10 @@ function renderSocialContent(data) {
         platform.slice(1)
         }
                         </h6>
-                        <small class="text-muted">${escapeHtml(
-          post.title
-        )}</small>
+                        <small class="text-muted">
+                            ${escapeHtml(post.title)}
+                            ${post.timestamp ? ` | ${formatDate(post.timestamp)}` : ''}
+                        </small>
                     </div>
                     <div class="card-body">
                         <p class="card-text">${escapeHtml(post.caption)}</p>
@@ -341,7 +342,7 @@ function renderSocialContent(data) {
 
 function loadSocialContent(platform) {
   const contentDiv = document.getElementById(`${platform}-content`);
-  
+
   // Show loading spinner
   contentDiv.innerHTML = `
     <div class="text-center">
@@ -376,15 +377,16 @@ function loadSocialContent(platform) {
               <small class="text-muted">
                 <i class="fab fa-${platform} me-1"></i>
                 ${platform.charAt(0).toUpperCase() + platform.slice(1)}
+                ${post.timestamp ? ` | ${formatDate(post.timestamp)}` : ''}
               </small>
             </div>
             <div class="card-body">
               <p class="card-text">${escapeHtml(post.caption)}</p>
               ${post.hashtags ? `
                 <div class="mt-2">
-                  ${post.hashtags.map(tag => 
-                    `<span class="badge bg-primary me-1">${escapeHtml(tag)}</span>`
-                  ).join('')}
+                  ${post.hashtags.map(tag =>
+          `<span class="badge bg-primary me-1">${escapeHtml(tag)}</span>`
+        ).join('')}
                 </div>
               ` : ''}
               ${post.script_intro ? `
@@ -601,7 +603,7 @@ function showBlogModal(index) {
 
   const blog = blogs[index];
   let blogContent = blog.blog;
-  
+
   // Handle case where blog content might be JSON string
   if (typeof blogContent === 'string' && blogContent.startsWith('{')) {
     try {
@@ -611,7 +613,7 @@ function showBlogModal(index) {
       // If parsing fails, use original content
     }
   }
-  
+
   const modal = new bootstrap.Modal(
     document.getElementById("contentModal") || createContentModal()
   );
@@ -629,7 +631,7 @@ function copyBlogContent(index) {
 
   const blog = blogs[index];
   let blogContent = blog.blog;
-  
+
   // Handle case where blog content might be JSON string
   if (typeof blogContent === 'string' && blogContent.startsWith('{')) {
     try {
@@ -639,7 +641,7 @@ function copyBlogContent(index) {
       // If parsing fails, use original content
     }
   }
-  
+
   copyToClipboard(blogContent);
 }
 
@@ -826,18 +828,18 @@ function createToastContainer() {
 // Dashboard Topic Selection Functions
 function showTopicSelection() {
   console.log('showTopicSelection called - showing on dashboard');
-  
+
   // Show the topic selection section
   const topicSection = document.getElementById('topicSelectionSection');
   topicSection.classList.remove('d-none');
-  
+
   // Scroll to the section
   topicSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  
+
   // Show loading state
   document.getElementById('topicLoading').classList.remove('d-none');
   document.getElementById('topicSelectionContent').classList.add('d-none');
-  
+
   // Load topics
   fetch('/generate_topics')
     .then(response => response.json())
@@ -845,14 +847,14 @@ function showTopicSelection() {
       if (data.success) {
         const topicList = document.getElementById('topicList');
         topicList.innerHTML = ''; // Clear existing content
-        
+
         // Debug: Log the topics we received
         console.log('📋 Received topics:', data.topics);
-        
+
         data.topics.forEach((topic, index) => {
           const relatedCount = topic.related_news ? topic.related_news.length : 0;
           console.log(`📝 Topic ${index}: ${topic.title}`);
-          
+
           topicList.innerHTML += `
             <div class="card mb-3 topic-card" style="cursor: pointer;" onclick="selectTopic(${index})">
               <div class="card-body">
@@ -869,14 +871,14 @@ function showTopicSelection() {
             </div>
           `;
         });
-        
+
         // Set default industry based on current niche (if available)
         setDefaultIndustry();
-        
+
         // Show content and hide loading
         document.getElementById('topicLoading').classList.add('d-none');
         document.getElementById('topicSelectionContent').classList.remove('d-none');
-        
+
       } else {
         showToast('error', data.error || 'Failed to load topics');
         hideTopicSelection();
@@ -890,24 +892,24 @@ function showTopicSelection() {
 
 function selectTopic(index) {
   console.log(`🎯 User selected topic index: ${index}`);
-  
+
   // Select the radio button
   const radio = document.getElementById(`dashboardTopic${index}`);
   radio.checked = true;
-  
+
   // Debug: Log the selected topic details
   const topicTitle = radio.closest('.topic-card').querySelector('h6').textContent;
   console.log(`📝 Selected topic title: "${topicTitle}"`);
-  
+
   // Remove selected class from all cards
   document.querySelectorAll('.topic-card').forEach(card => {
     card.classList.remove('border-success', 'bg-light');
   });
-  
+
   // Add selected class to clicked card
   const selectedCard = radio.closest('.topic-card');
   selectedCard.classList.add('border-success', 'bg-light');
-  
+
   // Enable generate button
   document.getElementById('generateSocialBtn').disabled = false;
 }
@@ -915,13 +917,13 @@ function selectTopic(index) {
 function hideTopicSelection() {
   const topicSection = document.getElementById('topicSelectionSection');
   topicSection.classList.add('d-none');
-  
+
   // Reset form
   document.querySelectorAll('input[name="dashboardTopic"]').forEach(radio => {
     radio.checked = false;
   });
   document.getElementById('generateSocialBtn').disabled = true;
-  
+
   // Remove selected styling
   document.querySelectorAll('.topic-card').forEach(card => {
     card.classList.remove('border-success', 'bg-light');
@@ -933,20 +935,20 @@ function generateSocialFromDashboard() {
   const industry = document.getElementById('industrySelect').value;
   const tone = document.getElementById('toneSelect').value;
   const audience = document.getElementById('audienceSelect').value;
-  
+
   if (!selectedTopic) {
     showToast('error', 'Please select a topic');
     return;
   }
-  
+
   // Show loading state
   const generateBtn = document.getElementById('generateSocialBtn');
   const originalText = generateBtn.innerHTML;
   generateBtn.disabled = true;
   generateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
-  
+
   showToast('info', `Generating social content for ${industry}... This may take a few moments.`);
-  
+
   // Debug: Log what we're sending
   const requestData = {
     topic_index: parseInt(selectedTopic.value),
@@ -954,11 +956,11 @@ function generateSocialFromDashboard() {
     tone: tone,
     audience: audience
   };
-  
+
   console.log('🚀 Sending request:', requestData);
   console.log('📝 Selected topic element:', selectedTopic);
   console.log('🔢 Topic index:', selectedTopic.value);
-  
+
   // Generate content with selections
   fetch('/generate_social_with_selection', {
     method: 'POST',
@@ -971,18 +973,18 @@ function generateSocialFromDashboard() {
     .then(data => {
       generateBtn.disabled = false;
       generateBtn.innerHTML = originalText;
-      
+
       if (data.success) {
         showToast('success', 'Social content generated successfully!');
-        
+
         // Hide topic selection
         hideTopicSelection();
-        
+
         // Switch to social tab and refresh content
         const socialTab = document.getElementById('social-tab');
         const socialTabInstance = new bootstrap.Tab(socialTab);
         socialTabInstance.show();
-        
+
         setTimeout(() => {
           // Load LinkedIn content by default
           loadSocialContent('linkedin');
@@ -1004,7 +1006,7 @@ function setDefaultIndustry() {
   // Map common business contexts to industry options
   const industryMappings = {
     'saas': 'IT & Dev',
-    'software': 'IT & Dev', 
+    'software': 'IT & Dev',
     'technology': 'IT & Dev',
     'fintech': 'Fintech',
     'finance': 'Fintech',
@@ -1024,24 +1026,24 @@ function setDefaultIndustry() {
     'agriculture': 'Agritech',
     'government': 'Government'
   };
-  
+
   // Try to detect industry from page content or use default
   const pageText = document.body.textContent.toLowerCase();
   let detectedIndustry = 'IT & Dev'; // Default
-  
+
   for (const [keyword, industry] of Object.entries(industryMappings)) {
     if (pageText.includes(keyword)) {
       detectedIndustry = industry;
       break;
     }
   }
-  
+
   // Set the detected industry as selected for both social and blog
   const industrySelect = document.getElementById('industrySelect');
   if (industrySelect) {
     industrySelect.value = detectedIndustry;
   }
-  
+
   const blogIndustrySelect = document.getElementById('blogIndustrySelect');
   if (blogIndustrySelect) {
     blogIndustrySelect.value = detectedIndustry;
@@ -1051,22 +1053,22 @@ function setDefaultIndustry() {
 // Blog Topic Selection Functions
 function showBlogTopicSelection() {
   console.log('showBlogTopicSelection called - showing on dashboard');
-  
+
   // Hide social topic selection if it's open
   const socialTopicSection = document.getElementById('topicSelectionSection');
   socialTopicSection.classList.add('d-none');
-  
+
   // Show the blog topic selection section
   const blogTopicSection = document.getElementById('blogTopicSelectionSection');
   blogTopicSection.classList.remove('d-none');
-  
+
   // Scroll to the section
   blogTopicSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  
+
   // Show loading state
   document.getElementById('blogTopicLoading').classList.remove('d-none');
   document.getElementById('blogTopicSelectionContent').classList.add('d-none');
-  
+
   // Load topics
   fetch('/generate_topics')
     .then(response => response.json())
@@ -1074,14 +1076,14 @@ function showBlogTopicSelection() {
       if (data.success) {
         const topicList = document.getElementById('blogTopicList');
         topicList.innerHTML = ''; // Clear existing content
-        
+
         // Debug: Log the topics we received
         console.log('📋 Received blog topics:', data.topics);
-        
+
         data.topics.forEach((topic, index) => {
           const relatedCount = topic.related_news ? topic.related_news.length : 0;
           console.log(`📝 Blog Topic ${index}: ${topic.title}`);
-          
+
           topicList.innerHTML += `
             <div class="card mb-3 blog-topic-card" style="cursor: pointer;" onclick="selectBlogTopic(${index})">
               <div class="card-body">
@@ -1098,14 +1100,14 @@ function showBlogTopicSelection() {
             </div>
           `;
         });
-        
+
         // Set default industry based on current business context
         setDefaultIndustry();
-        
+
         // Show content and hide loading
         document.getElementById('blogTopicLoading').classList.add('d-none');
         document.getElementById('blogTopicSelectionContent').classList.remove('d-none');
-        
+
       } else {
         showToast('error', data.error || 'Failed to load topics');
         hideBlogTopicSelection();
@@ -1119,24 +1121,24 @@ function showBlogTopicSelection() {
 
 function selectBlogTopic(index) {
   console.log(`🎯 User selected blog topic index: ${index}`);
-  
+
   // Select the radio button
   const radio = document.getElementById(`dashboardBlogTopic${index}`);
   radio.checked = true;
-  
+
   // Debug: Log the selected topic details
   const topicTitle = radio.closest('.blog-topic-card').querySelector('h6').textContent;
   console.log(`📝 Selected blog topic title: "${topicTitle}"`);
-  
+
   // Remove selected class from all cards
   document.querySelectorAll('.blog-topic-card').forEach(card => {
     card.classList.remove('border-primary', 'bg-light');
   });
-  
+
   // Add selected class to clicked card
   const selectedCard = radio.closest('.blog-topic-card');
   selectedCard.classList.add('border-primary', 'bg-light');
-  
+
   // Enable generate button
   document.getElementById('generateBlogBtn').disabled = false;
 }
@@ -1144,13 +1146,13 @@ function selectBlogTopic(index) {
 function hideBlogTopicSelection() {
   const blogTopicSection = document.getElementById('blogTopicSelectionSection');
   blogTopicSection.classList.add('d-none');
-  
+
   // Reset form
   document.querySelectorAll('input[name="dashboardBlogTopic"]').forEach(radio => {
     radio.checked = false;
   });
   document.getElementById('generateBlogBtn').disabled = true;
-  
+
   // Remove selected styling
   document.querySelectorAll('.blog-topic-card').forEach(card => {
     card.classList.remove('border-primary', 'bg-light');
@@ -1162,20 +1164,20 @@ function generateBlogFromDashboard() {
   const industry = document.getElementById('blogIndustrySelect').value;
   const tone = document.getElementById('blogToneSelect').value;
   const audience = document.getElementById('blogAudienceSelect').value;
-  
+
   if (!selectedTopic) {
     showToast('error', 'Please select a topic');
     return;
   }
-  
+
   // Show loading state
   const generateBtn = document.getElementById('generateBlogBtn');
   const originalText = generateBtn.innerHTML;
   generateBtn.disabled = true;
   generateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
-  
+
   showToast('info', `Generating blog content for ${industry}... This may take a few moments.`);
-  
+
   // Debug: Log what we're sending
   const requestData = {
     topic_index: parseInt(selectedTopic.value),
@@ -1183,11 +1185,11 @@ function generateBlogFromDashboard() {
     tone: tone,
     audience: audience
   };
-  
+
   console.log('🚀 Sending blog request:', requestData);
   console.log('📝 Selected blog topic element:', selectedTopic);
   console.log('🔢 Blog topic index:', selectedTopic.value);
-  
+
   // Generate content with selections
   fetch('/generate_blog_with_selection', {
     method: 'POST',
@@ -1200,18 +1202,18 @@ function generateBlogFromDashboard() {
     .then(data => {
       generateBtn.disabled = false;
       generateBtn.innerHTML = originalText;
-      
+
       if (data.success) {
         showToast('success', 'Blog content generated successfully!');
-        
+
         // Hide topic selection
         hideBlogTopicSelection();
-        
+
         // Switch to blogs tab and refresh content
         const blogsTab = document.getElementById('blogs-tab');
         const blogsTabInstance = new bootstrap.Tab(blogsTab);
         blogsTabInstance.show();
-        
+
         setTimeout(() => {
           loadContent('blogs');
           refreshStats();

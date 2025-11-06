@@ -1,132 +1,218 @@
 {
-    "industry": "Deep B2B SaaS Go-To-Market",
+    "industry": "GTM Behavior Rewiring System",
     "target_audience": [
-        "Founders of early-stage B2B SaaS companies",
-        "GTM Leaders in lean sales teams",
-        "Sales Teams in conversation-heavy environments"
+        "B2B SaaS Founders leading sales",
+        "AEs in Product-Led Growth companies",
+        "GTM Leaders in lean B2B SaaS teams"
     ],
     "customer_pain_points": [
         {
-            "challenge": "Traditional GTM strategies are failing to deliver results in modern SaaS environments.",
+            "challenge": "Founder-Led Sales is breaking and cannot scale",
             "why": [
                 {
-                    "cause": "Over-reliance on outdated GTM methods",
-                    "explanation": "The conventional model of scaling GTM through brute-force SDR hiring, generic playbooks, and manual RevOps analysis is no longer effective. This leads to inefficient resource allocation and a lack of adaptability in competitive, technologically mature markets.",
+                    "cause": "Lack of scalable GTM behavior system",
+                    "explanation": "Founders cannot scale themselves, leading to a lack of trust in the rep layer and resulting in buyers being ghosted and confused.",
                     "indicators": [
-                        "High GTM team churn",
-                        "Stagnant or declining conversion rates from outbound efforts",
-                        "Prolonged sales cycles",
-                        "Significant investment in GTM activities yielding diminishing returns"
+                        "Founder-Led Sales Is Breaking",
+                        "can’t scale themselves",
+                        "don’t trust the rep layer",
+                        "ghosted and confused"
                     ],
-                    "recommended_first_checks": [
-                        "Analyze current SDR performance metrics and retention rates",
-                        "Review the last 6 months of sales playbook effectiveness and adoption",
-                        "Assess the actual impact of RevOps efforts on funnel optimization and efficiency"
-                    ]
+                    "recommended_first_checks": []
                 }
             ]
         },
         {
-            "challenge": "Difficulty translating GTM data into actionable intelligence and improved execution.",
+            "challenge": "New AEs in Product-Led Growth companies use ineffective, outdated scripts",
             "why": [
                 {
-                    "cause": "Underleveraged GTM data from existing tech stack",
-                    "explanation": "Companies invest in advanced GTM tools (e.g., Gong, Fireflies, Clari) that generate vast amounts of data. However, without a systematic way to interpret this data into concrete, actionable insights and behavioral changes, it remains raw information, exposing problems without providing solutions.",
+                    "cause": "Reliance on outdated sales scripts in PLG environments",
+                    "explanation": "New AEs bring traditional sales scripts that are not adapted to Product-Led Growth buyer psychology, leading to constant questions about appropriate messaging.",
                     "indicators": [
-                        "GTM dashboards showing metrics without clear next steps or prescriptive guidance",
-                        "GTM teams not consistently applying data insights to refine strategies or behaviors",
-                        "Tools used primarily for reporting rather than for real-time behavioral coaching or optimization"
+                        "New AE Joins a Product-Led Company",
+                        "bring old scripts that don’t work",
+                        "ask “what should I say here?” constantly"
                     ],
-                    "recommended_first_checks": [
-                        "Evaluate how GTM data is currently analyzed and acted upon by teams",
-                        "Survey GTM teams on their ability to translate data insights into specific, measurable actions",
-                        "Review the ROI of existing GTM tech stack investments beyond basic reporting capabilities"
-                    ]
+                    "recommended_first_checks": []
                 }
             ]
         },
         {
-            "challenge": "Inability to scale high-quality GTM support and operationalize insights effectively.",
+            "challenge": "Outbound Reply Rate is below 1% with no clear understanding of failure points",
             "why": [
                 {
-                    "cause": "Fragmented GTM support ecosystem",
-                    "explanation": "Despite an 'overload of GTM possibilities,' companies face a 'deficit of execution.' Existing players like advisors, tech stack vendors, and agencies offer piecemeal solutions (e.g., diagnosis without embedding, execution without system intelligence, content creation without data-driven rewrites), failing to provide a cohesive, scalable system for GTM improvement.",
+                    "cause": "Unidentified GTM sequence failures",
+                    "explanation": "Teams lack insight into specific failures in personalization, CTA, tone, or length of outbound sequences, preventing learning and iteration from sequence results.",
                     "indicators": [
-                        "Founders struggling to implement GTM advice or operationalize strategic ideas",
-                        "Reliance on multiple disconnected vendors for various GTM functions (e.g., SDR agencies, copywriting, RevOps consultants)",
-                        "GTM assets (messaging, playbooks) not evolving consistently based on real-world performance data"
+                        "Outbound Reply Rate Is <1%",
+                        "No clue what’s failing — personalization, CTA, tone, length?",
+                        "Nobody is learning from the sequence results"
                     ],
-                    "recommended_first_checks": [
-                        "Map out all current GTM vendors/advisors and their specific contributions and integration points",
-                        "Assess the consistency and data-driven evolution of GTM messaging across different channels",
-                        "Review the internal process for updating GTM playbooks and content based on market feedback and performance"
-                    ]
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Pipeline Forecast is based on subjective 'Vibes' instead of data",
+            "why": [
+                {
+                    "cause": "Absence of data-driven GTM behavior insights",
+                    "explanation": "Forecasting relies on subjective 'vibes' rather than concrete data from sales interactions, leading to unpredictable revenue outcomes.",
+                    "indicators": [
+                        "Pipeline Forecast Is Based on “Vibes”"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Repeating GTM mistakes without knowing where buyers drop off or what reps should have said",
+            "why": [
+                {
+                    "cause": "Lack of granular GTM behavior analysis and prescriptive guidance",
+                    "explanation": "Teams repeat GTM mistakes because they lack specific insights into where buyers drop off, why messages fail, or what reps should have said instead, leading to lost momentum.",
+                    "indicators": [
+                        "nobody knows where the buyer dropped off",
+                        "why your message didn’t land",
+                        "what your rep should’ve said instead",
+                        "buyer dropped off",
+                        "message didn’t land"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Inability to make GTM changes stick despite coaching or playbooks",
+            "why": [
+                {
+                    "cause": "Absence of a systemic execution rewiring mechanism",
+                    "explanation": "Teams have failed to make behavioral changes stick because existing solutions like coaching or playbooks lack a system for real-time, performance-critical content rewriting and drilling.",
+                    "indicators": [
+                        "Our team is not very coachable",
+                        "We’ve tried playbooks, templates, coaching…",
+                        "Reps are polite, but buyers still ghost",
+                        "We’re not sure what to fix anymore"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Over-reliance on insight-only tools like Gong without actionable execution",
+            "why": [
+                {
+                    "cause": "Misconception that insight equals solution",
+                    "explanation": "Companies assume tools like Gong provide the full solution, but they only show what happened, not what should have happened or how to rewrite it for execution.",
+                    "indicators": [
+                        "We already have Gong",
+                        "Gong shows you what happened"
+                    ],
+                    "recommended_first_checks": []
                 }
             ]
         }
     ],
     "customer_needs": [
         {
-            "need": "A systematic approach to decode, rewire, and execute revenue-first GTM.",
+            "need": "Systematic GTM behavior rewiring for lean B2B SaaS teams to fix critical sales interaction moments",
             "how": [
                 {
-                    "approach": "High-context, insight-layer GTM system",
-                    "details": "KLYRR provides an integrated system that moves beyond generic enablement, offering deep analysis of GTM conversations, assets, and behaviors. It focuses on identifying high-leverage areas for improvement and implementing changes directly within the GTM workflow to drive revenue.",
+                    "approach": "GTM Behavior Rewiring System",
+                    "details": "KLYRR provides a GTM behavior rewiring system that includes call behavior scoring, timestamp rewrites, decision signal detection, VoiceGPT drills, async practice, weekly rep challenges, call/email scoring, a coaching protocol, and behavior evolution tracking.",
                     "measurable_signs": [
-                        "Demonstrable improvements in key revenue metrics (e.g., ARR, ACV)",
-                        "Increased GTM team efficiency and productivity",
-                        "Faster adaptation to market changes and competitive pressures",
-                        "Enhanced clarity and alignment in GTM strategy"
+                        "Team performance becomes predictable, observable",
+                        "Rep fluency becomes a source of pipeline reliability",
+                        "Trust, confidence, urgency — felt at every touchpoint",
+                        "Prospects convert faster and earlier"
                     ],
                     "first_deliverables": [
-                        "A diagnostic report identifying critical GTM system gaps and opportunities",
-                        "A prioritized roadmap for GTM rewiring and optimization",
-                        "Initial implementation of data-driven GTM asset optimizations (e.g., messaging rewrites)"
+                        "Call behavior scoring",
+                        "timestamp rewrites",
+                        "decision signal detection",
+                        "VoiceGPT drills",
+                        "async practice",
+                        "weekly rep challenges",
+                        "Call/email scoring",
+                        "coaching protocol",
+                        "behavior evolution tracking",
+                        "cold email reframes",
+                        "discovery scoring",
+                        "messaging system"
                     ]
                 }
             ]
         },
         {
-            "need": "Transform raw GTM data into actionable intelligence for performance improvement.",
+            "need": "Actionable, real-time rewrites of rep phrasing based on actual call transcripts",
             "how": [
                 {
-                    "approach": "Data interpretation and action layer for GTM tech stack",
-                    "details": "KLYRR integrates with existing GTM tools (e.g., Gong, Fireflies, Clari, Apollo) to extract, interpret, and act on underleveraged data. This involves analyzing call recordings, CRM data, and other GTM signals to provide specific, prescriptive guidance for GTM teams.",
+                    "approach": "Transcript-based Execution Rewiring",
+                    "details": "KLYRR listens to calls, provides rewrites based on real transcripts, and drills them until they stick, ensuring reps know what to say instead of just getting coaching notes.",
                     "measurable_signs": [
-                        "Improved conversion rates at each funnel stage",
-                        "Reduction in average sales cycle length",
-                        "Higher win rates for qualified opportunities",
-                        "Increased GTM team productivity per rep"
+                        "changes what the buyer hears",
+                        "rep fluency becomes a source of pipeline reliability"
                     ],
                     "first_deliverables": [
-                        "A customized dashboard highlighting critical GTM performance insights",
-                        "Specific recommendations for optimizing sales conversations and outreach",
-                        "A framework for continuous data-driven GTM adjustments and experimentation"
+                        "rewrites based on our real transcripts",
+                        "timestamp rewrites",
+                        "VoiceGPT drills"
                     ]
                 }
             ]
         },
         {
-            "need": "Enhance GTM team capabilities through continuous, data-driven coaching and practice.",
+            "need": "Improved outbound reply rates and continuous learning from GTM sequence results",
             "how": [
                 {
-                    "approach": "Integrated GTM performance and feedback system",
-                    "details": "KLYRR implements a system featuring transcript intelligence for call behavior scoring and decision signal detection, a drill layer for async practice and VoiceGPT drills, and a feedback system for call/email scoring and coaching. This ensures GTM reps continuously evolve their behaviors based on performance data.",
+                    "approach": "Performance-Critical Content Rewriting",
+                    "details": "KLYRR rewrites performance-critical content like cold emails, identifying and fixing failures in personalization, CTA, tone, or length, enabling learning from sequence results to increase reply rates.",
                     "measurable_signs": [
-                        "Measurable improvements in rep call behavior scores and adherence to best practices",
-                        "Increased buyer confidence and urgency signals detected in conversations",
-                        "Higher rates of successful objection handling and value articulation",
-                        "Consistent application of data-backed messaging and frameworks"
+                        "Outbound Reply Rate increase",
+                        "Prospects convert faster and earlier"
                     ],
                     "first_deliverables": [
-                        "Initial behavioral scoring and personalized coaching feedback for GTM reps",
-                        "Tailored practice drills addressing specific skill gaps identified from data",
-                        "A protocol for ongoing performance tracking, review, and coaching"
+                        "cold email reframes",
+                        "analysis of failing outbound sequence elements"
+                    ]
+                }
+            ]
+        },
+        {
+            "need": "Predictable pipeline forecasting driven by observable GTM performance and rep fluency",
+            "how": [
+                {
+                    "approach": "VoiceGPT Drills & Messaging System",
+                    "details": "KLYRR's VoiceGPT drills and messaging system ensure rep fluency and consistent GTM behaviors, making team performance predictable and observable, thus enabling more reliable pipeline forecasts.",
+                    "measurable_signs": [
+                        "Team performance becomes predictable, observable",
+                        "Rep fluency becomes a source of pipeline reliability"
+                    ],
+                    "first_deliverables": [
+                        "VoiceGPT drill reports",
+                        "messaging system adherence scores"
+                    ]
+                }
+            ]
+        },
+        {
+            "need": "A system that anchors buyers on risk and urgency, not just features",
+            "how": [
+                {
+                    "approach": "Buyer Perception Optimization",
+                    "details": "KLYRR's rewiring focuses on influencing the buyer’s perception of risk, urgency, and confidence in the rep at every touchpoint, moving conversations beyond mere feature discussions.",
+                    "measurable_signs": [
+                        "buyer’s perception of risk, urgency, and confidence in the rep",
+                        "Trust, confidence, urgency — felt at every touchpoint"
+                    ],
+                    "first_deliverables": [
+                        "call behavior scoring",
+                        "decision signal detection"
                     ]
                 }
             ]
         }
     ],
-    "value_proposition": "KLYRR provides a unique system that decodes, rewires, and executes revenue-first GTM by transforming underleveraged data into actionable intelligence across conversations, assets, and behaviors.",
-    "brand_tone": "Strategic, Analytical, Direct, Assertive, Insight-driven"
+    "value_proposition": "KLYRR is a GTM behavior rewiring system that fixes critical sales interaction moments, transforming rep fluency and buyer perception to drive predictable revenue outcomes for lean B2B SaaS teams.",
+    "brand_tone": "Pragmatic GTM Execution Authority"
 }

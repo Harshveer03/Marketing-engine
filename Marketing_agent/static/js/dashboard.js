@@ -428,7 +428,14 @@ function loadSocialContent(platform) {
 function renderTrends(data) {
   if (!Array.isArray(data)) return "";
 
-  return data
+  // Sort trends by similarity_score in descending order (highest to lowest)
+  const sortedData = data.sort((a, b) => {
+    const scoreA = a.similarity_score || 0;
+    const scoreB = b.similarity_score || 0;
+    return scoreB - scoreA; // Descending order
+  });
+
+  return sortedData
     .map(
       (trend) => `
         <div class="card content-card mb-3">
@@ -855,16 +862,24 @@ function showTopicSelection() {
           const relatedCount = topic.related_news ? topic.related_news.length : 0;
           console.log(`📝 Topic ${index}: ${topic.title}`);
 
+          const relevanceScore = topic.relevance_score || 0;
           topicList.innerHTML += `
             <div class="card mb-3 topic-card" style="cursor: pointer;" onclick="selectTopic(${index})">
               <div class="card-body">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="dashboardTopic" value="${index}" id="dashboardTopic${index}">
                   <label class="form-check-label w-100" for="dashboardTopic${index}">
-                    <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
-                    <small class="text-muted">
-                      <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
-                    </small>
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
+                        <small class="text-muted">
+                          <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
+                        </small>
+                      </div>
+                      <span class="badge bg-info">
+                        Score: ${Math.round(relevanceScore)}
+                      </span>
+                    </div>
                   </label>
                 </div>
               </div>
@@ -1084,16 +1099,24 @@ function showBlogTopicSelection() {
           const relatedCount = topic.related_news ? topic.related_news.length : 0;
           console.log(`📝 Blog Topic ${index}: ${topic.title}`);
 
+          const relevanceScore = topic.relevance_score || 0;
           topicList.innerHTML += `
             <div class="card mb-3 blog-topic-card" style="cursor: pointer;" onclick="selectBlogTopic(${index})">
               <div class="card-body">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="dashboardBlogTopic" value="${index}" id="dashboardBlogTopic${index}">
                   <label class="form-check-label w-100" for="dashboardBlogTopic${index}">
-                    <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
-                    <small class="text-muted">
-                      <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
-                    </small>
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
+                        <small class="text-muted">
+                          <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
+                        </small>
+                      </div>
+                      <span class="badge bg-info">
+                        Score: ${Math.round(relevanceScore)}
+                      </span>
+                    </div>
                   </label>
                 </div>
               </div>

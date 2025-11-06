@@ -142,5 +142,53 @@
             "engagement_rate": 0.024
         },
         "timestamp": "2025-11-05T07:29:24.413149"
+    },
+    {
+        "platform": "linkedin",
+        "title": "Future-proof GTM: Design winning strategies for 2025 growth.",
+        "metrics": {
+            "impressions": 13006,
+            "likes": 76,
+            "comments": 44,
+            "shares": 5,
+            "engagement_rate": 0.01
+        },
+        "timestamp": "2025-11-05T09:29:11.306538"
+    },
+    {
+        "platform": "twitter",
+        "title": "Future-proof GTM: Design winning strategies for 2025 growth.",
+        "metrics": {
+            "impressions": 17519,
+            "likes": 199,
+            "comments": 29,
+            "shares": 21,
+            "engagement_rate": 0.014
+        },
+        "timestamp": "2025-11-05T09:29:11.309962"
+    },
+    {
+        "platform": "youtube",
+        "title": "Future-proof GTM: Design winning strategies for 2025 growth.",
+        "metrics": {
+            "impressions": 17262,
+            "likes": 247,
+            "comments": 16,
+            "shares": 18,
+            "engagement_rate": 0.016
+        },
+        "timestamp": "2025-11-05T09:29:11.311816"
+    },
+    {
+        "platform": "blog",
+        "title": "Future-proof your GTM: New operating models for 2025 growth.",
+        "metrics": {
+            "impressions": 9133,
+            "likes": 67,
+            "comments": 36,
+            "shares": 26,
+            "engagement_rate": 0.014
+        },
+        "timestamp": "2025-11-05T09:29:11.313463"
     }
 ]

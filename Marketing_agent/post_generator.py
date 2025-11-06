@@ -149,6 +149,9 @@ class ContentPipeline:
         data = self.clean_response(response)
         topics = data.get("topics", [])
 
+        # Load niche data for relevance scoring
+        niche = self.load_json(NICHE_FILE)
+        
         for t in topics:
             t["related_news"] = [
                 n for n in news_list if any(
@@ -156,7 +159,13 @@ class ContentPipeline:
                     for word in t["title"].split()
                 )
             ][:5]
+            
+            # Calculate relevance score based on niche alignment and news relevance
+            t["relevance_score"] = self._calculate_topic_relevance(t, niche, news_list)
 
+        # Sort topics by relevance score (highest to lowest)
+        topics.sort(key=lambda x: x.get("relevance_score", 0), reverse=True)
+        
         return topics
 
     # ---------- Context Builders ----------
@@ -226,6 +235,51 @@ class ContentPipeline:
 
     def _format_needs(self, niche):
         return ', '.join([item['need'] for item in niche.get('customer_needs', [])])
+    
+    def _calculate_topic_relevance(self, topic, niche, news_list):
+        """Calculate relevance score for a topic based on niche alignment and news relevance"""
+        score = 0.0
+        topic_text = topic["title"].lower()
+        
+        # Score based on niche industry alignment (30% weight)
+        industry = niche.get("industry", "").lower()
+        if industry and any(word in topic_text for word in industry.split()):
+            score += 30
+        
+        # Score based on pain points alignment (25% weight)
+        pain_points = niche.get("customer_pain_points", [])
+        for pain in pain_points:
+            if isinstance(pain, dict):
+                challenge = pain.get("challenge", "").lower()
+                if challenge and any(word in topic_text for word in challenge.split() if len(word) > 3):
+                    score += 25
+                    break
+        
+        # Score based on customer needs alignment (20% weight)
+        needs = niche.get("customer_needs", [])
+        for need in needs:
+            if isinstance(need, dict):
+                need_text = need.get("need", "").lower()
+                if need_text and any(word in topic_text for word in need_text.split() if len(word) > 3):
+                    score += 20
+                    break
+        
+        # Score based on target audience alignment (15% weight)
+        target_audience = niche.get("target_audience", [])
+        for audience in target_audience:
+            if isinstance(audience, str) and any(word in topic_text for word in audience.lower().split() if len(word) > 3):
+                score += 15
+                break
+        
+        # Score based on related news quality and quantity (10% weight)
+        related_news_count = len(topic.get("related_news", []))
+        if related_news_count > 0:
+            # More related news = higher relevance
+            news_score = min(related_news_count * 2, 10)  # Cap at 10 points
+            score += news_score
+        
+        # Normalize score to 0-100 range
+        return min(score, 100)
 
     # ---------- Content Generation ----------
     def generate_linkedin(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):

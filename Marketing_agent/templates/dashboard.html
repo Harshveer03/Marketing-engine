@@ -55,20 +55,14 @@
         <div class="d-flex justify-content-between">
           <div>
             <h4 class="mb-0">
-              {% if performance and performance.summary and performance.summary.platforms %}
-                {% set platforms = performance.summary.platforms %}
-                {% set engagement_values = [] %}
-                {% for platform, data in platforms.items() %}
-                  {% if engagement_values.append(data.avg_engagement) %}{% endif %}
-                {% endfor %}
-                {% if engagement_values %}
-                  {{ "%.1f"|format((engagement_values|sum / engagement_values|length) * 100) }}%
-                {% else %}
-                  N/A
-                {% endif %}
-              {% else %}
-                N/A
-              {% endif %}
+              {% if performance and performance.summary and
+              performance.summary.platforms %} {% set platforms =
+              performance.summary.platforms %} {% set engagement_values = [] %}
+              {% for platform, data in platforms.items() %} {% if
+              engagement_values.append(data.avg_engagement) %}{% endif %} {%
+              endfor %} {% if engagement_values %} {{
+              "%.1f"|format((engagement_values|sum / engagement_values|length) *
+              100) }}% {% else %} N/A {% endif %} {% else %} N/A {% endif %}
             </h4>
             <p class="mb-0">Avg Engagement</p>
           </div>
@@ -145,9 +139,11 @@
           <div class="spinner-border text-success" role="status">
             <span class="visually-hidden">Generating topics...</span>
           </div>
-          <p class="mt-2 text-muted">Analyzing trends and generating topics...</p>
+          <p class="mt-2 text-muted">
+            Analyzing trends and generating topics...
+          </p>
         </div>
-        
+
         <!-- Topic Selection Content -->
         <div id="topicSelectionContent" class="d-none">
           <div class="row">
@@ -179,7 +175,7 @@
                   <option value="Government">Government</option>
                 </select>
               </div>
-              
+
               <div class="mb-3">
                 <label class="form-label">Tone:</label>
                 <select class="form-select" id="toneSelect">
@@ -188,7 +184,7 @@
                   <option value="bold">Bold</option>
                 </select>
               </div>
-              
+
               <div class="mb-3">
                 <label class="form-label">Target Audience:</label>
                 <select class="form-select" id="audienceSelect">
@@ -199,12 +195,22 @@
               </div>
             </div>
           </div>
-          
+
           <div class="d-flex justify-content-between align-items-center">
-            <button type="button" class="btn btn-outline-secondary" onclick="hideTopicSelection()">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              onclick="hideTopicSelection()"
+            >
               <i class="fas fa-times me-2"></i>Cancel
             </button>
-            <button type="button" class="btn btn-success" id="generateSocialBtn" disabled onclick="generateSocialFromDashboard()">
+            <button
+              type="button"
+              class="btn btn-success"
+              id="generateSocialBtn"
+              disabled
+              onclick="generateSocialFromDashboard()"
+            >
               <i class="fas fa-magic me-2"></i>Generate Social Content
             </button>
           </div>
@@ -229,9 +235,11 @@
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Generating topics...</span>
           </div>
-          <p class="mt-2 text-muted">Analyzing trends and generating topics...</p>
+          <p class="mt-2 text-muted">
+            Analyzing trends and generating topics...
+          </p>
         </div>
-        
+
         <!-- Topic Selection Content -->
         <div id="blogTopicSelectionContent" class="d-none">
           <div class="row">
@@ -263,7 +271,7 @@
                   <option value="Government">Government</option>
                 </select>
               </div>
-              
+
               <div class="mb-3">
                 <label class="form-label">Tone:</label>
                 <select class="form-select" id="blogToneSelect">
@@ -272,7 +280,7 @@
                   <option value="bold">Bold</option>
                 </select>
               </div>
-              
+
               <div class="mb-3">
                 <label class="form-label">Target Audience:</label>
                 <select class="form-select" id="blogAudienceSelect">
@@ -283,12 +291,22 @@
               </div>
             </div>
           </div>
-          
+
           <div class="d-flex justify-content-between align-items-center">
-            <button type="button" class="btn btn-outline-secondary" onclick="hideBlogTopicSelection()">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              onclick="hideBlogTopicSelection()"
+            >
               <i class="fas fa-times me-2"></i>Cancel
             </button>
-            <button type="button" class="btn btn-primary" id="generateBlogBtn" disabled onclick="generateBlogFromDashboard()">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="generateBlogBtn"
+              disabled
+              onclick="generateBlogFromDashboard()"
+            >
               <i class="fas fa-blog me-2"></i>Generate Blog Content
             </button>
           </div>
@@ -308,6 +326,18 @@
           id="contentTabs"
           role="tablist"
         >
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="trends-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#trends"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-chart-line me-2"></i>Trends
+            </button>
+          </li>
           <li class="nav-item" role="presentation">
             <button
               class="nav-link active"
@@ -332,18 +362,7 @@
               <i class="fas fa-share-alt me-2"></i>Social Media
             </button>
           </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="trends-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#trends"
-              type="button"
-              role="tab"
-            >
-              <i class="fas fa-chart-line me-2"></i>Trends
-            </button>
-          </li>
+
           <li class="nav-item" role="presentation">
             <button
               class="nav-link"
@@ -360,6 +379,18 @@
       </div>
       <div class="card-body">
         <div class="tab-content" id="contentTabsContent">
+          <!-- Trends Tab -->
+          <div class="tab-pane fade" id="trends" role="tabpanel">
+            <div id="trends-content">
+              <div class="text-center text-muted">
+                <i class="fas fa-chart-line fa-3x mb-3"></i>
+                <p>
+                  No trends data available. Click "Fetch Trends" to get the
+                  latest industry insights.
+                </p>
+              </div>
+            </div>
+          </div>
           <!-- Blogs Tab -->
           <div class="tab-pane fade show active" id="blogs" role="tabpanel">
             <div id="blogs-content">
@@ -378,7 +409,11 @@
             <!-- Social Media Sub-Navigation -->
             <div class="card mb-3">
               <div class="card-header p-0">
-                <ul class="nav nav-tabs card-header-tabs" id="socialTabs" role="tablist">
+                <ul
+                  class="nav nav-tabs card-header-tabs"
+                  id="socialTabs"
+                  role="tablist"
+                >
                   <li class="nav-item" role="presentation">
                     <button
                       class="nav-link active"
@@ -420,7 +455,11 @@
               <div class="card-body">
                 <div class="tab-content" id="socialTabsContent">
                   <!-- LinkedIn Content -->
-                  <div class="tab-pane fade show active" id="linkedin" role="tabpanel">
+                  <div
+                    class="tab-pane fade show active"
+                    id="linkedin"
+                    role="tabpanel"
+                  >
                     <div id="linkedin-content">
                       <div class="text-center text-muted">
                         <i class="fab fa-linkedin fa-3x mb-3"></i>
@@ -449,19 +488,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Trends Tab -->
-          <div class="tab-pane fade" id="trends" role="tabpanel">
-            <div id="trends-content">
-              <div class="text-center text-muted">
-                <i class="fas fa-chart-line fa-3x mb-3"></i>
-                <p>
-                  No trends data available. Click "Fetch Trends" to get the
-                  latest industry insights.
-                </p>
               </div>
             </div>
           </div>
@@ -542,14 +568,28 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="contentModalTitle">Blog Title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
       </div>
-      <div class="modal-body" id="contentModalBody" style="max-height: 70vh; overflow-y: auto;">
+      <div
+        class="modal-body"
+        id="contentModalBody"
+        style="max-height: 70vh; overflow-y: auto"
+      >
         Blog content will appear here...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="copyModalContent()">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="copyModalContent()"
+        >
           <i class="fas fa-copy me-1"></i>Copy Content
         </button>
       </div>
@@ -560,44 +600,48 @@
 <script>
   // Dashboard initialization - delegated to external JS file
   document.addEventListener("DOMContentLoaded", function () {
-    console.log('Dashboard template loaded, delegating to external JS...');
-    
+    console.log("Dashboard template loaded, delegating to external JS...");
+
     // The external dashboard.js file will handle all initialization
     // Just ensure we load the initial content after a short delay
     setTimeout(() => {
-      if (typeof loadContent === 'function') {
+      if (typeof loadContent === "function") {
         loadContent("blogs");
       }
     }, 500);
 
     // Add event listeners for main tab clicks
-    document.querySelectorAll('#contentTabs [data-bs-toggle="tab"]').forEach((tab) => {
-      tab.addEventListener("shown.bs.tab", function (e) {
-        const target = e.target.getAttribute("data-bs-target").substring(1);
-        console.log('Main tab clicked:', target);
-        if (target === "social") {
-          // Load LinkedIn content by default when social tab is opened
-          if (typeof loadSocialContent === 'function') {
-            loadSocialContent("linkedin");
+    document
+      .querySelectorAll('#contentTabs [data-bs-toggle="tab"]')
+      .forEach((tab) => {
+        tab.addEventListener("shown.bs.tab", function (e) {
+          const target = e.target.getAttribute("data-bs-target").substring(1);
+          console.log("Main tab clicked:", target);
+          if (target === "social") {
+            // Load LinkedIn content by default when social tab is opened
+            if (typeof loadSocialContent === "function") {
+              loadSocialContent("linkedin");
+            }
+          } else {
+            if (typeof loadContent === "function") {
+              loadContent(target);
+            }
           }
-        } else {
-          if (typeof loadContent === 'function') {
-            loadContent(target);
-          }
-        }
+        });
       });
-    });
 
     // Add event listeners for social sub-tab clicks
-    document.querySelectorAll('#socialTabs [data-bs-toggle="tab"]').forEach((tab) => {
-      tab.addEventListener("shown.bs.tab", function (e) {
-        const target = e.target.getAttribute("data-bs-target").substring(1);
-        console.log('Social sub-tab clicked:', target);
-        if (typeof loadSocialContent === 'function') {
-          loadSocialContent(target);
-        }
+    document
+      .querySelectorAll('#socialTabs [data-bs-toggle="tab"]')
+      .forEach((tab) => {
+        tab.addEventListener("shown.bs.tab", function (e) {
+          const target = e.target.getAttribute("data-bs-target").substring(1);
+          console.log("Social sub-tab clicked:", target);
+          if (typeof loadSocialContent === "function") {
+            loadSocialContent(target);
+          }
+        });
       });
-    });
   });
 
   // generateContent function is handled by external dashboard.js

@@ -629,11 +629,70 @@ def generate_blog_with_selection():
         print(f"💾 Saving blog for topic: '{blog_entry['title']}'")
         generator.append_json("./generated/content/blogs/blogs.json", blog_entry)
         
+        # Save the used topic to prevent duplicates
+        print(f"🔄 Starting to save used topic: '{selected_topic['title']}'")
+        used_topics_file = "./generated/topics/used_blog_topics.json"
+        print(f"📁 Creating directory for: {used_topics_file}")
+        os.makedirs(os.path.dirname(used_topics_file), exist_ok=True)
+        
+        used_topics = []
+        if os.path.exists(used_topics_file):
+            print(f"📖 Reading existing used topics from: {used_topics_file}")
+            with open(used_topics_file, "r", encoding="utf-8") as f:
+                try:
+                    used_topics = json.load(f)
+                    print(f"📊 Found {len(used_topics)} existing used topics")
+                except json.JSONDecodeError as e:
+                    print(f"⚠️ JSON decode error in used topics file: {e}")
+                    used_topics = []
+        else:
+            print(f"📄 Used topics file doesn't exist, will create new one")
+        
+        new_topic_entry = {"title": selected_topic['title'], "generated_on": datetime.now().isoformat()}
+        used_topics.append(new_topic_entry)
+        print(f"➕ Adding new topic entry: {new_topic_entry}")
+        
+        with open(used_topics_file, "w", encoding="utf-8") as f:
+            json.dump(used_topics, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Successfully saved used topic: '{selected_topic['title']}' to {used_topics_file}")
+        print(f"📊 Total used topics now: {len(used_topics)}")
+        
         return jsonify({'success': True, 'message': 'Blog content generated successfully', 'title': blog_entry['title']})
     except Exception as e:
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/generate_image_prompt', methods=['POST'])
+def generate_image_prompt():
+    """Generate optimized image prompt for blog content"""
+    try:
+        data = request.get_json()
+        content_type = data.get('type', 'blog')
+        content_data = data.get('data', {})
+        
+        print(f"📸 Generating image prompt for {content_type}")
+        print(f"📝 Content title: {content_data.get('title', 'N/A')}")
+        
+        if content_type == 'blog':
+            from image_prompt_builder import blog_image_prompt
+            prompt = blog_image_prompt(content_data)
+            
+            print(f"✅ Image prompt generated successfully")
+            return jsonify({
+                'success': True, 
+                'prompt': prompt,
+                'message': 'Image prompt generated successfully'
+            })
+        else:
+            return jsonify({'error': 'Invalid content type'}), 400
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"❌ Error generating image prompt: {e}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/reset')

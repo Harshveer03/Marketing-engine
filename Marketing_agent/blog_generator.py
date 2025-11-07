@@ -354,95 +354,6 @@ class BlogGenerator:
             }
 
     # ---------- Blog Generation ----------
-    def generate_blog(self, topic, news_items, niche, pdf_context):
-        # Ensure niche is a dictionary
-        if not isinstance(niche, dict):
-            print(f"⚠️ Warning: niche data is not a dictionary, got {type(niche)}")
-            niche = {}
-        
-        feedback_text = (
-            self.feedback.get("blog_feedback", "") + "\n" +
-            self.feedback.get("global_success_factors", "") + "\n" +
-            self.feedback.get("overall_recommendation", "")
-        )
-
-        # Safely extract pain points and needs
-        pain_points = []
-        if isinstance(niche.get('customer_pain_points'), list):
-            pain_points = [p.get('challenge', '') for p in niche.get('customer_pain_points', []) if isinstance(p, dict)]
-        
-        customer_needs = []
-        if isinstance(niche.get('customer_needs'), list):
-            customer_needs = [n.get('need', '') for n in niche.get('customer_needs', []) if isinstance(n, dict)]
-
-        prompt = f"""
-        You are an expert B2B SaaS content strategist.
-
-        Write a comprehensive blog on the topic: "{topic}"
-
-        Context:
-        - Industry: {niche.get("industry", "B2B SaaS")}
-        - Key Pain Points: {pain_points}
-        - Customer Needs: {customer_needs}
-        - Relevant News Articles: {json.dumps(news_items, indent=2)}
-        - Reference Material: {pdf_context[:2000] if pdf_context else "No additional context available"}
-
-        Use the following performance feedback to guide writing tone, structure, and topic positioning:
-        {feedback_text}
-
-        Blog Requirements:
-        1. Write a well-structured, long-form blog (700–1000 words).
-        2. Include clear sections: Introduction, Core Analysis, Solutions/Insights, and Conclusion.
-        3. Tone: Analytical, forward-thinking, and authoritative.
-        4. Include subtle references to recent industry shifts.
-        5. Do NOT add markdown or emojis.
-
-        Output in JSON:
-        {{
-          "title": "{topic}",
-          "outline": ["Intro", "Main Insight 1", "Main Insight 2", "Conclusion"],
-          "blog": "Full text here..."
-        }}
-        """
-        
-        try:
-            # Ensure we're in the right event loop context for the LLM call
-            loop = None
-            try:
-                loop = asyncio.get_event_loop()
-            except RuntimeError:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-            
-            response = self.llm.invoke(prompt).content
-        except Exception as e:
-            print(f"Error generating blog content: {e}")
-            # Return a fallback blog with rich content based on niche data
-            return self._generate_fallback_blog(topic, niche, news_items)
-        
-        # Try to extract and parse JSON with better error handling
-        try:
-            match = re.search(r"\{.*\}", response, re.DOTALL)
-            if match:
-                json_str = match.group()
-                # Clean the JSON string to handle control characters
-                json_str = self._clean_json_string(json_str)
-                data = json.loads(json_str)
-            else:
-                # Fallback if no JSON found
-                data = {
-                    "title": topic,
-                    "outline": ["Introduction", "Analysis", "Solutions", "Conclusion"],
-                    "blog": response.strip()
-                }
-        except json.JSONDecodeError as e:
-            print(f"⚠️ JSON parsing error: {e}")
-            print(f"Raw response: {response[:500]}...")
-            # Try to extract content manually as fallback
-            data = self._extract_content_manually(response, topic)
-        
-        return data
-    
     def generate_blog_with_industry(self, topic, news_items, niche, pdf_context, industry=None, tone="professional", audience="CXOs"):
         """Generate blog with industry-specific context"""
         # Ensure niche is a dictionary
@@ -456,8 +367,10 @@ class BlogGenerator:
             self.feedback.get("overall_recommendation", "")
         )
 
-        # Use provided industry or fall back to niche industry
-        target_industry = industry or niche.get("industry", "B2B SaaS")
+        # Target industry is what user selects from frontend (who they want to target)
+        target_industry = industry or "B2B SaaS"
+        # Original industry is the user's own business sector from niche data
+        original_industry = niche.get("industry", "B2B SaaS")
         
         # Safely extract pain points and needs
         pain_points = []
@@ -476,8 +389,8 @@ class BlogGenerator:
         Write a comprehensive blog on the topic: "{topic}"
 
         Context:
-        - Target Industry: {target_industry}
-        - Original Industry Context: {niche.get("industry", "B2B SaaS")}
+        - Target Industry (Blog Audience): {target_industry}
+        - Your Business Industry: {original_industry}
         - Key Pain Points: {pain_points}
         - Customer Needs: {customer_needs}
         - Target Audience: {audience}
@@ -490,16 +403,17 @@ class BlogGenerator:
 
         Blog Requirements:
         1. Write a well-structured, long-form blog (700–1000 words) specifically for {target_industry} professionals.
-        2. Include clear sections: Introduction, Core Analysis, Solutions/Insights, and Conclusion.
-        3. Tone: {tone.capitalize()}, forward-thinking, and authoritative for {audience} in {target_industry}.
-        4. Include subtle references to {target_industry} trends and challenges.
-        5. Address {target_industry}-specific pain points and opportunities.
-        6. Do NOT add markdown or emojis.
+        2. Write from the perspective of a {original_industry} expert addressing {target_industry} challenges.
+        3. Include clear sections: Introduction, Core Analysis, Solutions/Insights, and Conclusion.
+        4. Tone: {tone.capitalize()}, forward-thinking, and authoritative for {audience} in {target_industry}.
+        5. Include subtle references to {target_industry} trends and challenges.
+        6. Address {target_industry}-specific pain points and opportunities from a {original_industry} solution perspective.
+        7. Do NOT add markdown or emojis.
 
         Output in JSON:
         {{
           "title": "{topic}",
-          "outline": ["Intro", "Main Insight 1", "Main Insight 2", "Conclusion"],
+          "outline": ["Introduction", "Analysis", "Solutions", "Conclusion"],
           "blog": "Full text here..."
         }}
         """
@@ -518,7 +432,7 @@ class BlogGenerator:
         except Exception as e:
             print(f"Error generating blog content: {e}")
             # Return a fallback blog with rich content based on niche data
-            return self._generate_fallback_blog_with_industry(topic, niche, news_items, target_industry, tone, audience)
+            return self._generate_fallback_blog_with_industry(topic, niche, news_items, target_industry, original_industry, tone, audience)
         
         # Try to extract and parse JSON with better error handling
         try:
@@ -543,8 +457,8 @@ class BlogGenerator:
         
         return data
     
-    def _generate_fallback_blog_with_industry(self, topic, niche, news_items, industry, tone, audience):
-        """Generate a fallback blog with industry context when AI generation fails"""
+    def _generate_fallback_blog_with_industry(self, topic, niche, news_items, target_industry, original_industry, tone, audience):
+        """Generate a fallback blog with both target and original industry context when AI generation fails"""
         value_prop = niche.get('value_proposition', 'innovative solutions')
         
         # Extract pain points
@@ -552,83 +466,42 @@ class BlogGenerator:
         if isinstance(niche.get('customer_pain_points'), list):
             pain_points = [p.get('challenge', '') for p in niche.get('customer_pain_points', []) if isinstance(p, dict)]
         
-        # Generate a structured blog with industry context
+        # Generate a structured blog with both industry contexts
         blog_content = f"""Introduction
 
-The {industry} landscape is rapidly evolving, presenting both unprecedented opportunities and complex challenges for organizations seeking sustainable growth. As market dynamics shift and customer expectations continue to rise, traditional approaches are proving insufficient to meet the demands of modern {industry} environments.
+The {target_industry} landscape is rapidly evolving, presenting both unprecedented opportunities and complex challenges for organizations seeking sustainable growth. As market dynamics shift and customer expectations continue to rise, traditional approaches are proving insufficient to meet the demands of modern {target_industry} environments.
 
-Today's {audience.lower()} in {industry} face a critical inflection point where {topic.lower()} is becoming not just an advantage, but a necessity for competitive survival and growth.
+As {original_industry} experts, we understand the unique challenges facing today's {audience.lower()} in {target_industry}. The intersection of {original_industry} solutions and {target_industry} needs creates a critical inflection point where {topic.lower()} is becoming not just an advantage, but a necessity for competitive survival and growth.
 
-Core Analysis: The Current Challenge in {industry}
+Core Analysis: The Current Challenge in {target_industry}
 
-{industry} organizations today face several critical challenges that require immediate attention and strategic response. {pain_points[0] if pain_points else f'Organizations in {industry} struggle with operational efficiency and market positioning.'} This fundamental issue impacts not only immediate performance but also long-term strategic positioning in an increasingly competitive {industry} marketplace.
+{target_industry} organizations today face several critical challenges that require immediate attention and strategic response. {pain_points[0] if pain_points else f'Organizations in {target_industry} struggle with operational efficiency and market positioning.'} This fundamental issue impacts not only immediate performance but also long-term strategic positioning in an increasingly competitive {target_industry} marketplace.
 
-{pain_points[1] if len(pain_points) > 1 else f'Additionally, the complexity of modern {industry} operations requires sophisticated approaches to data management and customer engagement.'} These challenges compound to create significant barriers to growth and operational excellence in the {industry} sector.
+{pain_points[1] if len(pain_points) > 1 else f'Additionally, the complexity of modern {target_industry} operations requires sophisticated approaches to data management and customer engagement.'} These challenges compound to create significant barriers to growth and operational excellence in the {target_industry} sector.
 
-Strategic Solutions and Insights for {industry}
+Strategic Solutions and Insights for {target_industry}
 
-The path forward for {industry} organizations requires a systematic approach that addresses these challenges through {value_prop}. {audience} must focus on three key areas:
+Drawing from our expertise in {original_industry}, the path forward for {target_industry} organizations requires a systematic approach that addresses these challenges through {value_prop}. {audience} must focus on three key areas:
 
-First, implementing data-driven decision-making processes that transform raw information into actionable insights specific to {industry} operations. This involves not just collecting data, but developing the analytical capabilities to extract meaningful patterns and trends that inform strategic decisions in the {industry} context.
+First, implementing data-driven decision-making processes that transform raw information into actionable insights specific to {target_industry} operations. This involves not just collecting data, but developing the analytical capabilities to extract meaningful patterns and trends that inform strategic decisions in the {target_industry} context.
 
-Second, developing scalable operational frameworks that can adapt to changing {industry} conditions while maintaining consistency in service delivery and customer experience. This requires both technological infrastructure and organizational capabilities that support rapid scaling without compromising quality in {industry} operations.
+Second, developing scalable operational frameworks that can adapt to changing {target_industry} conditions while maintaining consistency in service delivery and customer experience. This requires both technological infrastructure and organizational capabilities that support rapid scaling without compromising quality in {target_industry} operations.
 
-Third, fostering a culture of continuous improvement and innovation that enables {industry} organizations to stay ahead of market trends and customer needs. This involves investing in team development, process optimization, and strategic partnerships that enhance overall {industry} capabilities.
+Third, fostering a culture of continuous improvement and innovation that enables {target_industry} organizations to stay ahead of market trends and customer needs. This involves investing in team development, process optimization, and strategic partnerships that enhance overall {target_industry} capabilities.
 
-Conclusion: The Path Forward for {industry}
+Conclusion: The Path Forward for {target_industry}
 
-The future belongs to {industry} organizations that can successfully navigate the complexities of the modern business environment while delivering exceptional value to their customers. By focusing on {value_prop} and addressing the fundamental challenges outlined above, {audience.lower()} can position their organizations for sustained success and market leadership in {industry}.
+The future belongs to {target_industry} organizations that can successfully navigate the complexities of the modern business environment while delivering exceptional value to their customers. By leveraging {original_industry} expertise and focusing on {value_prop}, {audience.lower()} can position their organizations for sustained success and market leadership in {target_industry}.
 
-The time for incremental change has passed. {industry} organizations must embrace transformative approaches that address root causes rather than symptoms, building capabilities that will serve them well in an uncertain and rapidly changing {industry} future."""
+The time for incremental change has passed. {target_industry} organizations must embrace transformative approaches that address root causes rather than symptoms, building capabilities that will serve them well in an uncertain and rapidly changing {target_industry} future."""
 
         return {
             "title": topic,
-            "outline": ["Introduction", f"Core Analysis: The Current Challenge in {industry}", f"Strategic Solutions and Insights for {industry}", f"Conclusion: The Path Forward for {industry}"],
+            "outline": ["Introduction", f"Core Analysis: The Current Challenge in {target_industry}", f"Strategic Solutions and Insights for {target_industry}", f"Conclusion: The Path Forward for {target_industry}"],
             "blog": blog_content
         }
     
-    def _generate_fallback_blog(self, topic, niche, news_items):
-        """Generate a fallback blog when AI generation fails"""
-        industry = niche.get('industry', 'B2B SaaS')
-        value_prop = niche.get('value_proposition', 'innovative solutions')
-        
-        # Extract pain points
-        pain_points = []
-        if isinstance(niche.get('customer_pain_points'), list):
-            pain_points = [p.get('challenge', '') for p in niche.get('customer_pain_points', []) if isinstance(p, dict)]
-        
-        # Generate a structured blog
-        blog_content = f"""Introduction
 
-The {industry} landscape is rapidly evolving, presenting both unprecedented opportunities and complex challenges for organizations seeking sustainable growth. As market dynamics shift and customer expectations continue to rise, traditional approaches are proving insufficient to meet the demands of modern business environments.
-
-Core Analysis: The Current Challenge
-
-Today's {industry} organizations face several critical challenges that require immediate attention and strategic response. {pain_points[0] if pain_points else 'Organizations struggle with operational efficiency and market positioning.'} This fundamental issue impacts not only immediate performance but also long-term strategic positioning in an increasingly competitive marketplace.
-
-{pain_points[1] if len(pain_points) > 1 else 'Additionally, the complexity of modern business operations requires sophisticated approaches to data management and customer engagement.'} These challenges compound to create significant barriers to growth and operational excellence.
-
-Solutions and Strategic Insights
-
-The path forward requires a systematic approach that addresses these challenges through {value_prop}. Organizations must focus on three key areas:
-
-First, implementing data-driven decision-making processes that transform raw information into actionable insights. This involves not just collecting data, but developing the analytical capabilities to extract meaningful patterns and trends that inform strategic decisions.
-
-Second, developing scalable operational frameworks that can adapt to changing market conditions while maintaining consistency in service delivery and customer experience. This requires both technological infrastructure and organizational capabilities that support rapid scaling without compromising quality.
-
-Third, fostering a culture of continuous improvement and innovation that enables organizations to stay ahead of market trends and customer needs. This involves investing in team development, process optimization, and strategic partnerships that enhance overall capabilities.
-
-Conclusion: The Path Forward
-
-The future belongs to organizations that can successfully navigate the complexities of the modern {industry} environment while delivering exceptional value to their customers. By focusing on {value_prop} and addressing the fundamental challenges outlined above, organizations can position themselves for sustained success and market leadership.
-
-The time for incremental change has passed. Organizations must embrace transformative approaches that address root causes rather than symptoms, building capabilities that will serve them well in an uncertain and rapidly changing future."""
-
-        return {
-            "title": topic,
-            "outline": ["Introduction", "Core Analysis: The Current Challenge", "Solutions and Strategic Insights", "Conclusion: The Path Forward"],
-            "blog": blog_content
-        }
 
     # ---------- Execution Flow ----------
     def run(self, mode="manual"):
@@ -648,10 +521,11 @@ The time for incremental change has passed. Organizations must embrace transform
                     topic = self.generate_topic(niche)
 
                 news_items = self.fetch_news(topic)
-                self.append_json(USED_TOPICS_FILE, {"title": topic, "generated_on": datetime.utcnow().isoformat()})
 
             pdf_context = self.build_pdf_context(topic, niche)
-            blog_data = self.generate_blog(topic, news_items, niche, pdf_context)
+            # Use industry from niche data, with defaults for tone and audience
+            industry = niche.get("industry", "B2B SaaS")
+            blog_data = self.generate_blog_with_industry(topic, news_items, niche, pdf_context, industry, "professional", "CXOs")
 
             # ✅ Append new blog to single JSON file
             blog_entry = {
@@ -662,6 +536,11 @@ The time for incremental change has passed. Organizations must embrace transform
                 "timestamp": datetime.utcnow().isoformat()
             }
             self.append_json(OUTPUT_FILE, blog_entry)
+            
+            # Save used topic AFTER successful blog generation (only for automatic mode)
+            if mode != "manual":
+                self.append_json(USED_TOPICS_FILE, {"title": topic, "generated_on": datetime.utcnow().isoformat()})
+                print(f"📝 Saved used topic: '{topic}' to {USED_TOPICS_FILE}")
 
             print(f"\n✅ Blog appended to: {OUTPUT_FILE}")
             print(f"📝 Title: {blog_entry['title']}")

@@ -190,5 +190,149 @@
             "engagement_rate": 0.014
         },
         "timestamp": "2025-11-05T09:29:11.313463"
+    },
+    {
+        "platform": "linkedin",
+        "title": "AI Rewires Sales: Drive Predictable Pipeline and Revenue.",
+        "metrics": {
+            "impressions": 3165,
+            "likes": 166,
+            "comments": 15,
+            "shares": 27,
+            "engagement_rate": 0.066
+        },
+        "timestamp": "2025-11-07T07:33:48.334548"
+    },
+    {
+        "platform": "linkedin",
+        "title": "Transform Sales Execution: Real-Time Messaging Rewiring.",
+        "metrics": {
+            "impressions": 6644,
+            "likes": 51,
+            "comments": 12,
+            "shares": 49,
+            "engagement_rate": 0.017
+        },
+        "timestamp": "2025-11-07T07:33:48.335028"
+    },
+    {
+        "platform": "linkedin",
+        "title": "AI for predictable pipeline: Ditch the sales 'vibes'.",
+        "metrics": {
+            "impressions": 4053,
+            "likes": 85,
+            "comments": 36,
+            "shares": 24,
+            "engagement_rate": 0.036
+        },
+        "timestamp": "2025-11-07T07:33:48.335724"
+    },
+    {
+        "platform": "twitter",
+        "title": "AI Rewires Sales: Drive Predictable Pipeline and Revenue.",
+        "metrics": {
+            "impressions": 14543,
+            "likes": 50,
+            "comments": 26,
+            "shares": 7,
+            "engagement_rate": 0.006
+        },
+        "timestamp": "2025-11-07T07:33:48.337190"
+    },
+    {
+        "platform": "twitter",
+        "title": "Transform Sales Execution: Real-Time Messaging Rewiring.",
+        "metrics": {
+            "impressions": 11981,
+            "likes": 239,
+            "comments": 19,
+            "shares": 19,
+            "engagement_rate": 0.023
+        },
+        "timestamp": "2025-11-07T07:33:48.337566"
+    },
+    {
+        "platform": "twitter",
+        "title": "AI for predictable pipeline: Ditch the sales 'vibes'.",
+        "metrics": {
+            "impressions": 19041,
+            "likes": 130,
+            "comments": 16,
+            "shares": 12,
+            "engagement_rate": 0.008
+        },
+        "timestamp": "2025-11-07T07:33:48.338017"
+    },
+    {
+        "platform": "youtube",
+        "title": "AI Rewires Sales: Drive Predictable Pipeline and Revenue.",
+        "metrics": {
+            "impressions": 4857,
+            "likes": 247,
+            "comments": 55,
+            "shares": 42,
+            "engagement_rate": 0.071
+        },
+        "timestamp": "2025-11-07T07:33:48.339277"
+    },
+    {
+        "platform": "youtube",
+        "title": "Transform Sales Execution: Real-Time Messaging Rewiring.",
+        "metrics": {
+            "impressions": 5931,
+            "likes": 233,
+            "comments": 58,
+            "shares": 31,
+            "engagement_rate": 0.054
+        },
+        "timestamp": "2025-11-07T07:33:48.339689"
+    },
+    {
+        "platform": "youtube",
+        "title": "AI for predictable pipeline: Ditch the sales 'vibes'.",
+        "metrics": {
+            "impressions": 3217,
+            "likes": 122,
+            "comments": 18,
+            "shares": 31,
+            "engagement_rate": 0.053
+        },
+        "timestamp": "2025-11-07T07:33:48.340268"
+    },
+    {
+        "platform": "blog",
+        "title": "Future-proof 2025 GTM: Drive growth with AI-driven strategies.",
+        "metrics": {
+            "impressions": 3917,
+            "likes": 71,
+            "comments": 6,
+            "shares": 13,
+            "engagement_rate": 0.023
+        },
+        "timestamp": "2025-11-07T07:33:48.343297"
+    },
+    {
+        "platform": "blog",
+        "title": "AI rewires sales execution: Drive immediate revenue impact.",
+        "metrics": {
+            "impressions": 16534,
+            "likes": 191,
+            "comments": 51,
+            "shares": 44,
+            "engagement_rate": 0.017
+        },
+        "timestamp": "2025-11-07T07:33:48.344114"
+    },
+    {
+        "platform": "blog",
+        "title": "2025 GTM strategy: Build new operating models for market leadership.",
+        "metrics": {
+            "impressions": 10209,
+            "likes": 200,
+            "comments": 13,
+            "shares": 33,
+            "engagement_rate": 0.024
+        },
+        "timestamp": "2025-11-07T07:33:48.344838"
     }
 ]

@@ -666,24 +666,46 @@ def generate_blog_with_selection():
 
 @app.route('/api/generate_image_prompt', methods=['POST'])
 def generate_image_prompt():
-    """Generate optimized image prompt for blog content"""
+    """Generate optimized image prompt for blog, LinkedIn, or Twitter content"""
     try:
         data = request.get_json()
         content_type = data.get('type', 'blog')
         content_data = data.get('data', {})
         
         print(f"📸 Generating image prompt for {content_type}")
+        print(f"🔍 DEBUG - content_type value: '{content_type}' (type: {type(content_type).__name__})")
+        print(f"🔍 DEBUG - Full request data: {data}")
         print(f"📝 Content title: {content_data.get('title', 'N/A')}")
         
         if content_type == 'blog':
             from image_prompt_builder import blog_image_prompt
             prompt = blog_image_prompt(content_data)
             
-            print(f"✅ Image prompt generated successfully")
+            print(f"✅ Blog image prompt generated successfully")
             return jsonify({
                 'success': True, 
                 'prompt': prompt,
                 'message': 'Image prompt generated successfully'
+            })
+        elif content_type == 'linkedin':
+            from image_prompt_builder import linkedin_image_prompt
+            prompt = linkedin_image_prompt(content_data)
+            
+            print(f"✅ LinkedIn image prompt generated successfully")
+            return jsonify({
+                'success': True, 
+                'prompt': prompt,
+                'message': 'LinkedIn image prompt generated successfully'
+            })
+        elif content_type == 'twitter':
+            from image_prompt_builder import twitter_image_prompt
+            prompt = twitter_image_prompt(content_data)
+            
+            print(f"✅ Twitter image prompt generated successfully")
+            return jsonify({
+                'success': True, 
+                'prompt': prompt,
+                'message': 'Twitter image prompt generated successfully'
             })
         else:
             return jsonify({'error': 'Invalid content type'}), 400

@@ -382,7 +382,7 @@ function loadSocialContent(platform) {
         : [data[platform]];
       let html = "";
 
-      posts.forEach((post) => {
+      posts.forEach((post, index) => {
         html += `
           <div class="card content-card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -438,6 +438,15 @@ function loadSocialContent(platform) {
                 `
                     : ""
                 }
+                ${
+                  platform === "linkedin" || platform === "twitter"
+                    ? `
+                  <button class="btn btn-sm btn-outline-primary ms-2" onclick="generateSocialImagePrompt('${platform}', ${index})">
+                    <i class="fas fa-image me-1"></i>Generate Image Prompt
+                  </button>
+                `
+                    : ""
+                }
               </div>
             </div>
           </div>
@@ -445,6 +454,12 @@ function loadSocialContent(platform) {
       });
 
       contentDiv.innerHTML = html;
+      
+      // Store social data globally for image prompt generation
+      if (!window.socialContentData) {
+        window.socialContentData = {};
+      }
+      window.socialContentData[platform] = posts;
     })
     .catch((error) => {
       contentDiv.innerHTML = `
@@ -1535,3 +1550,125 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 console.log("✅ Image prompt generation functions loaded");
+
+// ========================================
+// Social Media Image Prompt Generation Functions
+// ========================================
+
+/**
+ * Generate image prompt for LinkedIn or Twitter content
+ */
+function generateSocialImagePrompt(platform, postIndex) {
+  console.log(`📸 Generating ${platform} image prompt for post index:`, postIndex);
+
+  // Get the post data
+  if (!window.socialContentData || !window.socialContentData[platform]) {
+    showToast("error", "Post data not found. Please refresh the page.");
+    return;
+  }
+
+  const posts = window.socialContentData[platform];
+  if (!posts[postIndex]) {
+    showToast("error", "Post not found. Please try again.");
+    return;
+  }
+
+  const postData = posts[postIndex];
+  
+  // Show loading toast
+  showToast("info", `Generating ${platform} image prompt...`);
+
+  // Call backend API
+  fetch("/api/generate_image_prompt", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      type: platform,
+      data: postData,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log(`✅ ${platform} image prompt generated successfully`);
+        showImagePromptModal(data.prompt, postData.title, platform);
+      } else {
+        console.error("❌ Error:", data.error);
+        showToast("error", "Error generating image prompt: " + data.error);
+      }
+    })
+    .catch((error) => {
+      console.error(`❌ Error generating ${platform} image prompt:`, error);
+      showToast("error", "Failed to generate image prompt. Please try again.");
+    });
+}
+
+/**
+ * Generate LinkedIn image prompt (convenience function)
+ */
+function generateLinkedInImagePrompt(linkedinData) {
+  console.log("📸 Generating LinkedIn image prompt:", linkedinData.title);
+
+  // Call backend API
+  fetch("/api/generate_image_prompt", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      type: "linkedin",
+      data: linkedinData,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("✅ LinkedIn image prompt generated successfully");
+        showImagePromptModal(data.prompt, linkedinData.title, "linkedin");
+      } else {
+        console.error("❌ Error:", data.error);
+        showToast("error", "Error generating image prompt: " + data.error);
+      }
+    })
+    .catch((error) => {
+      console.error("❌ Error generating LinkedIn image prompt:", error);
+      showToast("error", "Failed to generate image prompt. Please try again.");
+    });
+}
+
+/**
+ * Generate Twitter image prompt (convenience function)
+ */
+function generateTwitterImagePrompt(twitterData) {
+  console.log("📸 Generating Twitter image prompt:", twitterData.title);
+
+  // Call backend API
+  fetch("/api/generate_image_prompt", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      type: "twitter",
+      data: twitterData,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("✅ Twitter image prompt generated successfully");
+        showImagePromptModal(data.prompt, twitterData.title, "twitter");
+      } else {
+        console.error("❌ Error:", data.error);
+        showToast("error", "Error generating image prompt: " + data.error);
+      }
+    })
+    .catch((error) => {
+      console.error("❌ Error generating Twitter image prompt:", error);
+      showToast("error", "Failed to generate image prompt. Please try again.");
+    });
+}
+
+console.log("✅ Social media image prompt generation functions loaded");

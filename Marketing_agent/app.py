@@ -663,7 +663,6 @@ def generate_blog_with_selection():
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
-        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/generate_image_prompt', methods=['POST'])
 def generate_image_prompt():

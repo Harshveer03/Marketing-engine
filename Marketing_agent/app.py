@@ -666,13 +666,13 @@ def generate_blog_with_selection():
 
 @app.route('/api/generate_image_prompt', methods=['POST'])
 def generate_image_prompt():
-    """Generate optimized image prompt for blog, LinkedIn, or Twitter content"""
+    """Generate optimized image prompt for blog, LinkedIn, or Twitter content, or video prompt for YouTube"""
     try:
         data = request.get_json()
         content_type = data.get('type', 'blog')
         content_data = data.get('data', {})
         
-        print(f"📸 Generating image prompt for {content_type}")
+        print(f"📸 Generating prompt for {content_type}")
         print(f"🔍 DEBUG - content_type value: '{content_type}' (type: {type(content_type).__name__})")
         print(f"🔍 DEBUG - Full request data: {data}")
         print(f"📝 Content title: {content_data.get('title', 'N/A')}")
@@ -707,13 +707,23 @@ def generate_image_prompt():
                 'prompt': prompt,
                 'message': 'Twitter image prompt generated successfully'
             })
+        elif content_type == 'youtube':
+            from image_prompt_builder import youtube_video_prompt
+            prompt = youtube_video_prompt(content_data)
+            
+            print(f"✅ YouTube video prompt generated successfully")
+            return jsonify({
+                'success': True, 
+                'prompt': prompt,
+                'message': 'YouTube video prompt generated successfully'
+            })
         else:
             return jsonify({'error': 'Invalid content type'}), 400
             
     except Exception as e:
         import traceback
         traceback.print_exc()
-        print(f"❌ Error generating image prompt: {e}")
+        print(f"❌ Error generating prompt: {e}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/reset')

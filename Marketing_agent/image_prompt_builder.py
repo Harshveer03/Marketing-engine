@@ -413,6 +413,157 @@ class ImagePromptBuilder:
         fallback_prompt = ' '.join(fallback_prompt.split())
         
         return fallback_prompt
+    
+    def youtube_video_prompt(self, youtube_data):
+        """
+        Generate an optimized video prompt for a YouTube video.
+        
+        Args:
+            youtube_data (dict): YouTube video information containing:
+                - title (str): Video title
+                - script_intro (str): Video intro script (30-45 seconds)
+                - caption (str): Video description
+                - hashtags (list): Video tags/keywords
+                - industry (str): Target industry
+                - tone (str): Content tone
+                - audience (str): Target audience
+        
+        Returns:
+            str: Optimized video generation prompt
+        """
+        # Extract key information
+        title = youtube_data.get('title', '')
+        script_intro = youtube_data.get('script_intro', '')
+        caption = youtube_data.get('caption', '')
+        tags = youtube_data.get('hashtags', [])
+        industry = youtube_data.get('industry', 'B2B SaaS')
+        tone = youtube_data.get('tone', 'professional')
+        audience = youtube_data.get('audience', 'CXOs')
+        
+        # Build the prompt for AI to generate video prompt
+        prompt = f"""
+        You are an expert video content strategist specializing in creating optimized video generation prompts for AI video generators like Runway, Pika, Synthesia, and similar tools.
+
+        Create a detailed, optimized video generation prompt for a YouTube video with the following details:
+
+        Video Title: "{title}"
+        Industry: {industry}
+        Target Audience: {audience}
+        Tone: {tone}
+        Tags: {', '.join(tags) if tags else 'N/A'}
+        Script Intro: {script_intro[:500] if script_intro else 'N/A'}
+        Description: {caption[:300] if caption else 'N/A'}
+
+        Requirements for the video prompt:
+        1. Create a multi-scene video structure (30-60 seconds total)
+        2. Scene-by-scene breakdown with timing (e.g., Scene 1: 0-5s, Scene 2: 5-15s)
+        3. Opening hook that grabs attention in first 5 seconds
+        4. Visual storytelling that matches the script intro narrative
+        5. Professional, high-quality aesthetic appropriate for {industry} and {audience}
+        6. Tone should be {tone}
+        7. 16:9 aspect ratio (1920x1080 or 3840x2160)
+        8. Smooth transitions between scenes
+        9. Dynamic camera movements and visual interest
+        10. Industry-specific visual elements and metaphors for {industry}
+
+        Video Style Guidelines:
+        - For "professional" tone: Clean, corporate, authoritative, polished
+        - For "bold" tone: Dynamic, energetic, attention-grabbing, confident
+        - For "casual" tone: Approachable, friendly, conversational, relatable
+        - For IT & Dev: Tech-forward, digital, innovative, futuristic
+        - For Sales/Marketing: Growth-focused, results-driven, strategic
+        - For YouTube: Engaging, shareable, optimized for viewer retention
+
+        Structure the prompt with:
+        - Opening Scene (0-5s): Hook visual
+        - Main Content Scenes (5-45s): 2-3 scenes based on script narrative
+        - Closing Scene (45-60s): Call-to-action or summary visual
+        - Technical specifications
+        - Visual style and aesthetic details
+        - Transition and pacing notes
+
+        Generate a comprehensive video prompt (200-300 words) that can be directly used in an AI video generator.
+        The prompt should create a cohesive video narrative that supports the YouTube content strategy.
+
+        Return ONLY the video prompt text, no explanations or additional commentary.
+        """
+        
+        try:
+            # Generate the video prompt using AI
+            response = self.llm.invoke(prompt).content
+            
+            # Clean up the response
+            video_prompt = response.strip()
+            
+            # Remove any markdown formatting or quotes
+            video_prompt = re.sub(r'^["\'`]+|["\'`]+$', '', video_prompt)
+            video_prompt = re.sub(r'^\*\*|\*\*$', '', video_prompt)
+            
+            # Add quality enhancers if not present
+            quality_keywords = ['high quality', 'professional', '1080p', '4k', 'cinematic']
+            if not any(keyword in video_prompt.lower() for keyword in quality_keywords):
+                video_prompt += ", high quality production, professional cinematography, 1080p resolution"
+            
+            print(f"✅ Generated video prompt for YouTube: '{title[:50]}...'")
+            return video_prompt
+            
+        except Exception as e:
+            print(f"❌ Error generating video prompt: {e}")
+            # Return a fallback prompt
+            return self._generate_fallback_youtube_prompt(title, script_intro, industry, tone, audience)
+    
+    def _generate_fallback_youtube_prompt(self, title, script_intro, industry, tone, audience):
+        """Generate a fallback YouTube video prompt if AI generation fails"""
+        
+        # Industry-specific visual elements for YouTube
+        industry_visuals = {
+            'IT & Dev': 'modern technology workspace, digital innovation visualization, tech product demonstration',
+            'Sales/Marketing': 'business growth animation, strategic planning visualization, professional team collaboration',
+            'Real Estate': 'property showcase, architectural walkthrough, modern building visualization',
+            'Finance': 'financial data visualization, market analysis animation, investment strategy presentation',
+            'Healthcare': 'healthcare innovation showcase, medical technology demonstration, patient care visualization',
+            'B2B SaaS': 'software interface demonstration, cloud technology visualization, digital transformation showcase'
+        }
+        
+        # Tone-specific video styles
+        tone_styles = {
+            'professional': 'polished corporate video style, clean professional transitions, authoritative presentation',
+            'bold': 'dynamic energetic video style, bold visual statements, confident presentation',
+            'casual': 'approachable friendly video style, conversational presentation, relatable visuals',
+            'technical': 'detailed technical demonstration, precise visual explanations, analytical presentation'
+        }
+        
+        # Audience-specific elements
+        audience_elements = {
+            'CXOs': 'executive-level insights, strategic vision presentation, leadership perspective',
+            'Founders': 'entrepreneurial energy, startup innovation showcase, growth-focused narrative',
+            'Marketers': 'marketing strategy visualization, creative campaign showcase, engagement-focused content',
+            'Developers': 'technical demonstration, code visualization, developer-focused presentation'
+        }
+        
+        visual_element = industry_visuals.get(industry, industry_visuals['B2B SaaS'])
+        style = tone_styles.get(tone, tone_styles['professional'])
+        audience_element = audience_elements.get(audience, audience_elements['CXOs'])
+        
+        # Extract key points from script intro if available
+        script_context = f"based on the narrative: {script_intro[:200]}" if script_intro else "with engaging visual storytelling"
+        
+        fallback_prompt = f"""Professional YouTube video for '{title}', 
+        Scene 1 (0-5s): Opening hook with {visual_element}, immediately capturing attention
+        Scene 2 (5-25s): Main content visualization {script_context}, featuring {audience_element}
+        Scene 3 (25-45s): Solution or insight demonstration with {style}
+        Scene 4 (45-60s): Closing call-to-action with brand elements
+        
+        Video style: {style}, modern {industry} industry aesthetic, 
+        optimized for YouTube engagement and {audience} audience,
+        16:9 aspect ratio (1920x1080), smooth transitions, dynamic camera movements,
+        professional cinematography, high quality production, 1080p resolution,
+        suitable for thought leadership content on YouTube"""
+        
+        # Clean up extra whitespace
+        fallback_prompt = ' '.join(fallback_prompt.split())
+        
+        return fallback_prompt
 
 
 # Standalone function for easy import
@@ -456,6 +607,20 @@ def twitter_image_prompt(twitter_data):
     """
     builder = ImagePromptBuilder()
     return builder.twitter_image_prompt(twitter_data)
+
+
+def youtube_video_prompt(youtube_data):
+    """
+    Convenience function to generate YouTube video prompt.
+    
+    Args:
+        youtube_data (dict): YouTube post information
+    
+    Returns:
+        str: Optimized video generation prompt
+    """
+    builder = ImagePromptBuilder()
+    return builder.youtube_video_prompt(youtube_data)
 
 
 # Test function

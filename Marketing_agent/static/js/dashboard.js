@@ -447,6 +447,15 @@ function loadSocialContent(platform) {
                 `
                     : ""
                 }
+                ${
+                  platform === "youtube"
+                    ? `
+                  <button class="btn btn-sm btn-outline-danger ms-2" onclick="generateYouTubeVideoPrompt(${index})">
+                    <i class="fas fa-video me-1"></i>Generate Video Prompt
+                  </button>
+                `
+                    : ""
+                }
               </div>
             </div>
           </div>
@@ -454,7 +463,7 @@ function loadSocialContent(platform) {
       });
 
       contentDiv.innerHTML = html;
-      
+
       // Store social data globally for image prompt generation
       if (!window.socialContentData) {
         window.socialContentData = {};
@@ -1559,7 +1568,10 @@ console.log("✅ Image prompt generation functions loaded");
  * Generate image prompt for LinkedIn or Twitter content
  */
 function generateSocialImagePrompt(platform, postIndex) {
-  console.log(`📸 Generating ${platform} image prompt for post index:`, postIndex);
+  console.log(
+    `📸 Generating ${platform} image prompt for post index:`,
+    postIndex
+  );
 
   // Get the post data
   if (!window.socialContentData || !window.socialContentData[platform]) {
@@ -1574,7 +1586,7 @@ function generateSocialImagePrompt(platform, postIndex) {
   }
 
   const postData = posts[postIndex];
-  
+
   // Show loading toast
   showToast("info", `Generating ${platform} image prompt...`);
 
@@ -1672,3 +1684,160 @@ function generateTwitterImagePrompt(twitterData) {
 }
 
 console.log("✅ Social media image prompt generation functions loaded");
+
+// ========================================
+// YouTube Video Prompt Generation Functions
+// ========================================
+
+/**
+ * Generate video prompt for YouTube content
+ */
+function generateYouTubeVideoPrompt(postIndex) {
+  console.log(`🎬 Generating YouTube video prompt for post index:`, postIndex);
+
+  // Get the post data
+  if (!window.socialContentData || !window.socialContentData["youtube"]) {
+    showToast("error", "YouTube post data not found. Please refresh the page.");
+    return;
+  }
+
+  const posts = window.socialContentData["youtube"];
+  if (!posts[postIndex]) {
+    showToast("error", "YouTube post not found. Please try again.");
+    return;
+  }
+
+  const postData = posts[postIndex];
+
+  // Show loading toast
+  showToast("info", "Generating YouTube video prompt...");
+
+  // Call backend API
+  fetch("/api/generate_image_prompt", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      type: "youtube",
+      data: postData,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("✅ YouTube video prompt generated successfully");
+        showVideoPromptModal(data.prompt, postData.title);
+      } else {
+        console.error("❌ Error:", data.error);
+        showToast("error", "Error generating video prompt: " + data.error);
+      }
+    })
+    .catch((error) => {
+      console.error("❌ Error generating YouTube video prompt:", error);
+      showToast("error", "Failed to generate video prompt. Please try again.");
+    });
+}
+
+/**
+ * Show modal with generated video prompt
+ */
+function showVideoPromptModal(prompt, videoTitle) {
+  const modalHTML = `
+        <div class="modal fade" id="videoPromptModal" tabindex="-1" aria-labelledby="videoPromptModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="videoPromptModalLabel">
+                            🎬 Generated Video Prompt
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted mb-3">
+                            <small>For YouTube video: <strong>${escapeHtml(
+                              videoTitle
+                            )}</strong></small>
+                        </p>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Copy this prompt and use it in AI video generators like Runway, Pika, Synthesia, or similar tools.
+                        </div>
+                        <div class="form-group">
+                            <label for="videoPromptText" class="form-label fw-bold">Video Prompt:</label>
+                            <textarea 
+                                class="form-control" 
+                                id="videoPromptText" 
+                                rows="12" 
+                                readonly
+                                style="font-family: monospace; font-size: 0.9rem;"
+                            >${escapeHtml(prompt)}</textarea>
+                        </div>
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>Tip:</strong> This prompt is optimized for AI video generators. You can edit it before copying if you want to customize it further.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="copyVideoPromptToClipboard()">
+                            <i class="fas fa-clipboard me-2"></i>Copy Video Prompt
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+  // Remove existing modal if any
+  const existingModal = document.getElementById("videoPromptModal");
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+  // Add modal to body
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Show modal
+  const modal = new bootstrap.Modal(
+    document.getElementById("videoPromptModal")
+  );
+  modal.show();
+
+  // Clean up modal after it's hidden
+  document
+    .getElementById("videoPromptModal")
+    .addEventListener("hidden.bs.modal", function () {
+      this.remove();
+    });
+}
+
+/**
+ * Copy video prompt to clipboard
+ */
+function copyVideoPromptToClipboard() {
+  const promptText = document.getElementById("videoPromptText");
+  if (promptText) {
+    promptText.select();
+    document.execCommand("copy");
+
+    // Show success notification
+    showToast("success", "Video prompt copied to clipboard!");
+
+    // Update button text temporarily
+    const copyBtn = event.target.closest("button");
+    const originalHTML = copyBtn.innerHTML;
+    copyBtn.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
+    copyBtn.classList.remove("btn-danger");
+    copyBtn.classList.add("btn-success");
+
+    setTimeout(() => {
+      copyBtn.innerHTML = originalHTML;
+      copyBtn.classList.remove("btn-success");
+      copyBtn.classList.add("btn-danger");
+    }, 2000);
+  }
+}
+
+console.log("✅ YouTube video prompt generation functions loaded");

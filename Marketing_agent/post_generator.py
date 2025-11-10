@@ -7,6 +7,9 @@ from datetime import datetime
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import OllamaEmbeddings
+import ollama
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 load_dotenv()
 
@@ -30,9 +33,48 @@ class ContentPipeline:
         self.llm = ChatGoogleGenerativeAI(model=model, temperature=0.7)
         self.vectordb = None
         self.feedback = load_feedback_context()
+        self.embedding_model = embedding_model
+        self.niche_embedding = None
+        
+        # Load niche embedding for quality checking
+        self._load_niche_embedding()
         
         # Load vector database in a thread-safe way
         self._load_vector_db_safe(embedding_model)
+    
+    def _load_niche_embedding(self):
+        """Load and create niche embedding for quality checking"""
+        try:
+            niche = self.load_json(NICHE_FILE)
+            if not niche:
+                print("⚠️ No niche data found for quality checking")
+                return
+            
+            # Build niche description from key fields
+            niche_parts = []
+            if niche.get("industry"):
+                niche_parts.append(f"Industry: {niche['industry']}")
+            if niche.get("value_proposition"):
+                niche_parts.append(f"Value: {niche['value_proposition']}")
+            if niche.get("customer_pain_points"):
+                pain_points = [p.get("challenge", "") for p in niche["customer_pain_points"] if isinstance(p, dict)]
+                if pain_points:
+                    niche_parts.append(f"Pain Points: {', '.join(pain_points[:3])}")
+            if niche.get("customer_needs"):
+                needs = [n.get("need", "") for n in niche["customer_needs"] if isinstance(n, dict)]
+                if needs:
+                    niche_parts.append(f"Needs: {', '.join(needs[:3])}")
+            
+            niche_description = " | ".join(niche_parts)
+            
+            # Generate niche embedding
+            response = ollama.embeddings(model=self.embedding_model, prompt=niche_description)
+            self.niche_embedding = np.array(response['embedding'])
+            print(f"✅ Niche embedding created for quality checking")
+            
+        except Exception as e:
+            print(f"⚠️ Could not create niche embedding: {e}")
+            self.niche_embedding = None
     
     def _load_vector_db_safe(self, embedding_model):
         """Load vector database in a thread-safe manner"""
@@ -281,6 +323,62 @@ class ContentPipeline:
         # Normalize score to 0-100 range
         return min(score, 100)
 
+    # ---------- Quality Checker ----------
+    def calculate_social_quality_score(self, platform, topic, content, hashtags_or_tags):
+        """Calculate quality score for social media posts"""
+        if self.niche_embedding is None:
+            print("⚠️ Niche embedding not available, skipping quality check")
+            return 0
+        
+        try:
+            print(f"🔍 Generating embeddings for {platform} quality check...")
+            
+            # Topic embedding
+            topic_text = topic['title'] if isinstance(topic, dict) else str(topic)
+            topic_response = ollama.embeddings(model=self.embedding_model, prompt=topic_text)
+            topic_embedding = np.array(topic_response['embedding'])
+            
+            # Content embedding (platform-specific)
+            content_sample = content[:1000] if len(content) > 1000 else content
+            content_response = ollama.embeddings(model=self.embedding_model, prompt=content_sample)
+            content_embedding = np.array(content_response['embedding'])
+            
+            # Hashtags/Tags embedding
+            if isinstance(hashtags_or_tags, list) and hashtags_or_tags:
+                tags_text = " ".join(hashtags_or_tags)
+            else:
+                tags_text = "No tags available"
+            tags_response = ollama.embeddings(model=self.embedding_model, prompt=tags_text)
+            tags_embedding = np.array(tags_response['embedding'])
+            
+            # Calculate cosine similarities
+            topic_similarity = cosine_similarity([topic_embedding], [self.niche_embedding])[0][0]
+            content_similarity = cosine_similarity([content_embedding], [self.niche_embedding])[0][0]
+            tags_similarity = cosine_similarity([tags_embedding], [self.niche_embedding])[0][0]
+            
+            # Platform-specific weighted quality score
+            if platform == "linkedin":
+                # LinkedIn: Caption 60% + Topic 25% + Hashtags 15%
+                quality_score = (content_similarity * 0.6 + topic_similarity * 0.25 + tags_similarity * 0.15) * 100
+            elif platform == "twitter":
+                # Twitter: Tweet 70% + Topic 20% + Hashtags 10%
+                quality_score = (content_similarity * 0.7 + topic_similarity * 0.2 + tags_similarity * 0.1) * 100
+            elif platform == "youtube":
+                # YouTube: Script+Description 50% + Topic 30% + Tags 20%
+                quality_score = (content_similarity * 0.5 + topic_similarity * 0.3 + tags_similarity * 0.2) * 100
+            else:
+                # Default weighting
+                quality_score = (content_similarity * 0.5 + topic_similarity * 0.3 + tags_similarity * 0.2) * 100
+            
+            print(f"📊 {platform.capitalize()} Quality Scores - Topic: {topic_similarity:.2f}, Content: {content_similarity:.2f}, Tags: {tags_similarity:.2f}")
+            print(f"✅ Overall Quality Score: {quality_score:.1f}%")
+            
+            return round(quality_score, 2)
+            
+        except Exception as e:
+            print(f"⚠️ Error calculating {platform} quality score: {e}")
+            return 0
+
     # ---------- Content Generation ----------
     def generate_linkedin(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
         try:
@@ -494,12 +592,35 @@ class ContentPipeline:
         twitter = self.generate_twitter(selected_topic, selected_topic["related_news"], niche, audience, tone, pdf_context)
         youtube = self.generate_youtube(selected_topic, selected_topic["related_news"], niche, audience, tone, pdf_context)
 
+        # Calculate quality scores for each platform
+        linkedin_quality = self.calculate_social_quality_score(
+            "linkedin",
+            selected_topic,
+            linkedin.get("caption", ""),
+            linkedin.get("hashtags", [])
+        )
+        
+        twitter_quality = self.calculate_social_quality_score(
+            "twitter",
+            selected_topic,
+            twitter.get("tweet", ""),
+            twitter.get("hashtags", [])
+        )
+        
+        youtube_quality = self.calculate_social_quality_score(
+            "youtube",
+            selected_topic,
+            youtube.get("script_intro", "") + " " + youtube.get("description", ""),
+            youtube.get("tags", [])
+        )
+
         os.makedirs(OUTPUT_DIR, exist_ok=True)
 
         linkedin_data = {
             "title": selected_topic["title"],
             "caption": linkedin.get("caption", ""),
             "hashtags": linkedin.get("hashtags", []),
+            "quality_score": linkedin_quality,
             "timestamp": datetime.now().isoformat()
         }
 
@@ -507,6 +628,7 @@ class ContentPipeline:
             "title": selected_topic["title"],
             "caption": twitter.get("tweet", ""),
             "hashtags": twitter.get("hashtags", []),
+            "quality_score": twitter_quality,
             "timestamp": datetime.now().isoformat()
         }
 
@@ -515,6 +637,7 @@ class ContentPipeline:
             "script_intro": youtube.get("script_intro", ""),
             "caption": youtube.get("description", ""),
             "hashtags": youtube.get("tags", []),
+            "quality_score": youtube_quality,
             "timestamp": datetime.now().isoformat()
         }
 

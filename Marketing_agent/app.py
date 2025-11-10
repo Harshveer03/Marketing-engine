@@ -502,6 +502,28 @@ def generate_social_with_selection():
         twitter = pipeline.generate_twitter(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
         youtube = pipeline.generate_youtube(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
         
+        # Calculate quality scores for each platform
+        linkedin_quality = pipeline.calculate_social_quality_score(
+            "linkedin",
+            selected_topic,
+            linkedin.get("caption", ""),
+            linkedin.get("hashtags", [])
+        )
+        
+        twitter_quality = pipeline.calculate_social_quality_score(
+            "twitter",
+            selected_topic,
+            twitter.get("tweet", ""),
+            twitter.get("hashtags", [])
+        )
+        
+        youtube_quality = pipeline.calculate_social_quality_score(
+            "youtube",
+            selected_topic,
+            youtube.get("script_intro", "") + " " + youtube.get("description", ""),
+            youtube.get("tags", [])
+        )
+        
         # Save content to files
         output_dir = "./generated/content/social"
         os.makedirs(output_dir, exist_ok=True)
@@ -513,6 +535,7 @@ def generate_social_with_selection():
             "title": topic_title,
             "caption": linkedin.get("caption", ""),
             "hashtags": linkedin.get("hashtags", []),
+            "quality_score": linkedin_quality,
             "industry": industry,
             "tone": tone,
             "audience": audience,
@@ -523,6 +546,7 @@ def generate_social_with_selection():
             "title": topic_title,
             "caption": twitter.get("tweet", ""),
             "hashtags": twitter.get("hashtags", []),
+            "quality_score": twitter_quality,
             "industry": industry,
             "tone": tone,
             "audience": audience,
@@ -534,6 +558,7 @@ def generate_social_with_selection():
             "script_intro": youtube.get("script_intro", ""),
             "caption": youtube.get("description", ""),
             "hashtags": youtube.get("tags", []),
+            "quality_score": youtube_quality,
             "industry": industry,
             "tone": tone,
             "audience": audience,
@@ -614,6 +639,13 @@ def generate_blog_with_selection():
             audience
         )
         
+        # Calculate quality score
+        quality_score = generator.calculate_quality_score(
+            selected_topic['title'],
+            blog_data.get("blog", ""),
+            selected_topic.get('related_news', [])
+        )
+        
         # Save blog content
         blog_entry = {
             "title": blog_data.get("title", selected_topic['title']),
@@ -623,6 +655,7 @@ def generate_blog_with_selection():
             "industry": industry,
             "tone": tone,
             "audience": audience,
+            "quality_score": quality_score,
             "timestamp": datetime.now().isoformat()
         }
         

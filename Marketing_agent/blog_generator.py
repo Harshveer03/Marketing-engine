@@ -10,6 +10,9 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.embeddings import OllamaEmbeddings
 import requests
+import ollama
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 load_dotenv()
 
@@ -34,9 +37,48 @@ class BlogGenerator:
         self.llm = ChatGoogleGenerativeAI(model=model, temperature=0.7)
         self.vectordb = None
         self.feedback = load_feedback_context()
+        self.embedding_model = embedding_model
+        self.niche_embedding = None
+        
+        # Load niche embedding for quality checking
+        self._load_niche_embedding()
         
         # Load vector database in a thread-safe way
         self._load_vector_db_safe(embedding_model)
+    
+    def _load_niche_embedding(self):
+        """Load and create niche embedding for quality checking"""
+        try:
+            niche = self.load_json(NICHE_FILE)
+            if not niche:
+                print("⚠️ No niche data found for quality checking")
+                return
+            
+            # Build niche description from key fields
+            niche_parts = []
+            if niche.get("industry"):
+                niche_parts.append(f"Industry: {niche['industry']}")
+            if niche.get("value_proposition"):
+                niche_parts.append(f"Value: {niche['value_proposition']}")
+            if niche.get("customer_pain_points"):
+                pain_points = [p.get("challenge", "") for p in niche["customer_pain_points"] if isinstance(p, dict)]
+                if pain_points:
+                    niche_parts.append(f"Pain Points: {', '.join(pain_points[:3])}")
+            if niche.get("customer_needs"):
+                needs = [n.get("need", "") for n in niche["customer_needs"] if isinstance(n, dict)]
+                if needs:
+                    niche_parts.append(f"Needs: {', '.join(needs[:3])}")
+            
+            niche_description = " | ".join(niche_parts)
+            
+            # Generate niche embedding
+            response = ollama.embeddings(model=self.embedding_model, prompt=niche_description)
+            self.niche_embedding = np.array(response['embedding'])
+            print(f"✅ Niche embedding created for quality checking")
+            
+        except Exception as e:
+            print(f"⚠️ Could not create niche embedding: {e}")
+            self.niche_embedding = None
     
     def _load_vector_db_safe(self, embedding_model):
         """Load vector database in a thread-safe manner"""
@@ -501,6 +543,50 @@ The time for incremental change has passed. {target_industry} organizations must
             "blog": blog_content
         }
     
+    # ---------- Quality Checker ----------
+    def calculate_quality_score(self, topic, content, trends):
+        """Calculate quality score by comparing topic, content, and trends against niche embedding"""
+        if self.niche_embedding is None:
+            print("⚠️ Niche embedding not available, skipping quality check")
+            return 0
+        
+        try:
+            # Generate embeddings for topic, content, and trends
+            print("🔍 Generating embeddings for quality check...")
+            
+            # Topic embedding
+            topic_response = ollama.embeddings(model=self.embedding_model, prompt=topic)
+            topic_embedding = np.array(topic_response['embedding'])
+            
+            # Content embedding (use first 1000 chars to avoid token limits)
+            content_sample = content[:1000] if len(content) > 1000 else content
+            content_response = ollama.embeddings(model=self.embedding_model, prompt=content_sample)
+            content_embedding = np.array(content_response['embedding'])
+            
+            # Trends embedding (combine trend titles)
+            if isinstance(trends, list) and trends:
+                trends_text = " | ".join([t.get('title', '') for t in trends[:5] if isinstance(t, dict)])
+            else:
+                trends_text = "No trends available"
+            trends_response = ollama.embeddings(model=self.embedding_model, prompt=trends_text)
+            trends_embedding = np.array(trends_response['embedding'])
+            
+            # Calculate cosine similarities
+            topic_similarity = cosine_similarity([topic_embedding], [self.niche_embedding])[0][0]
+            content_similarity = cosine_similarity([content_embedding], [self.niche_embedding])[0][0]
+            trends_similarity = cosine_similarity([trends_embedding], [self.niche_embedding])[0][0]
+            
+            # Weighted quality score: Content 50%, Topic 30%, Trends 20%
+            quality_score = (content_similarity * 0.5 + topic_similarity * 0.3 + trends_similarity * 0.2) * 100
+            
+            print(f"📊 Quality Scores - Topic: {topic_similarity:.2f}, Content: {content_similarity:.2f}, Trends: {trends_similarity:.2f}")
+            print(f"✅ Overall Quality Score: {quality_score:.1f}%")
+            
+            return round(quality_score, 2)
+            
+        except Exception as e:
+            print(f"⚠️ Error calculating quality score: {e}")
+            return 0
 
 
     # ---------- Execution Flow ----------
@@ -527,12 +613,20 @@ The time for incremental change has passed. {target_industry} organizations must
             industry = niche.get("industry", "B2B SaaS")
             blog_data = self.generate_blog_with_industry(topic, news_items, niche, pdf_context, industry, "professional", "CXOs")
 
+            # Calculate quality score
+            quality_score = self.calculate_quality_score(
+                topic,
+                blog_data.get("blog", ""),
+                news_items
+            )
+
             # ✅ Append new blog to single JSON file
             blog_entry = {
                 "title": blog_data.get("title", topic),
                 "outline": blog_data.get("outline", []),
                 "blog": blog_data.get("blog", ""),
                 "news": news_items,
+                "quality_score": quality_score,
                 "timestamp": datetime.utcnow().isoformat()
             }
             self.append_json(OUTPUT_FILE, blog_entry)

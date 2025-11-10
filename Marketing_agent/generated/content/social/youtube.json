@@ -1,56 +1,21 @@
 [
     {
-        "title": "AI Rewires Sales: Drive Predictable Pipeline and Revenue.",
-        "script_intro": "Is your B2B SaaS GTM strategy feeling less like a rocket launch and more like a never-ending uphill battle? In today's hyper-competitive landscape, traditional approaches—relying on brute-force SDRs and generic playbooks—are yielding diminishing returns, leaving CXOs like you struggling to translate vast GTM data into actionable, predictable revenue growth. But what if you could leverage AI to systematically decode your pipeline, operationalize critical insights, and truly rewire your sales engine for scalable success? In this video, we'll reveal how AI isn't just an efficiency tool, but the strategic imperative to transform your GTM from fragmented guesswork into a revenue-first powerhouse. Stay tuned to discover how to drive predictable pipeline and revenue, starting today.",
-        "caption": "Are your traditional B2B SaaS GTM strategies failing to deliver predictable revenue? This video reveals how AI is fundamentally rewiring sales, transforming fragmented efforts into a systematic engine for predictable pipeline and scalable growth. Learn to operationalize GTM data, overcome execution deficits, and empower your teams with data-driven insights to achieve consistent results. Watch now to decode, rewire, and execute your revenue-first GTM strategy with the power of AI.",
+        "title": "Redefine GTM: AI powers market leadership and growth.",
+        "script_intro": "Fintech Founders, are you grappling with a growth paradox? Your vision is clear, but your GTM execution feels stuck—with founder-led sales breaking, pipeline forecasts based on 'vibes,' and outbound reply rates below 1%. In today's competitive landscape, relying on intuition and outdated scripts isn't just inefficient; it's a direct threat to your market leadership. This video will reveal how AI is fundamentally redefining Go-To-Market strategies, transforming those critical sales interaction moments from guesswork into a predictable science. Discover how to empower your team with real-time, actionable guidance, ensuring every interaction drives market leadership and sustainable growth. Stay with us to unlock the future of GTM in Fintech.",
+        "caption": "Fintech Founders, elevate your Go-To-Market strategy from 'vibes' to data-driven precision. This video unveils how AI systematically rewires GTM behavior, solving critical pain points like unscalable founder-led sales, low outbound reply rates, and subjective pipeline forecasting. Learn to achieve predictable market leadership and growth through actionable, AI-powered sales execution. Share your biggest GTM challenge in the comments below!",
         "hashtags": [
-            "AI Sales",
-            "Predictable Revenue",
-            "B2B SaaS GTM",
-            "Sales Strategy",
-            "Revenue Operations",
-            "AI for Sales Leaders",
-            "Go-To-Market Strategy"
+            "Fintech GTM Strategy",
+            "AI Sales Fintech",
+            "Founder-Led Sales Scaling",
+            "Predictable Pipeline",
+            "B2B SaaS Growth",
+            "Sales Enablement AI",
+            "Go-To-Market Transformation"
         ],
-        "industry": "Sales/Marketing",
+        "quality_score": 73.75,
+        "industry": "Fintech",
         "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-06T11:53:59.346174"
-    },
-    {
-        "title": "Transform Sales Execution: Real-Time Messaging Rewiring.",
-        "script_intro": "**(Visual: Dynamic, modern graphics showcasing data flowing into actionable insights, then a confident CXO.)**\n\n**Narrator:** Is your B2B SaaS Go-To-Market strategy struggling to keep pace with the rapid evolution of the IT & Dev market? You're not alone. Many CXOs are finding that traditional sales execution models, plagued by outdated playbooks and untapped data, are simply failing to deliver results.\n\nToday, we're revealing how to transform your sales execution by rewiring your entire approach with real-time, data-driven messaging. This isn't about more tools; it's about operationalizing intelligence. Stay tuned to discover a systematic framework to decode, rewire, and execute revenue-first GTM, ensuring your team is always performing at its peak.",
-        "caption": "In the demanding IT & Dev landscape, traditional sales execution models are failing to deliver results. This video provides IT & Dev CXOs with a systematic approach to transform GTM performance by leveraging real-time messaging and data-driven insights, moving beyond outdated strategies to unlock new revenue potential. Learn how to operationalize your GTM data and empower your teams for unparalleled sales growth and efficiency.",
-        "hashtags": [
-            "IT Dev GTM Strategy",
-            "SaaS Sales Execution",
-            "Real-Time Sales Messaging",
-            "GTM Data Analytics",
-            "CXO Sales Strategy",
-            "Revenue Operations",
-            "B2B SaaS Growth"
-        ],
-        "industry": "IT & Dev",
-        "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-06T11:54:10.405214"
-    },
-    {
-        "title": "AI for predictable pipeline: Ditch the sales 'vibes'.",
-        "script_intro": "(Visual: Split screen: one side chaotic data streams and 'gut feeling' indicators, other side a streamlined, AI-powered clear pipeline with predictable metrics.)\n\nIT & Dev CXOs, is your sales pipeline stuck in the 'vibes' era, delivering unpredictable revenue? Traditional GTM strategies are failing; your vast data isn't translating into consistent growth or actionable insights. \n\nIt's time for an AI-driven approach. In this video, we'll show you how to decode your GTM, operationalize insights, and engineer a truly predictable pipeline.\n\nDiscover how to leverage AI for a revenue-first GTM strategy, moving beyond guesswork to achieve consistent, scalable results. Watch now to transform your pipeline.",
-        "caption": "IT & Dev CXOs, struggling with unpredictable revenue and underperforming Go-To-Market strategies? This video reveals how AI can transform your GTM from guesswork to a predictable, data-driven revenue engine. Learn to operationalize GTM data, enhance team capabilities, and build a consistent pipeline for scalable growth in competitive SaaS markets.",
-        "hashtags": [
-            "AI for Predictable Pipeline",
-            "IT Dev GTM Strategy",
-            "SaaS Revenue Growth",
-            "Data-Driven Sales AI",
-            "CXO Go-To-Market",
-            "AI Sales Transformation",
-            "Predictive Revenue Operations"
-        ],
-        "industry": "IT & Dev",
-        "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-06T12:57:56.350227"
+        "audience": "Founders",
+        "timestamp": "2025-11-09T12:27:05.909131"
     }
 ]

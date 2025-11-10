@@ -261,6 +261,17 @@ function renderBlogs(data) {
         }
       }
 
+      // Get quality score and determine badge color
+      const qualityScore = blog.quality_score || 0;
+      let badgeClass = 'bg-secondary';
+      if (qualityScore >= 80) {
+        badgeClass = 'bg-success';
+      } else if (qualityScore >= 60) {
+        badgeClass = 'bg-warning';
+      } else if (qualityScore > 0) {
+        badgeClass = 'bg-danger';
+      }
+
       return `
         <div class="card content-card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -272,9 +283,12 @@ function renderBlogs(data) {
                   blogContent.substring(0, 300)
                 )}...</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <button class="btn btn-sm btn-outline-primary" onclick="showBlogModal(${index})">
-                        <i class="fas fa-eye me-1"></i>Read Full Post
-                    </button>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary" onclick="showBlogModal(${index})">
+                            <i class="fas fa-eye me-1"></i>Read Full Post
+                        </button>
+                        ${qualityScore > 0 ? `<span class="badge ${badgeClass} ms-2">Quality: ${Math.round(qualityScore)}%</span>` : ''}
+                    </div>
                     <button class="btn btn-sm btn-outline-secondary" onclick="copyBlogContent(${index})">
                         <i class="fas fa-copy me-1"></i>Copy
                     </button>
@@ -386,7 +400,10 @@ function loadSocialContent(platform) {
         html += `
           <div class="card content-card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-              <h6 class="mb-0">${escapeHtml(post.title)}</h6>
+              <h6 class="mb-0">
+                ${escapeHtml(post.title)}
+                ${post.quality_score !== undefined ? getQualityBadge(post.quality_score) : ''}
+              </h6>
               <small class="text-muted">
                 <i class="fab fa-${platform} me-1"></i>
                 ${platform.charAt(0).toUpperCase() + platform.slice(1)}
@@ -694,10 +711,24 @@ function showBlogModal(index) {
     audience: blog.audience || "",
   };
 
-  const modal = new bootstrap.Modal(
-    document.getElementById("contentModal") || createContentModal()
-  );
-  document.getElementById("contentModalTitle").textContent = blog.title;
+  // Set title with quality score badge FIRST
+  const qualityScore = blog.quality_score || 0;
+  let badgeClass = 'bg-secondary';
+  let badgeHTML = '';
+  if (qualityScore >= 80) {
+    badgeClass = 'bg-success';
+  } else if (qualityScore >= 60) {
+    badgeClass = 'bg-warning';
+  } else if (qualityScore > 0) {
+    badgeClass = 'bg-danger';
+  }
+  
+  if (qualityScore > 0) {
+    badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(qualityScore)}%</span>`;
+  }
+  
+  // Update modal content
+  document.getElementById("contentModalTitle").innerHTML = escapeHtml(blog.title) + badgeHTML;
   document.getElementById("contentModalBody").innerHTML = blogContent.replace(
     /\n/g,
     "<br>"
@@ -706,6 +737,8 @@ function showBlogModal(index) {
   // Show the image prompt button for blogs
   showImagePromptButton();
 
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById("contentModal"));
   modal.show();
 }
 
@@ -761,6 +794,21 @@ function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
+}
+
+function getQualityBadge(qualityScore) {
+  if (!qualityScore || qualityScore === 0) return '';
+  
+  let badgeClass = 'bg-secondary';
+  if (qualityScore >= 80) {
+    badgeClass = 'bg-success';
+  } else if (qualityScore >= 60) {
+    badgeClass = 'bg-warning';
+  } else {
+    badgeClass = 'bg-danger';
+  }
+  
+  return `<span class="badge ${badgeClass} ms-2">Quality: ${Math.round(qualityScore)}%</span>`;
 }
 
 function createContentModal() {

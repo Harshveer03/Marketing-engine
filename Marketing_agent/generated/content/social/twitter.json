@@ -1,41 +1,16 @@
 [
     {
-        "title": "AI Rewires Sales: Drive Predictable Pipeline and Revenue.",
-        "caption": "CXOs: Is your GTM strategy failing to deliver predictable revenue? AI isn't just an upgrade; it's the systemic rewire. Transform raw sales data into actionable intelligence & scale pipeline growth. #AISales #RevenueOps #GTMStrategy",
+        "title": "Redefine GTM: AI powers market leadership and growth.",
+        "caption": "Fintech Founders: Your GTM is breaking. Stop relying on 'vibes' & 1% reply rates. AI isn't just insight—it *rewires* sales behavior for predictable revenue & growth. Redefine your market leadership. #Fintech #AISales #GTM",
         "hashtags": [
+            "#Fintech",
             "#AISales",
-            "#RevenueOps",
-            "#GTMStrategy"
+            "#GTM"
         ],
-        "industry": "Sales/Marketing",
+        "quality_score": 75.25,
+        "industry": "Fintech",
         "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-06T11:53:59.346167"
-    },
-    {
-        "title": "Transform Sales Execution: Real-Time Messaging Rewiring.",
-        "caption": "IT & Dev CXOs: Is your GTM execution failing? Rewire it. Real-time messaging transforms raw data into actionable sales intelligence, scaling performance like never before. Engineer your revenue growth.\n#SalesTech #RevOps #DigitalTransformation",
-        "hashtags": [
-            "#SalesTech",
-            "#RevOps",
-            "#DigitalTransformation"
-        ],
-        "industry": "IT & Dev",
-        "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-06T11:54:10.405207"
-    },
-    {
-        "title": "AI for predictable pipeline: Ditch the sales 'vibes'.",
-        "caption": "Ditch the sales 'vibes' for good. IT & Dev CXOs: AI isn't just for product, it's the key to a predictable GTM pipeline. Decode data, operationalize insights, & scale revenue with precision. Stop guessing, start growing.",
-        "hashtags": [
-            "#AIforGTM",
-            "#SaaS",
-            "#RevenueOps"
-        ],
-        "industry": "IT & Dev",
-        "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-06T12:57:56.350219"
+        "audience": "Founders",
+        "timestamp": "2025-11-09T12:27:05.909128"
     }
 ]

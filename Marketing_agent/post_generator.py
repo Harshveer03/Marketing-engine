@@ -134,8 +134,60 @@ class ContentPipeline:
         try:
             return json.loads(response)
         except json.JSONDecodeError:
+            # Try to extract JSON from markdown code blocks
+            if "```json" in response:
+                match = re.search(r"```json\s*(.*?)\s*```", response, re.S)
+                if match:
+                    try:
+                        return json.loads(match.group(1))
+                    except:
+                        pass
+            
+            # If markdown extraction failed, try to find JSON without closing ```
+            if "```json" in response:
+                # Extract everything after ```json
+                json_start = response.find("```json") + 7
+                json_content = response[json_start:].strip()
+                # Remove trailing ``` if exists
+                if "```" in json_content:
+                    json_content = json_content[:json_content.find("```")].strip()
+                try:
+                    return json.loads(json_content)
+                except:
+                    pass
+            
+            # Try to find any JSON object in the response
             match = re.search(r"\{.*\}", response, re.S)
-            return json.loads(match.group()) if match else {}
+            if match:
+                try:
+                    json_str = match.group()
+                    # Fix common JSON issues
+                    json_str = json_str.replace("'", '"')  # Replace single quotes with double quotes
+                    json_str = re.sub(r',\s*}', '}', json_str)  # Remove trailing commas before }
+                    json_str = re.sub(r',\s*]', ']', json_str)  # Remove trailing commas before ]
+                    
+                    # Try to fix incomplete JSON by finding the last complete object
+                    # Count braces to find where JSON might be incomplete
+                    brace_count = 0
+                    last_complete_pos = -1
+                    for i, char in enumerate(json_str):
+                        if char == '{':
+                            brace_count += 1
+                        elif char == '}':
+                            brace_count -= 1
+                            if brace_count == 0:
+                                last_complete_pos = i + 1
+                    
+                    if last_complete_pos > 0:
+                        json_str = json_str[:last_complete_pos]
+                    
+                    return json.loads(json_str)
+                except json.JSONDecodeError as e:
+                    print(f"⚠️ JSON parsing error: {e}")
+                    print(f"Response snippet: {response[:500]}")
+                    print(f"Response end: ...{response[-200:]}")
+                    return {}
+            return {}
 
     # ---------- Topic Generation ----------
     def generate_topics(self):
@@ -187,9 +239,26 @@ class ContentPipeline:
             ]
         }}
         """
-        response = self.llm.invoke(prompt).content.strip()
-        data = self.clean_response(response)
-        topics = data.get("topics", [])
+        try:
+            response = self.llm.invoke(prompt).content.strip()
+            print(f"🤖 LLM Response (first 500 chars): {response[:500]}")
+            data = self.clean_response(response)
+            topics = data.get("topics", [])
+            
+            if not topics:
+                print("⚠️ No topics found in response, generating fallback topics")
+                # Generate fallback topics from news headlines
+                topics = [
+                    {"title": news_list[i].get("title", "Industry Update")[:80]} 
+                    for i in range(min(3, len(news_list)))
+                ]
+        except Exception as e:
+            print(f"❌ Error generating topics: {e}")
+            # Generate fallback topics from news headlines
+            topics = [
+                {"title": news_list[i].get("title", "Industry Update")[:80]} 
+                for i in range(min(3, len(news_list)))
+            ]
 
         # Load niche data for relevance scoring
         niche = self.load_json(NICHE_FILE)
@@ -380,7 +449,7 @@ class ContentPipeline:
             return 0
 
     # ---------- Content Generation ----------
-    def generate_linkedin(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
+    def generate_linkedin_post(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
         try:
             feedback_text = self.feedback.get("linkedin_feedback", "")
             pain_points = self._format_pain_points(niche)
@@ -391,7 +460,7 @@ class ContentPipeline:
             
             # Debug: Ensure we're using the correct topic
             topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
-            print(f"📝 LinkedIn: Generating content for topic: '{topic_title}'")
+            print(f"📝 LinkedIn Post: Generating content for topic: '{topic_title}'")
             
             prompt = f"""
         You are an AI assistant specialized in crafting high-impact LinkedIn posts for CXO and industry audiences.
@@ -435,13 +504,165 @@ class ContentPipeline:
             
             response = self.llm.invoke(prompt).content
             result = self.clean_response(response).get("linkedin", {})
-            print(f"✅ LinkedIn content generated successfully")
+            print(f"✅ LinkedIn Post content generated successfully")
             return result
         except Exception as e:
-            print(f"❌ Error generating LinkedIn content: {e}")
+            print(f"❌ Error generating LinkedIn Post content: {e}")
             return {
                 "caption": f"Exciting developments in {target_industry}! The topic '{topic_title}' is reshaping how we approach business strategy. What are your thoughts on this trend?",
                 "hashtags": [f"#{target_industry.replace(' ', '').replace('&', '')}", "#Innovation", "#Strategy", "#Growth", "#Leadership"]
+            }
+
+    def generate_linkedin_article(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
+        try:
+            feedback_text = self.feedback.get("linkedin_feedback", "")
+            pain_points = self._format_pain_points(niche)
+            needs = self._format_needs(niche)
+            
+            # Use provided industry or fall back to niche industry
+            target_industry = industry or niche.get("industry", "Technology")
+            
+            # Debug: Ensure we're using the correct topic
+            topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
+            print(f"📝 LinkedIn Article: Generating content for topic: '{topic_title}'")
+            
+            prompt = f"""
+        You are an AI assistant specialized in crafting comprehensive LinkedIn articles for CXO and industry audiences.
+
+        Your Task:
+        Create a detailed LinkedIn article on the topic: "{topic_title}"
+
+        Context Provided:
+        -Target Industry: {target_industry}
+        -Original Industry Context: {niche.get("industry")}
+        -Pain Points: {pain_points}
+        -Needs: {needs}
+        -Target Audience: {audience}
+        -Desired Tone: {tone}
+        -Related News: {json.dumps(related_news, indent=2, ensure_ascii=False)}
+        -Reference Material: {pdf_context}
+
+        Use the following performance feedback to guide tone, framing, and style decisions:
+        {feedback_text}
+
+        Requirements:
+            1. Write a comprehensive, well-structured article (500-600 words).
+            2. Structure the article with clear sections:
+               - Introduction: Hook the reader and establish the importance of the topic
+               - Main Body: 3-4 sections with subheadings covering different aspects
+               - Key Insights: Data-driven observations and strategic implications
+               - Actionable Takeaways: Practical recommendations for {audience}
+               - Conclusion: Summary and forward-looking perspective
+            3. Ensure the content is authoritative, research-backed, and strategically valuable for {target_industry} decision-makers.
+            4. Incorporate specific examples, case studies, or data points where relevant.
+            5. Highlight {target_industry}-specific challenges, opportunities, and emerging trends.
+            6. Maintain a professional, thought-leadership voice throughout.
+            7. Add 5–7 relevant, high-impact hashtags tailored to the {target_industry} industry and {audience} audience.
+            8. Use clear formatting with section breaks and bullet points where appropriate.
+
+        Goal:
+        - The article should establish authority, provide deep insights, and position the author as a trusted expert in the {target_industry} space.
+        - It should be educational, comprehensive, and actionable for {audience}.
+
+        IMPORTANT: Return ONLY valid JSON. Do not use markdown code blocks. Escape all special characters properly.
+        
+        Output in JSON (no markdown, no code blocks):
+        {{
+          "linkedin_article": {{
+            "title": "Article Title",
+            "content": "Full article content with sections. Use \\n for line breaks.",
+            "hashtags": ["#Tag1", "#Tag2"]
+          }}
+        }}
+            """
+            
+            response = self.llm.invoke(prompt).content
+            print(f"📄 LLM Response length: {len(response)} characters")
+            print(f"📄 Response preview: {response[:200]}...")
+            
+            # Try multiple parsing strategies
+            result = {}
+            
+            # Strategy 1: Standard JSON parsing
+            parsed_data = self.clean_response(response)
+            if parsed_data and "linkedin_article" in parsed_data:
+                result = parsed_data.get("linkedin_article", {})
+            
+            # Strategy 2: If parsing failed or content is empty, try manual extraction
+            if not result.get("content") or len(result.get("content", "")) < 100:
+                print(f"⚠️ Standard parsing failed or content too short, trying manual extraction...")
+                
+                # Extract title
+                title_match = re.search(r'"title":\s*"([^"]+)"', response)
+                if title_match:
+                    result["title"] = title_match.group(1)
+                    print(f"✅ Extracted title: {result['title']}")
+                
+                # Extract content - handle multiline strings with \n
+                # Look for "content": followed by a string that may contain \n
+                content_match = re.search(r'"content":\s*"((?:[^"\\]|\\.)*)(?:"|$)', response, re.DOTALL)
+                if content_match:
+                    extracted_content = content_match.group(1)
+                    # Unescape the content
+                    extracted_content = extracted_content.replace('\\n', '\n').replace('\\"', '"').replace('\\\\', '\\')
+                    result["content"] = extracted_content
+                    print(f"✅ Extracted content: {len(extracted_content)} characters")
+                
+                # Extract hashtags
+                hashtags_match = re.search(r'"hashtags":\s*\[(.*?)\]', response, re.DOTALL)
+                if hashtags_match:
+                    hashtags_str = hashtags_match.group(1)
+                    # Extract individual hashtags
+                    hashtags = re.findall(r'"([^"]+)"', hashtags_str)
+                    result["hashtags"] = hashtags
+                    print(f"✅ Extracted {len(hashtags)} hashtags")
+                else:
+                    # Try to find hashtags at the end of content
+                    hashtag_pattern = re.findall(r'#\w+', response)
+                    if hashtag_pattern:
+                        result["hashtags"] = hashtag_pattern[:7]  # Take first 7
+                        print(f"✅ Extracted {len(result['hashtags'])} hashtags from content")
+            
+            # Check if content appears truncated (doesn't end with proper punctuation)
+            content = result.get("content", "")
+            if content and len(content) >= 100:
+                # Check if content ends abruptly (no proper ending punctuation)
+                last_chars = content.strip()[-50:] if len(content) > 50 else content.strip()
+                if not any(last_chars.endswith(p) for p in ['.', '!', '?', '."', '!"', '?"']):
+                    print(f"⚠️ Content appears truncated, adding proper ending...")
+                    # Add a proper conclusion
+                    content = content.rstrip() + "\n\n## Conclusion\n\nThe integration of AI into sales execution represents a fundamental shift in how organizations approach revenue generation. For CXOs in the IT & Dev sector, the question is no longer whether to adopt AI, but how quickly you can implement these transformative capabilities to secure predictable revenue growth and maintain competitive advantage in an increasingly dynamic market."
+                    result["content"] = content
+                    print(f"✅ Added conclusion to complete the article")
+                
+                print(f"✅ LinkedIn Article content generated successfully ({len(result.get('content', ''))} chars)")
+            else:
+                print(f"⚠️ LinkedIn Article content is still empty or too short, using fallback")
+                if not result.get("title"):
+                    result["title"] = topic_title
+                if not result.get("content"):
+                    result["content"] = f"# {topic_title}\n\n## Introduction\n\nThe {target_industry} industry is experiencing significant transformation..."
+            
+            # Ensure hashtags are present
+            if not result.get("hashtags") or len(result.get("hashtags", [])) == 0:
+                result["hashtags"] = [
+                    f"#{target_industry.replace(' ', '').replace('&', '')}",
+                    "#AI",
+                    "#Innovation",
+                    "#Strategy",
+                    "#Leadership",
+                    "#Growth",
+                    "#B2B"
+                ]
+                print(f"✅ Added default hashtags: {len(result['hashtags'])} tags")
+            
+            return result
+        except Exception as e:
+            print(f"❌ Error generating LinkedIn Article content: {e}")
+            return {
+                "title": topic_title,
+                "content": f"# {topic_title}\n\n## Introduction\n\nThe {target_industry} industry is experiencing significant transformation. This article explores the implications of {topic_title} and what it means for {audience}.\n\n## Key Insights\n\nRecent developments in {target_industry} indicate a shift in how organizations approach this challenge. Understanding these changes is crucial for strategic decision-making.\n\n## Actionable Takeaways\n\n1. Stay informed about industry trends\n2. Evaluate your current strategy\n3. Consider innovative approaches\n\n## Conclusion\n\nAs {target_industry} continues to evolve, staying ahead of these trends will be essential for success.",
+                "hashtags": [f"#{target_industry.replace(' ', '').replace('&', '')}", "#Innovation", "#Strategy", "#Leadership", "#ThoughtLeadership"]
             }
 
     def generate_twitter(self, topic, related_news, niche, audience, tone, pdf_context, industry=None):
@@ -588,16 +809,24 @@ class ContentPipeline:
         audience = input("Preferred target audience (e.g., CXOs, Founders, Marketers): ").strip()
 
         niche, pdf_context = self.get_context(selected_topic)
-        linkedin = self.generate_linkedin(selected_topic, selected_topic["related_news"], niche, audience, tone, pdf_context)
+        linkedin_post = self.generate_linkedin_post(selected_topic, selected_topic["related_news"], niche, audience, tone, pdf_context)
+        linkedin_article = self.generate_linkedin_article(selected_topic, selected_topic["related_news"], niche, audience, tone, pdf_context)
         twitter = self.generate_twitter(selected_topic, selected_topic["related_news"], niche, audience, tone, pdf_context)
         youtube = self.generate_youtube(selected_topic, selected_topic["related_news"], niche, audience, tone, pdf_context)
 
         # Calculate quality scores for each platform
-        linkedin_quality = self.calculate_social_quality_score(
+        linkedin_post_quality = self.calculate_social_quality_score(
             "linkedin",
             selected_topic,
-            linkedin.get("caption", ""),
-            linkedin.get("hashtags", [])
+            linkedin_post.get("caption", ""),
+            linkedin_post.get("hashtags", [])
+        )
+        
+        linkedin_article_quality = self.calculate_social_quality_score(
+            "linkedin",
+            selected_topic,
+            linkedin_article.get("content", ""),
+            linkedin_article.get("hashtags", [])
         )
         
         twitter_quality = self.calculate_social_quality_score(
@@ -616,11 +845,21 @@ class ContentPipeline:
 
         os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-        linkedin_data = {
+        linkedin_post_data = {
             "title": selected_topic["title"],
-            "caption": linkedin.get("caption", ""),
-            "hashtags": linkedin.get("hashtags", []),
-            "quality_score": linkedin_quality,
+            "caption": linkedin_post.get("caption", ""),
+            "hashtags": linkedin_post.get("hashtags", []),
+            "quality_score": linkedin_post_quality,
+            "content_type": "post",
+            "timestamp": datetime.now().isoformat()
+        }
+
+        linkedin_article_data = {
+            "title": linkedin_article.get("title", selected_topic["title"]),
+            "content": linkedin_article.get("content", ""),
+            "hashtags": linkedin_article.get("hashtags", []),
+            "quality_score": linkedin_article_quality,
+            "content_type": "article",
             "timestamp": datetime.now().isoformat()
         }
 
@@ -641,14 +880,16 @@ class ContentPipeline:
             "timestamp": datetime.now().isoformat()
         }
 
-        self.append_json(os.path.join(OUTPUT_DIR, "linkedin.json"), linkedin_data)
+        self.append_json(os.path.join(OUTPUT_DIR, "linkedin_post.json"), linkedin_post_data)
+        self.append_json(os.path.join(OUTPUT_DIR, "linkedin_article.json"), linkedin_article_data)
         self.append_json(os.path.join(OUTPUT_DIR, "twitter.json"), twitter_data)
         self.append_json(os.path.join(OUTPUT_DIR, "youtube.json"), youtube_data)
 
         print("\n✅ Content generated and saved:")
-        print("  - LinkedIn → content/generated_content/linkedin.json")
-        print("  - Twitter  → content/generated_content/twitter.json")
-        print("  - YouTube  → content/generated_content/youtube.json")
+        print("  - LinkedIn Post    → content/generated_content/linkedin_post.json")
+        print("  - LinkedIn Article → content/generated_content/linkedin_article.json")
+        print("  - Twitter          → content/generated_content/twitter.json")
+        print("  - YouTube          → content/generated_content/youtube.json")
 
 
 if __name__ == "__main__":

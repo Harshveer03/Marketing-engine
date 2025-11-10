@@ -112,7 +112,7 @@ def load_content_stats():
     
     # Count social posts - check both locations
     social_dirs = ["./generated/content/social", "./content/generated_content"]
-    social_files = ["linkedin.json", "twitter.json", "youtube.json"]
+    social_files = ["linkedin_post.json", "linkedin_article.json", "twitter.json", "youtube.json"]
     
     for social_dir in social_dirs:
         for platform in social_files:
@@ -328,9 +328,16 @@ def view_content(content_type):
             social_content = {}
             social_dirs = ["./generated/content/social", "./content/generated_content"]
             
-            for platform in ['linkedin', 'twitter', 'youtube']:
+            for platform in ['linkedin-article', 'linkedin-post', 'twitter', 'youtube']:
                 for social_dir in social_dirs:
-                    file_path = f"{social_dir}/{platform}.json"
+                    # Handle file naming
+                    if platform == 'linkedin-article':
+                        file_path = f"{social_dir}/linkedin_article.json"
+                    elif platform == 'linkedin-post':
+                        file_path = f"{social_dir}/linkedin_post.json"
+                    else:
+                        file_path = f"{social_dir}/{platform}.json"
+                    
                     if os.path.exists(file_path):
                         with open(file_path, "r", encoding="utf-8") as f:
                             social_content[platform] = json.load(f)
@@ -455,11 +462,16 @@ def generate_social_with_selection():
         industry = data.get('industry', 'IT & Dev')
         tone = data.get('tone', 'professional')
         audience = data.get('audience', 'Founders')
+        platforms = data.get('platforms', ['linkedin', 'twitter', 'youtube'])  # Get selected platforms
         
         print(f"🔢 Topic index: {topic_index}, Industry: {industry}, Tone: {tone}, Audience: {audience}")
+        print(f"📱 Selected platforms: {platforms}")
         
         if topic_index is None:
             return jsonify({'error': 'Missing topic selection'}), 400
+        
+        if not platforms or len(platforms) == 0:
+            return jsonify({'error': 'Please select at least one platform'}), 400
         
         from post_generator import ContentPipeline
         pipeline = ContentPipeline()
@@ -494,84 +506,110 @@ def generate_social_with_selection():
             print(f"Error getting context: {e}")
             return jsonify({'error': f'Failed to get context: {str(e)}'}), 500
         
-        # Generate content for all platforms using the selected topic
+        # Generate content ONLY for selected platforms
         print(f"🚀 Generating content for topic: '{selected_topic['title']}'")
         print(f"📊 Industry: {industry}, Tone: {tone}, Audience: {audience}")
+        print(f"📱 Generating for platforms: {', '.join(platforms)}")
         
-        linkedin = pipeline.generate_linkedin(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
-        twitter = pipeline.generate_twitter(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
-        youtube = pipeline.generate_youtube(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
-        
-        # Calculate quality scores for each platform
-        linkedin_quality = pipeline.calculate_social_quality_score(
-            "linkedin",
-            selected_topic,
-            linkedin.get("caption", ""),
-            linkedin.get("hashtags", [])
-        )
-        
-        twitter_quality = pipeline.calculate_social_quality_score(
-            "twitter",
-            selected_topic,
-            twitter.get("tweet", ""),
-            twitter.get("hashtags", [])
-        )
-        
-        youtube_quality = pipeline.calculate_social_quality_score(
-            "youtube",
-            selected_topic,
-            youtube.get("script_intro", "") + " " + youtube.get("description", ""),
-            youtube.get("tags", [])
-        )
-        
-        # Save content to files
         output_dir = "./generated/content/social"
         os.makedirs(output_dir, exist_ok=True)
-        
-        # Save content with the selected topic title
         topic_title = selected_topic["title"]
         
-        linkedin_data = {
-            "title": topic_title,
-            "caption": linkedin.get("caption", ""),
-            "hashtags": linkedin.get("hashtags", []),
-            "quality_score": linkedin_quality,
-            "industry": industry,
-            "tone": tone,
-            "audience": audience,
-            "timestamp": datetime.now().isoformat()
-        }
+        # Generate and save content only for selected platforms
+        if 'linkedin-article' in platforms:
+            print("📝 Generating LinkedIn Article content...")
+            linkedin_article = pipeline.generate_linkedin_article(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
+            linkedin_article_quality = pipeline.calculate_social_quality_score(
+                "linkedin",
+                selected_topic,
+                linkedin_article.get("content", ""),
+                linkedin_article.get("hashtags", [])
+            )
+            linkedin_article_data = {
+                "title": linkedin_article.get("title", topic_title),
+                "content": linkedin_article.get("content", ""),
+                "hashtags": linkedin_article.get("hashtags", []),
+                "quality_score": linkedin_article_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "content_type": "article",
+                "timestamp": datetime.now().isoformat()
+            }
+            pipeline.append_json(os.path.join(output_dir, "linkedin_article.json"), linkedin_article_data)
+            print("✅ LinkedIn Article content saved")
         
-        twitter_data = {
-            "title": topic_title,
-            "caption": twitter.get("tweet", ""),
-            "hashtags": twitter.get("hashtags", []),
-            "quality_score": twitter_quality,
-            "industry": industry,
-            "tone": tone,
-            "audience": audience,
-            "timestamp": datetime.now().isoformat()
-        }
+        if 'linkedin-post' in platforms:
+            print("📝 Generating LinkedIn Post content...")
+            linkedin_post = pipeline.generate_linkedin_post(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
+            linkedin_post_quality = pipeline.calculate_social_quality_score(
+                "linkedin",
+                selected_topic,
+                linkedin_post.get("caption", ""),
+                linkedin_post.get("hashtags", [])
+            )
+            linkedin_post_data = {
+                "title": topic_title,
+                "caption": linkedin_post.get("caption", ""),
+                "hashtags": linkedin_post.get("hashtags", []),
+                "quality_score": linkedin_post_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "content_type": "post",
+                "timestamp": datetime.now().isoformat()
+            }
+            pipeline.append_json(os.path.join(output_dir, "linkedin_post.json"), linkedin_post_data)
+            print("✅ LinkedIn Post content saved")
         
-        youtube_data = {
-            "title": topic_title,
-            "script_intro": youtube.get("script_intro", ""),
-            "caption": youtube.get("description", ""),
-            "hashtags": youtube.get("tags", []),
-            "quality_score": youtube_quality,
-            "industry": industry,
-            "tone": tone,
-            "audience": audience,
-            "timestamp": datetime.now().isoformat()
-        }
+        if 'twitter' in platforms:
+            print("📝 Generating Twitter content...")
+            twitter = pipeline.generate_twitter(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
+            twitter_quality = pipeline.calculate_social_quality_score(
+                "twitter",
+                selected_topic,
+                twitter.get("tweet", ""),
+                twitter.get("hashtags", [])
+            )
+            twitter_data = {
+                "title": topic_title,
+                "caption": twitter.get("tweet", ""),
+                "hashtags": twitter.get("hashtags", []),
+                "quality_score": twitter_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "timestamp": datetime.now().isoformat()
+            }
+            pipeline.append_json(os.path.join(output_dir, "twitter.json"), twitter_data)
+            print("✅ Twitter content saved")
         
-        print(f"💾 Saving content for topic: '{topic_title}'")
+        if 'youtube' in platforms:
+            print("📝 Generating YouTube content...")
+            youtube = pipeline.generate_youtube(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
+            youtube_quality = pipeline.calculate_social_quality_score(
+                "youtube",
+                selected_topic,
+                youtube.get("script_intro", "") + " " + youtube.get("description", ""),
+                youtube.get("tags", [])
+            )
+            youtube_data = {
+                "title": topic_title,
+                "script_intro": youtube.get("script_intro", ""),
+                "caption": youtube.get("description", ""),
+                "hashtags": youtube.get("tags", []),
+                "quality_score": youtube_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "timestamp": datetime.now().isoformat()
+            }
+            pipeline.append_json(os.path.join(output_dir, "youtube.json"), youtube_data)
+            print("✅ YouTube content saved")
         
-        pipeline.append_json(os.path.join(output_dir, "linkedin.json"), linkedin_data)
-        pipeline.append_json(os.path.join(output_dir, "twitter.json"), twitter_data)
-        pipeline.append_json(os.path.join(output_dir, "youtube.json"), youtube_data)
+        print(f"💾 Content generation complete for: {', '.join(platforms)}")
         
-        return jsonify({'success': True, 'message': 'Social content generated successfully'})
+        return jsonify({'success': True, 'message': f'Social content generated for {", ".join(platforms)}'})
     except Exception as e:
         import traceback
         traceback.print_exc()

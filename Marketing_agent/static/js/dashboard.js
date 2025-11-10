@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const target = e.target.getAttribute("data-bs-target").substring(1);
         console.log("Main tab clicked:", target);
         if (target === "social") {
-          // Load LinkedIn content by default when social tab is opened
-          loadSocialContent("linkedin");
+          // Load LinkedIn Article content by default when social tab is opened
+          loadSocialContent("linkedin-article");
         } else {
           loadContent(target);
         }
@@ -379,6 +379,8 @@ function loadSocialContent(platform) {
   fetch("/content/social")
     .then((response) => response.json())
     .then((data) => {
+      console.log(`📊 Loaded data for platform: ${platform}`, data[platform]);
+      
       if (!data || !data[platform]) {
         contentDiv.innerHTML = `
           <div class="text-center text-muted">
@@ -394,24 +396,45 @@ function loadSocialContent(platform) {
       const posts = Array.isArray(data[platform])
         ? data[platform]
         : [data[platform]];
+      
+      console.log(`📝 Processing ${posts.length} posts for ${platform}`);
+      
       let html = "";
 
       posts.forEach((post, index) => {
+        console.log(`📄 Post ${index}:`, {
+          title: post.title,
+          hasContent: !!post.content,
+          hasCaption: !!post.caption,
+          contentLength: post.content ? post.content.length : 0,
+          qualityScore: post.quality_score
+        });
+        
+        // Determine content field based on platform
+        const contentField = (platform === 'linkedin-article') ? post.content : post.caption;
+        const platformDisplay = platform.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        
+        // For LinkedIn Article, show preview with "Read Full Article" button
+        const isArticle = platform === 'linkedin-article';
+        const displayContent = isArticle ? (contentField || '').substring(0, 300) : contentField;
+        
+        console.log(`✂️ Display content length: ${displayContent ? displayContent.length : 0}`);
+        
         html += `
           <div class="card content-card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
               <h6 class="mb-0">
                 ${escapeHtml(post.title)}
-                ${post.quality_score !== undefined ? getQualityBadge(post.quality_score) : ''}
+                ${(post.quality_score !== undefined && post.quality_score !== null && post.quality_score > 0) ? getQualityBadge(post.quality_score) : ''}
               </h6>
               <small class="text-muted">
-                <i class="fab fa-${platform} me-1"></i>
-                ${platform.charAt(0).toUpperCase() + platform.slice(1)}
+                <i class="fab fa-linkedin me-1"></i>
+                ${platformDisplay}
                 ${post.timestamp ? ` | ${formatDate(post.timestamp)}` : ""}
               </small>
             </div>
             <div class="card-body">
-              <p class="card-text">${escapeHtml(post.caption)}</p>
+              <p class="card-text">${displayContent ? escapeHtml(displayContent) : '<em class="text-muted">No content available</em>'}${isArticle && displayContent ? '...' : ''}</p>
               ${
                 post.hashtags
                   ? `
@@ -439,10 +462,19 @@ function loadSocialContent(platform) {
                   : ""
               }
               <div class="mt-3">
-                <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('${escapeHtml(
-                  post.caption
+                ${
+                  isArticle
+                    ? `
+                  <button class="btn btn-sm btn-outline-primary" onclick="showLinkedInArticleModal(${index})">
+                    <i class="fas fa-eye me-1"></i>Read Full Article
+                  </button>
+                `
+                    : ""
+                }
+                <button class="btn btn-sm btn-outline-secondary ${isArticle ? 'ms-2' : ''}" onclick="copyToClipboard('${escapeHtml(
+                  contentField || ''
                 ).replace(/'/g, "\\'")}')">
-                  <i class="fas fa-copy me-1"></i>Copy Text
+                  <i class="fas fa-copy me-1"></i>Copy ${isArticle ? 'Article' : 'Text'}
                 </button>
                 ${
                   post.script_intro
@@ -456,7 +488,7 @@ function loadSocialContent(platform) {
                     : ""
                 }
                 ${
-                  platform === "linkedin" || platform === "twitter"
+                  platform === "linkedin-article" || platform === "linkedin-post" || platform === "twitter"
                     ? `
                   <button class="btn btn-sm btn-outline-primary ms-2" onclick="generateSocialImagePrompt('${platform}', ${index})">
                     <i class="fas fa-image me-1"></i>Generate Image Prompt
@@ -486,6 +518,15 @@ function loadSocialContent(platform) {
         window.socialContentData = {};
       }
       window.socialContentData[platform] = posts;
+      
+      // Store LinkedIn articles in contentData for modal access (similar to blogs)
+      if (platform === 'linkedin-article') {
+        if (!window.contentData) {
+          window.contentData = {};
+        }
+        window.contentData['linkedin-article'] = posts;
+        console.log(`✅ Stored ${posts.length} LinkedIn articles in contentData`, window.contentData['linkedin-article']);
+      }
     })
     .catch((error) => {
       contentDiv.innerHTML = `
@@ -740,6 +781,65 @@ function showBlogModal(index) {
   // Show modal
   const modal = new bootstrap.Modal(document.getElementById("contentModal"));
   modal.show();
+}
+
+// LinkedIn Article-specific functions
+function showLinkedInArticleModal(index) {
+  console.log(`🔍 Opening LinkedIn Article modal for index: ${index}`);
+  console.log(`📦 contentData available:`, window.contentData);
+  
+  const articles = window.contentData ? window.contentData['linkedin-article'] : null;
+  
+  console.log(`📚 Articles array:`, articles);
+  
+  if (!articles || !articles[index]) {
+    console.error(`❌ Article not found at index ${index}. Available articles:`, articles);
+    showToast("error", "LinkedIn Article content not found. Please refresh the page.");
+    return;
+  }
+
+  const article = articles[index];
+  console.log(`📄 Article data:`, article);
+  
+  let articleContent = article.content || article.caption || '';
+  
+  if (!articleContent) {
+    console.error(`❌ No content found in article:`, article);
+    showToast("error", "Article content is empty.");
+    return;
+  }
+
+  // Set title with quality score badge
+  const qualityScore = article.quality_score || 0;
+  let badgeClass = 'bg-secondary';
+  let badgeHTML = '';
+  if (qualityScore >= 80) {
+    badgeClass = 'bg-success';
+  } else if (qualityScore >= 60) {
+    badgeClass = 'bg-warning';
+  } else if (qualityScore > 0) {
+    badgeClass = 'bg-danger';
+  }
+  
+  if (qualityScore > 0) {
+    badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(qualityScore)}%</span>`;
+  }
+  
+  // Update modal content
+  document.getElementById("contentModalTitle").innerHTML = escapeHtml(article.title) + badgeHTML;
+  document.getElementById("contentModalBody").innerHTML = articleContent.replace(
+    /\n/g,
+    "<br>"
+  );
+
+  // Hide the image prompt button for LinkedIn articles (or show if you want)
+  hideImagePromptButton();
+
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById("contentModal"));
+  modal.show();
+  
+  console.log(`✅ Modal opened successfully`);
 }
 
 function copyBlogContent(index) {
@@ -1093,8 +1193,19 @@ function generateSocialFromDashboard() {
   const tone = document.getElementById("toneSelect").value;
   const audience = document.getElementById("audienceSelect").value;
 
+  // Get selected platforms
+  const selectedPlatforms = [];
+  document.querySelectorAll('.platform-checkbox:checked').forEach(checkbox => {
+    selectedPlatforms.push(checkbox.value);
+  });
+
   if (!selectedTopic) {
     showToast("error", "Please select a topic");
+    return;
+  }
+
+  if (selectedPlatforms.length === 0) {
+    showToast("error", "Please select at least one platform");
     return;
   }
 
@@ -1105,9 +1216,10 @@ function generateSocialFromDashboard() {
   generateBtn.innerHTML =
     '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
 
+  const platformNames = selectedPlatforms.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ');
   showToast(
     "info",
-    `Generating social content for ${industry}... This may take a few moments.`
+    `Generating content for ${platformNames}... This may take a few moments.`
   );
 
   // Debug: Log what we're sending
@@ -1116,11 +1228,11 @@ function generateSocialFromDashboard() {
     industry: industry,
     tone: tone,
     audience: audience,
+    platforms: selectedPlatforms
   };
 
   console.log("🚀 Sending request:", requestData);
-  console.log("📝 Selected topic element:", selectedTopic);
-  console.log("🔢 Topic index:", selectedTopic.value);
+  console.log("📝 Selected platforms:", selectedPlatforms);
 
   // Generate content with selections
   fetch("/generate_social_with_selection", {
@@ -1136,7 +1248,7 @@ function generateSocialFromDashboard() {
       generateBtn.innerHTML = originalText;
 
       if (data.success) {
-        showToast("success", "Social content generated successfully!");
+        showToast("success", `Content generated for ${platformNames}!`);
 
         // Hide topic selection
         hideTopicSelection();
@@ -1147,8 +1259,8 @@ function generateSocialFromDashboard() {
         socialTabInstance.show();
 
         setTimeout(() => {
-          // Load LinkedIn content by default
-          loadSocialContent("linkedin");
+          // Load first selected platform content
+          loadSocialContent(selectedPlatforms[0]);
           refreshStats();
         }, 1000);
       } else {
@@ -1160,6 +1272,23 @@ function generateSocialFromDashboard() {
       generateBtn.innerHTML = originalText;
       showToast("error", "Failed to generate content: " + error.message);
     });
+}
+
+// Toggle all platforms checkbox
+function toggleAllPlatforms() {
+  const checkboxes = document.querySelectorAll('.platform-checkbox');
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = !allChecked;
+  });
+  
+  const button = event.target.closest('button');
+  if (allChecked) {
+    button.innerHTML = '<i class="fas fa-check-double me-1"></i>Select All';
+  } else {
+    button.innerHTML = '<i class="fas fa-times me-1"></i>Deselect All';
+  }
 }
 
 // Set default industry based on current business context

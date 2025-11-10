@@ -193,6 +193,39 @@
                   <option value="Marketers">Marketers</option>
                 </select>
               </div>
+
+              <div class="mb-3">
+                <label class="form-label">Select Platforms:</label>
+                <div class="d-flex flex-column gap-2">
+                  <div class="form-check">
+                    <input class="form-check-input platform-checkbox" type="checkbox" value="linkedin-article" id="platformLinkedInArticle" checked>
+                    <label class="form-check-label" for="platformLinkedInArticle">
+                      <i class="fab fa-linkedin me-1"></i>LinkedIn - Article
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input platform-checkbox" type="checkbox" value="linkedin-post" id="platformLinkedInPost" checked>
+                    <label class="form-check-label" for="platformLinkedInPost">
+                      <i class="fab fa-linkedin me-1"></i>LinkedIn - Post
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input platform-checkbox" type="checkbox" value="twitter" id="platformTwitter" checked>
+                    <label class="form-check-label" for="platformTwitter">
+                      <i class="fab fa-twitter me-1"></i>Twitter
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input platform-checkbox" type="checkbox" value="youtube" id="platformYouTube" checked>
+                    <label class="form-check-label" for="platformYouTube">
+                      <i class="fab fa-youtube me-1"></i>YouTube
+                    </label>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-secondary mt-1" onclick="toggleAllPlatforms()">
+                    <i class="fas fa-check-double me-1"></i>Select All
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -417,13 +450,25 @@
                   <li class="nav-item" role="presentation">
                     <button
                       class="nav-link active"
-                      id="linkedin-tab"
+                      id="linkedin-article-tab"
                       data-bs-toggle="tab"
-                      data-bs-target="#linkedin"
+                      data-bs-target="#linkedin-article"
                       type="button"
                       role="tab"
                     >
-                      <i class="fab fa-linkedin me-2"></i>LinkedIn
+                      <i class="fab fa-linkedin me-2"></i>LinkedIn Article
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="linkedin-post-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#linkedin-post"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-linkedin me-2"></i>LinkedIn Post
                     </button>
                   </li>
                   <li class="nav-item" role="presentation">
@@ -454,16 +499,30 @@
               </div>
               <div class="card-body">
                 <div class="tab-content" id="socialTabsContent">
-                  <!-- LinkedIn Content -->
+                  <!-- LinkedIn Article Content -->
                   <div
                     class="tab-pane fade show active"
-                    id="linkedin"
+                    id="linkedin-article"
                     role="tabpanel"
                   >
-                    <div id="linkedin-content">
+                    <div id="linkedin-article-content">
                       <div class="text-center text-muted">
                         <i class="fab fa-linkedin fa-3x mb-3"></i>
-                        <p>No LinkedIn content generated yet.</p>
+                        <p>No LinkedIn Article content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- LinkedIn Post Content -->
+                  <div
+                    class="tab-pane fade"
+                    id="linkedin-post"
+                    role="tabpanel"
+                  >
+                    <div id="linkedin-post-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-linkedin fa-3x mb-3"></i>
+                        <p>No LinkedIn Post content generated yet.</p>
                       </div>
                     </div>
                   </div>

@@ -448,6 +448,235 @@ def generate_topics():
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
+@app.route('/generate_social_manual', methods=['POST'])
+def generate_social_manual():
+    """Generate social content with user's custom topic"""
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        user_topic = data.get('topic')
+        industry = data.get('industry', 'IT & Development')
+        tone = data.get('tone', 'professional')
+        audience = data.get('audience', 'CXOs')
+        platforms = data.get('platforms', ['linkedin-article', 'linkedin-post', 'twitter', 'youtube'])
+        
+        print(f"📝 Manual social generation:")
+        print(f"   Topic: {user_topic}")
+        print(f"   Industry: {industry}")
+        print(f"   Tone: {tone}")
+        print(f"   Audience: {audience}")
+        print(f"   Platforms: {platforms}")
+        
+        if not user_topic:
+            return jsonify({'error': 'Topic is required'}), 400
+        
+        if not platforms or len(platforms) == 0:
+            return jsonify({'error': 'At least one platform must be selected'}), 400
+        
+        from post_generator import ContentPipeline
+        from blog_generator import BlogGenerator
+        
+        pipeline = ContentPipeline()
+        generator = BlogGenerator()
+        
+        # Step 1: Fetch trends based on user's topic
+        print(f"🔍 Fetching trends related to: '{user_topic}'")
+        search_query = f"{user_topic} {industry}"
+        topic_trends = generator.fetch_news(search_query)
+        
+        print(f"📰 Found {len(topic_trends)} relevant trends")
+        
+        # Step 2: Get niche context
+        niche = pipeline.load_json("./generated/niche_icp.json")
+        pdf_context = pipeline._build_context_from_niche(niche)
+        
+        # Step 3: Create topic object
+        topic_obj = {
+            "title": user_topic,
+            "related_news": topic_trends
+        }
+        
+        # Step 4: Generate content for selected platforms
+        print(f"✍️ Generating content for platforms: {platforms}")
+        
+        output_dir = "./generated/content/social"
+        os.makedirs(output_dir, exist_ok=True)
+        
+        generated_count = 0
+        
+        # LinkedIn Article
+        if 'linkedin-article' in platforms:
+            print(f"📝 Generating LinkedIn Article...")
+            linkedin_article = pipeline.generate_linkedin_article(
+                topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
+            )
+            
+            linkedin_article_quality = pipeline.calculate_social_quality_score(
+                "linkedin",
+                topic_obj,
+                linkedin_article.get("content", ""),
+                linkedin_article.get("hashtags", [])
+            )
+            
+            linkedin_article_data = {
+                "title": linkedin_article.get("title", user_topic),
+                "content": linkedin_article.get("content", ""),
+                "hashtags": linkedin_article.get("hashtags", []),
+                "quality_score": linkedin_article_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "generation_mode": "manual",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            pipeline.append_json(os.path.join(output_dir, "linkedin_article.json"), linkedin_article_data)
+            generated_count += 1
+            print(f"✅ LinkedIn Article generated")
+        
+        # LinkedIn Post
+        if 'linkedin-post' in platforms:
+            print(f"📝 Generating LinkedIn Post...")
+            linkedin_post = pipeline.generate_linkedin_post(
+                topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
+            )
+            
+            linkedin_post_quality = pipeline.calculate_social_quality_score(
+                "linkedin",
+                topic_obj,
+                linkedin_post.get("caption", ""),
+                linkedin_post.get("hashtags", [])
+            )
+            
+            linkedin_post_data = {
+                "title": user_topic,
+                "caption": linkedin_post.get("caption", ""),
+                "hashtags": linkedin_post.get("hashtags", []),
+                "quality_score": linkedin_post_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "generation_mode": "manual",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            pipeline.append_json(os.path.join(output_dir, "linkedin_post.json"), linkedin_post_data)
+            generated_count += 1
+            print(f"✅ LinkedIn Post generated")
+        
+        # Twitter
+        if 'twitter' in platforms:
+            print(f"📝 Generating Twitter content...")
+            twitter = pipeline.generate_twitter(
+                topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
+            )
+            
+            twitter_quality = pipeline.calculate_social_quality_score(
+                "twitter",
+                topic_obj,
+                twitter.get("tweet", ""),
+                twitter.get("hashtags", [])
+            )
+            
+            twitter_data = {
+                "title": user_topic,
+                "caption": twitter.get("tweet", ""),
+                "hashtags": twitter.get("hashtags", []),
+                "quality_score": twitter_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "generation_mode": "manual",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            pipeline.append_json(os.path.join(output_dir, "twitter.json"), twitter_data)
+            generated_count += 1
+            print(f"✅ Twitter content generated")
+        
+        # YouTube
+        if 'youtube' in platforms:
+            print(f"📝 Generating YouTube content...")
+            youtube = pipeline.generate_youtube(
+                topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
+            )
+            
+            youtube_quality = pipeline.calculate_social_quality_score(
+                "youtube",
+                topic_obj,
+                youtube.get("script_intro", "") + " " + youtube.get("description", ""),
+                youtube.get("tags", [])
+            )
+            
+            youtube_data = {
+                "title": user_topic,
+                "script_intro": youtube.get("script_intro", ""),
+                "caption": youtube.get("description", ""),
+                "hashtags": youtube.get("tags", []),
+                "quality_score": youtube_quality,
+                "industry": industry,
+                "tone": tone,
+                "audience": audience,
+                "generation_mode": "manual",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            pipeline.append_json(os.path.join(output_dir, "youtube.json"), youtube_data)
+            generated_count += 1
+            print(f"✅ YouTube content generated")
+        
+        print(f"✅ Manual social generation complete: {generated_count} platforms")
+        
+        # Save the topic to topics.json (for current session)
+        print(f"🔄 Saving topic: '{user_topic}'")
+        topics_file = "./generated/topics/topics.json"
+        os.makedirs(os.path.dirname(topics_file), exist_ok=True)
+        
+        topic_entry = {
+            "title": user_topic,
+            "related_news": topic_trends
+        }
+        
+        pipeline.save_json(topics_file, [topic_entry])
+        print(f"✅ Successfully saved topic to topics.json")
+        
+        # Save the used topic to prevent duplicates
+        print(f"🔄 Saving used social topic: '{user_topic}'")
+        used_topics_file = "./generated/topics/used_social_topics.json"
+        os.makedirs(os.path.dirname(used_topics_file), exist_ok=True)
+        
+        used_topics = []
+        if os.path.exists(used_topics_file):
+            try:
+                with open(used_topics_file, "r", encoding="utf-8") as f:
+                    used_topics = json.load(f)
+                print(f"📊 Found {len(used_topics)} existing used social topics")
+            except json.JSONDecodeError as e:
+                print(f"⚠️ JSON decode error in used social topics file: {e}")
+                used_topics = []
+        
+        new_topic_entry = {"title": user_topic, "generated_on": datetime.now().isoformat(), "mode": "manual"}
+        used_topics.append(new_topic_entry)
+        
+        with open(used_topics_file, "w", encoding="utf-8") as f:
+            json.dump(used_topics, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Successfully saved used social topic: '{user_topic}'")
+        print(f"📊 Total used social topics now: {len(used_topics)}")
+        
+        return jsonify({
+            'success': True,
+            'message': f'Social content generated for {generated_count} platforms',
+            'platforms_generated': generated_count
+        })
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/generate_social_with_selection', methods=['POST'])
 def generate_social_with_selection():
     """Generate social content with user selections"""
@@ -609,6 +838,30 @@ def generate_social_with_selection():
         
         print(f"💾 Content generation complete for: {', '.join(platforms)}")
         
+        # Save the used topic to prevent duplicates
+        print(f"🔄 Saving used social topic: '{selected_topic['title']}'")
+        used_topics_file = "./generated/topics/used_social_topics.json"
+        os.makedirs(os.path.dirname(used_topics_file), exist_ok=True)
+        
+        used_topics = []
+        if os.path.exists(used_topics_file):
+            try:
+                with open(used_topics_file, "r", encoding="utf-8") as f:
+                    used_topics = json.load(f)
+                print(f"📊 Found {len(used_topics)} existing used social topics")
+            except json.JSONDecodeError as e:
+                print(f"⚠️ JSON decode error in used social topics file: {e}")
+                used_topics = []
+        
+        new_topic_entry = {"title": selected_topic['title'], "generated_on": datetime.now().isoformat(), "mode": "automatic"}
+        used_topics.append(new_topic_entry)
+        
+        with open(used_topics_file, "w", encoding="utf-8") as f:
+            json.dump(used_topics, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Successfully saved used social topic: '{selected_topic['title']}'")
+        print(f"📊 Total used social topics now: {len(used_topics)}")
+        
         return jsonify({'success': True, 'message': f'Social content generated for {", ".join(platforms)}'})
     except Exception as e:
         import traceback
@@ -730,6 +983,122 @@ def generate_blog_with_selection():
         print(f"📊 Total used topics now: {len(used_topics)}")
         
         return jsonify({'success': True, 'message': 'Blog content generated successfully', 'title': blog_entry['title']})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/generate_blog_manual', methods=['POST'])
+def generate_blog_manual():
+    """Generate blog with user's custom topic"""
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        user_topic = data.get('topic')
+        industry = data.get('industry', 'IT & Development')
+        tone = data.get('tone', 'professional')
+        audience = data.get('audience', 'CXOs')
+        
+        print(f"📝 Manual blog generation:")
+        print(f"   Topic: {user_topic}")
+        print(f"   Industry: {industry}")
+        print(f"   Tone: {tone}")
+        print(f"   Audience: {audience}")
+        
+        if not user_topic:
+            return jsonify({'error': 'Topic is required'}), 400
+        
+        from blog_generator import BlogGenerator
+        from trend_fetcher import TrendFetcher
+        
+        generator = BlogGenerator()
+        
+        # Step 1: Fetch trends based on user's topic
+        print(f"🔍 Fetching trends related to: '{user_topic}'")
+        fetcher = TrendFetcher()
+        
+        # Create a search query combining topic and industry
+        search_query = f"{user_topic} {industry}"
+        print(f"🔍 Search query: '{search_query}'")
+        
+        # Fetch news using the topic
+        topic_trends = generator.fetch_news(search_query)
+        
+        print(f"📰 Found {len(topic_trends)} relevant trends")
+        
+        # Step 2: Get niche context
+        niche = generator.load_json("./generated/niche_icp.json")
+        pdf_context = generator.build_pdf_context(user_topic, niche)
+        
+        # Step 3: Generate blog
+        print(f"✍️ Generating blog content...")
+        blog_data = generator.generate_blog_with_industry(
+            topic=user_topic,
+            news_items=topic_trends,
+            niche=niche,
+            pdf_context=pdf_context,
+            industry=industry,
+            tone=tone,
+            audience=audience
+        )
+        
+        # Step 4: Calculate quality score
+        quality_score = generator.calculate_quality_score(
+            user_topic,
+            blog_data.get("blog", ""),
+            topic_trends
+        )
+        
+        # Step 5: Save blog
+        blog_entry = {
+            "title": blog_data.get("title", user_topic),
+            "outline": blog_data.get("outline", []),
+            "blog": blog_data.get("blog", ""),
+            "news": topic_trends,
+            "industry": industry,
+            "tone": tone,
+            "audience": audience,
+            "quality_score": quality_score,
+            "generation_mode": "manual",  # Track that this was manual
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        generator.append_json("./generated/content/blogs/blogs.json", blog_entry)
+        
+        print(f"✅ Manual blog generated: '{blog_entry['title']}'")
+        
+        # Save the used topic to prevent duplicates
+        print(f"🔄 Saving used topic: '{user_topic}'")
+        used_topics_file = "./generated/topics/used_blog_topics.json"
+        os.makedirs(os.path.dirname(used_topics_file), exist_ok=True)
+        
+        used_topics = []
+        if os.path.exists(used_topics_file):
+            try:
+                with open(used_topics_file, "r", encoding="utf-8") as f:
+                    used_topics = json.load(f)
+                print(f"📊 Found {len(used_topics)} existing used topics")
+            except json.JSONDecodeError as e:
+                print(f"⚠️ JSON decode error in used topics file: {e}")
+                used_topics = []
+        
+        new_topic_entry = {"title": user_topic, "generated_on": datetime.now().isoformat()}
+        used_topics.append(new_topic_entry)
+        
+        with open(used_topics_file, "w", encoding="utf-8") as f:
+            json.dump(used_topics, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Successfully saved used topic: '{user_topic}'")
+        print(f"📊 Total used topics now: {len(used_topics)}")
+        
+        return jsonify({
+            'success': True,
+            'message': 'Blog generated successfully',
+            'title': blog_entry['title']
+        })
+        
     except Exception as e:
         import traceback
         traceback.print_exc()

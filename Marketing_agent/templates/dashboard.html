@@ -97,7 +97,7 @@
           <div class="col-md-3 mb-2">
             <button
               class="btn btn-primary w-100"
-              onclick="showBlogTopicSelection()"
+              onclick="showBlogModeSelection()"
             >
               <i class="fas fa-blog me-2"></i>Generate Blog
             </button>
@@ -105,7 +105,7 @@
           <div class="col-md-3 mb-2">
             <button
               class="btn btn-success w-100"
-              onclick="showTopicSelection()"
+              onclick="showSocialModeSelection()"
             >
               <i class="fas fa-share-alt me-2"></i>Generate Social
             </button>
@@ -198,30 +198,61 @@
                 <label class="form-label">Select Platforms:</label>
                 <div class="d-flex flex-column gap-2">
                   <div class="form-check">
-                    <input class="form-check-input platform-checkbox" type="checkbox" value="linkedin-article" id="platformLinkedInArticle" checked>
-                    <label class="form-check-label" for="platformLinkedInArticle">
+                    <input
+                      class="form-check-input platform-checkbox"
+                      type="checkbox"
+                      value="linkedin-article"
+                      id="platformLinkedInArticle"
+                      checked
+                    />
+                    <label
+                      class="form-check-label"
+                      for="platformLinkedInArticle"
+                    >
                       <i class="fab fa-linkedin me-1"></i>LinkedIn - Article
                     </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input platform-checkbox" type="checkbox" value="linkedin-post" id="platformLinkedInPost" checked>
+                    <input
+                      class="form-check-input platform-checkbox"
+                      type="checkbox"
+                      value="linkedin-post"
+                      id="platformLinkedInPost"
+                      checked
+                    />
                     <label class="form-check-label" for="platformLinkedInPost">
                       <i class="fab fa-linkedin me-1"></i>LinkedIn - Post
                     </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input platform-checkbox" type="checkbox" value="twitter" id="platformTwitter" checked>
+                    <input
+                      class="form-check-input platform-checkbox"
+                      type="checkbox"
+                      value="twitter"
+                      id="platformTwitter"
+                      checked
+                    />
                     <label class="form-check-label" for="platformTwitter">
                       <i class="fab fa-twitter me-1"></i>Twitter
                     </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input platform-checkbox" type="checkbox" value="youtube" id="platformYouTube" checked>
+                    <input
+                      class="form-check-input platform-checkbox"
+                      type="checkbox"
+                      value="youtube"
+                      id="platformYouTube"
+                      checked
+                    />
                     <label class="form-check-label" for="platformYouTube">
                       <i class="fab fa-youtube me-1"></i>YouTube
                     </label>
                   </div>
-                  <button type="button" class="btn btn-sm btn-outline-secondary mt-1" onclick="toggleAllPlatforms()">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-secondary mt-1"
+                    onclick="toggleAllPlatforms()"
+                  >
                     <i class="fas fa-check-double me-1"></i>Select All
                   </button>
                 </div>
@@ -514,11 +545,7 @@
                   </div>
 
                   <!-- LinkedIn Post Content -->
-                  <div
-                    class="tab-pane fade"
-                    id="linkedin-post"
-                    role="tabpanel"
-                  >
+                  <div class="tab-pane fade" id="linkedin-post" role="tabpanel">
                     <div id="linkedin-post-content">
                       <div class="text-center text-muted">
                         <i class="fab fa-linkedin fa-3x mb-3"></i>
@@ -603,6 +630,381 @@
     <button class="btn btn-outline-primary btn-lg" onclick="exportContent()">
       <i class="fas fa-download me-2"></i>Export All Content
     </button>
+  </div>
+</div>
+
+<!-- Blog Mode Selection Modal -->
+<div class="modal fade" id="blogModeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choose Blog Generation Mode</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100"
+              style="cursor: pointer"
+              onclick="selectBlogMode('automatic')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center"
+              >
+                <i class="fas fa-magic fa-3x text-primary mb-3"></i>
+                <h5>Automatic</h5>
+                <p class="text-muted mb-0">
+                  AI generates topics from your industry trends
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100"
+              style="cursor: pointer"
+              onclick="selectBlogMode('manual')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center"
+              >
+                <i class="fas fa-pen fa-3x text-success mb-3"></i>
+                <h5>Manual</h5>
+                <p class="text-muted mb-0">
+                  Write your own topic and we'll find relevant trends
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Mode Selection Modal -->
+<div class="modal fade" id="socialModeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choose Social Generation Mode</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100 border-2"
+              style="cursor: pointer; transition: all 0.3s"
+              onmouseover="this.style.borderColor='#0d6efd'; this.style.boxShadow='0 4px 12px rgba(13,110,253,0.3)'"
+              onmouseout="this.style.borderColor=''; this.style.boxShadow=''"
+              onclick="selectSocialMode('automatic')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center py-4"
+              >
+                <i class="fas fa-magic fa-3x text-primary mb-3"></i>
+                <h5 class="mb-2">Automatic</h5>
+                <p class="text-muted mb-0 small">
+                  AI generates topics from your industry trends
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100 border-2"
+              style="cursor: pointer; transition: all 0.3s"
+              onmouseover="this.style.borderColor='#198754'; this.style.boxShadow='0 4px 12px rgba(25,135,84,0.3)'"
+              onmouseout="this.style.borderColor=''; this.style.boxShadow=''"
+              onclick="selectSocialMode('manual')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center py-4"
+              >
+                <i class="fas fa-pen fa-3x text-success mb-3"></i>
+                <h5 class="mb-2">Manual</h5>
+                <p class="text-muted mb-0 small">
+                  Write your own topic and we'll find relevant trends
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Manual Social Topic Input Modal -->
+<div
+  class="modal fade"
+  id="manualSocialTopicModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter Your Social Media Topic</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Enter your social media topic and we'll fetch relevant trends to
+          create compelling content for your selected platforms.
+        </div>
+        <div class="mb-3">
+          <label for="manualSocialTopicInput" class="form-label fw-bold"
+            >Your Topic:</label
+          >
+          <input
+            type="text"
+            id="manualSocialTopicInput"
+            class="form-control form-control-lg"
+            placeholder="e.g., AI revolutionizing customer support in healthcare"
+          />
+          <small class="text-muted"
+            >Be specific and descriptive for best results</small
+          >
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="manualSocialIndustrySelect" class="form-label"
+              >Industry:</label
+            >
+            <select id="manualSocialIndustrySelect" class="form-select">
+              <option value="IT & Dev">IT & Development</option>
+              <option value="Sales/Marketing">Sales/Marketing</option>
+              <option value="Fintech">Fintech</option>
+              <option value="Billing">Billing</option>
+              <option value="Retail">Retail</option>
+              <option value="Logistics">Logistics</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Education">Education</option>
+              <option value="HRTech">HRTech</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="Agritech">Agritech</option>
+              <option value="Energy">Energy</option>
+              <option value="Travel">Travel</option>
+              <option value="Legal">Legal</option>
+              <option value="Media">Media</option>
+              <option value="Government">Government</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualSocialToneSelect" class="form-label">Tone:</label>
+            <select id="manualSocialToneSelect" class="form-select">
+              <option value="professional">Professional</option>
+              <option value="casual">Casual</option>
+              <option value="bold">Bold</option>
+              <option value="technical">Technical</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualSocialAudienceSelect" class="form-label"
+              >Target Audience:</label
+            >
+            <select id="manualSocialAudienceSelect" class="form-select">
+              <option value="CXOs">CXOs</option>
+              <option value="Founders">Founders</option>
+              <option value="Marketers">Marketers</option>
+              <option value="Developers">Developers</option>
+              <option value="Managers">Managers</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Select Platforms:</label>
+          <div class="d-flex flex-column gap-2">
+            <div class="form-check">
+              <input
+                class="form-check-input manual-platform-checkbox"
+                type="checkbox"
+                value="linkedin-article"
+                id="manualPlatformLinkedInArticle"
+                checked
+              />
+              <label
+                class="form-check-label"
+                for="manualPlatformLinkedInArticle"
+              >
+                <i class="fab fa-linkedin me-1"></i>LinkedIn - Article
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input manual-platform-checkbox"
+                type="checkbox"
+                value="linkedin-post"
+                id="manualPlatformLinkedInPost"
+                checked
+              />
+              <label class="form-check-label" for="manualPlatformLinkedInPost">
+                <i class="fab fa-linkedin me-1"></i>LinkedIn - Post
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input manual-platform-checkbox"
+                type="checkbox"
+                value="twitter"
+                id="manualPlatformTwitter"
+                checked
+              />
+              <label class="form-check-label" for="manualPlatformTwitter">
+                <i class="fab fa-twitter me-1"></i>Twitter
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input manual-platform-checkbox"
+                type="checkbox"
+                value="youtube"
+                id="manualPlatformYouTube"
+                checked
+              />
+              <label class="form-check-label" for="manualPlatformYouTube">
+                <i class="fab fa-youtube me-1"></i>YouTube
+              </label>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary mt-1"
+              onclick="toggleAllManualPlatforms()"
+            >
+              <i class="fas fa-check-double me-1"></i>Select All
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="generateSocialManual()"
+        >
+          <i class="fas fa-magic me-2"></i>Generate Social Content
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Manual Blog Topic Input Modal -->
+<div
+  class="modal fade"
+  id="manualBlogTopicModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter Your Blog Topic</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Enter your blog topic and we'll fetch relevant trends to create
+          compelling content.
+        </div>
+        <div class="mb-3">
+          <label for="manualBlogTopicInput" class="form-label fw-bold"
+            >Your Topic:</label
+          >
+          <input
+            type="text"
+            id="manualBlogTopicInput"
+            class="form-control form-control-lg"
+            placeholder="e.g., How AI is transforming customer service in 2025"
+          />
+          <small class="text-muted"
+            >Be specific and descriptive for best results</small
+          >
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="manualBlogIndustrySelect" class="form-label"
+              >Industry:</label
+            >
+            <select id="manualBlogIndustrySelect" class="form-select">
+              <option value="IT & Dev">IT & Development</option>
+              <option value="Sales/Marketing">Sales/Marketing</option>
+              <option value="Fintech">Fintech</option>
+              <option value="Billing">Billing</option>
+              <option value="Retail">Retail</option>
+              <option value="Logistics">Logistics</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Education">Education</option>
+              <option value="HRTech">HRTech</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="Agritech">Agritech</option>
+              <option value="Energy">Energy</option>
+              <option value="Travel">Travel</option>
+              <option value="Legal">Legal</option>
+              <option value="Media">Media</option>
+              <option value="Government">Government</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualBlogToneSelect" class="form-label">Tone:</label>
+            <select id="manualBlogToneSelect" class="form-select">
+              <option value="professional">Professional</option>
+              <option value="casual">Casual</option>
+              <option value="bold">Bold</option>
+              <option value="technical">Technical</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualBlogAudienceSelect" class="form-label"
+              >Target Audience:</label
+            >
+            <select id="manualBlogAudienceSelect" class="form-select">
+              <option value="CXOs">CXOs</option>
+              <option value="Founders">Founders</option>
+              <option value="Marketers">Marketers</option>
+              <option value="Developers">Developers</option>
+              <option value="Managers">Managers</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="generateBlogManual()"
+        >
+          <i class="fas fa-magic me-2"></i>Generate Blog
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

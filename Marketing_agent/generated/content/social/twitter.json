@@ -1,16 +1,31 @@
 [
     {
-        "title": "Unlock market leadership: AI-driven GTM for competitive advantage.",
-        "caption": "IT & Dev CXOs: Is your GTM based on 'vibes'? AI isn't just for code. It's your competitive edge to rewire sales behavior, boost reply rates, & forecast accurately. Unlock market leadership with data-driven GTM, not guesswork. #AI #GTM #TechLeadership",
+        "title": "AI-Powered Sales Execution: Drive Predictable Revenue Growth.",
+        "caption": "Is your pipeline forecasting based on 'vibes'? Founder-led sales breaking? Stop repeating GTM mistakes. AI-powered sales execution rewires GTM behavior in real-time for predictable revenue growth. Move beyond insights to action. #AI #GTM #SalesStrategy",
         "hashtags": [
             "#AI",
             "#GTM",
-            "#TechLeadership"
+            "#SalesStrategy"
         ],
-        "quality_score": 73.37,
-        "industry": "IT & Dev",
-        "tone": "professional",
+        "quality_score": 75.06,
+        "industry": "Sales/Marketing",
+        "tone": "bold",
         "audience": "CXOs",
-        "timestamp": "2025-11-10T15:13:01.622196"
+        "timestamp": "2025-11-10T22:17:36.756166"
+    },
+    {
+        "title": "AI revolutionizing B2B SAAS Market",
+        "caption": "Your GTM isn't scaling: 'Vibe'-based forecasts, <1% reply rates, changes don't stick. AI moves beyond insight-only tools. It's a real-time system for *GTM behavior rewiring*, driving predictable pipeline & rep fluency, anchoring buyers on urgency.",
+        "hashtags": [
+            "#AI",
+            "#GTMStrategy",
+            "#SalesOps"
+        ],
+        "quality_score": 74.54,
+        "industry": "Sales/Marketing",
+        "tone": "technical",
+        "audience": "Developers",
+        "generation_mode": "manual",
+        "timestamp": "2025-11-10T22:19:43.332785"
     }
 ]

@@ -263,13 +263,13 @@ function renderBlogs(data) {
 
       // Get quality score and determine badge color
       const qualityScore = blog.quality_score || 0;
-      let badgeClass = 'bg-secondary';
+      let badgeClass = "bg-secondary";
       if (qualityScore >= 80) {
-        badgeClass = 'bg-success';
+        badgeClass = "bg-success";
       } else if (qualityScore >= 60) {
-        badgeClass = 'bg-warning';
+        badgeClass = "bg-warning";
       } else if (qualityScore > 0) {
-        badgeClass = 'bg-danger';
+        badgeClass = "bg-danger";
       }
 
       return `
@@ -287,7 +287,13 @@ function renderBlogs(data) {
                         <button class="btn btn-sm btn-outline-primary" onclick="showBlogModal(${index})">
                             <i class="fas fa-eye me-1"></i>Read Full Post
                         </button>
-                        ${qualityScore > 0 ? `<span class="badge ${badgeClass} ms-2">Quality: ${Math.round(qualityScore)}%</span>` : ''}
+                        ${
+                          qualityScore > 0
+                            ? `<span class="badge ${badgeClass} ms-2">Quality: ${Math.round(
+                                qualityScore
+                              )}%</span>`
+                            : ""
+                        }
                     </div>
                     <button class="btn btn-sm btn-outline-secondary" onclick="copyBlogContent(${index})">
                         <i class="fas fa-copy me-1"></i>Copy
@@ -380,7 +386,7 @@ function loadSocialContent(platform) {
     .then((response) => response.json())
     .then((data) => {
       console.log(`📊 Loaded data for platform: ${platform}`, data[platform]);
-      
+
       if (!data || !data[platform]) {
         contentDiv.innerHTML = `
           <div class="text-center text-muted">
@@ -396,9 +402,9 @@ function loadSocialContent(platform) {
       const posts = Array.isArray(data[platform])
         ? data[platform]
         : [data[platform]];
-      
+
       console.log(`📝 Processing ${posts.length} posts for ${platform}`);
-      
+
       let html = "";
 
       posts.forEach((post, index) => {
@@ -407,25 +413,42 @@ function loadSocialContent(platform) {
           hasContent: !!post.content,
           hasCaption: !!post.caption,
           contentLength: post.content ? post.content.length : 0,
-          qualityScore: post.quality_score
+          qualityScore: post.quality_score,
         });
-        
+
         // Determine content field based on platform
-        const contentField = (platform === 'linkedin-article') ? post.content : post.caption;
-        const platformDisplay = platform.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-        
+        const contentField =
+          platform === "linkedin-article" ? post.content : post.caption;
+        const platformDisplay = platform
+          .replace("-", " ")
+          .split(" ")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ");
+
         // For LinkedIn Article, show preview with "Read Full Article" button
-        const isArticle = platform === 'linkedin-article';
-        const displayContent = isArticle ? (contentField || '').substring(0, 300) : contentField;
-        
-        console.log(`✂️ Display content length: ${displayContent ? displayContent.length : 0}`);
-        
+        const isArticle = platform === "linkedin-article";
+        const displayContent = isArticle
+          ? (contentField || "").substring(0, 300)
+          : contentField;
+
+        console.log(
+          `✂️ Display content length: ${
+            displayContent ? displayContent.length : 0
+          }`
+        );
+
         html += `
           <div class="card content-card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
               <h6 class="mb-0">
                 ${escapeHtml(post.title)}
-                ${(post.quality_score !== undefined && post.quality_score !== null && post.quality_score > 0) ? getQualityBadge(post.quality_score) : ''}
+                ${
+                  post.quality_score !== undefined &&
+                  post.quality_score !== null &&
+                  post.quality_score > 0
+                    ? getQualityBadge(post.quality_score)
+                    : ""
+                }
               </h6>
               <small class="text-muted">
                 <i class="fab fa-linkedin me-1"></i>
@@ -434,7 +457,11 @@ function loadSocialContent(platform) {
               </small>
             </div>
             <div class="card-body">
-              <p class="card-text">${displayContent ? escapeHtml(displayContent) : '<em class="text-muted">No content available</em>'}${isArticle && displayContent ? '...' : ''}</p>
+              <p class="card-text">${
+                displayContent
+                  ? escapeHtml(displayContent)
+                  : '<em class="text-muted">No content available</em>'
+              }${isArticle && displayContent ? "..." : ""}</p>
               ${
                 post.hashtags
                   ? `
@@ -471,10 +498,14 @@ function loadSocialContent(platform) {
                 `
                     : ""
                 }
-                <button class="btn btn-sm btn-outline-secondary ${isArticle ? 'ms-2' : ''}" onclick="copyToClipboard('${escapeHtml(
-                  contentField || ''
-                ).replace(/'/g, "\\'")}')">
-                  <i class="fas fa-copy me-1"></i>Copy ${isArticle ? 'Article' : 'Text'}
+                <button class="btn btn-sm btn-outline-secondary ${
+                  isArticle ? "ms-2" : ""
+                }" onclick="copyToClipboard('${escapeHtml(
+          contentField || ""
+        ).replace(/'/g, "\\'")}')">
+                  <i class="fas fa-copy me-1"></i>Copy ${
+                    isArticle ? "Article" : "Text"
+                  }
                 </button>
                 ${
                   post.script_intro
@@ -488,7 +519,9 @@ function loadSocialContent(platform) {
                     : ""
                 }
                 ${
-                  platform === "linkedin-article" || platform === "linkedin-post" || platform === "twitter"
+                  platform === "linkedin-article" ||
+                  platform === "linkedin-post" ||
+                  platform === "twitter"
                     ? `
                   <button class="btn btn-sm btn-outline-primary ms-2" onclick="generateSocialImagePrompt('${platform}', ${index})">
                     <i class="fas fa-image me-1"></i>Generate Image Prompt
@@ -518,14 +551,17 @@ function loadSocialContent(platform) {
         window.socialContentData = {};
       }
       window.socialContentData[platform] = posts;
-      
+
       // Store LinkedIn articles in contentData for modal access (similar to blogs)
-      if (platform === 'linkedin-article') {
+      if (platform === "linkedin-article") {
         if (!window.contentData) {
           window.contentData = {};
         }
-        window.contentData['linkedin-article'] = posts;
-        console.log(`✅ Stored ${posts.length} LinkedIn articles in contentData`, window.contentData['linkedin-article']);
+        window.contentData["linkedin-article"] = posts;
+        console.log(
+          `✅ Stored ${posts.length} LinkedIn articles in contentData`,
+          window.contentData["linkedin-article"]
+        );
       }
     })
     .catch((error) => {
@@ -754,22 +790,25 @@ function showBlogModal(index) {
 
   // Set title with quality score badge FIRST
   const qualityScore = blog.quality_score || 0;
-  let badgeClass = 'bg-secondary';
-  let badgeHTML = '';
+  let badgeClass = "bg-secondary";
+  let badgeHTML = "";
   if (qualityScore >= 80) {
-    badgeClass = 'bg-success';
+    badgeClass = "bg-success";
   } else if (qualityScore >= 60) {
-    badgeClass = 'bg-warning';
+    badgeClass = "bg-warning";
   } else if (qualityScore > 0) {
-    badgeClass = 'bg-danger';
+    badgeClass = "bg-danger";
   }
-  
+
   if (qualityScore > 0) {
-    badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(qualityScore)}%</span>`;
+    badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(
+      qualityScore
+    )}%</span>`;
   }
-  
+
   // Update modal content
-  document.getElementById("contentModalTitle").innerHTML = escapeHtml(blog.title) + badgeHTML;
+  document.getElementById("contentModalTitle").innerHTML =
+    escapeHtml(blog.title) + badgeHTML;
   document.getElementById("contentModalBody").innerHTML = blogContent.replace(
     /\n/g,
     "<br>"
@@ -787,22 +826,30 @@ function showBlogModal(index) {
 function showLinkedInArticleModal(index) {
   console.log(`🔍 Opening LinkedIn Article modal for index: ${index}`);
   console.log(`📦 contentData available:`, window.contentData);
-  
-  const articles = window.contentData ? window.contentData['linkedin-article'] : null;
-  
+
+  const articles = window.contentData
+    ? window.contentData["linkedin-article"]
+    : null;
+
   console.log(`📚 Articles array:`, articles);
-  
+
   if (!articles || !articles[index]) {
-    console.error(`❌ Article not found at index ${index}. Available articles:`, articles);
-    showToast("error", "LinkedIn Article content not found. Please refresh the page.");
+    console.error(
+      `❌ Article not found at index ${index}. Available articles:`,
+      articles
+    );
+    showToast(
+      "error",
+      "LinkedIn Article content not found. Please refresh the page."
+    );
     return;
   }
 
   const article = articles[index];
   console.log(`📄 Article data:`, article);
-  
-  let articleContent = article.content || article.caption || '';
-  
+
+  let articleContent = article.content || article.caption || "";
+
   if (!articleContent) {
     console.error(`❌ No content found in article:`, article);
     showToast("error", "Article content is empty.");
@@ -811,26 +858,27 @@ function showLinkedInArticleModal(index) {
 
   // Set title with quality score badge
   const qualityScore = article.quality_score || 0;
-  let badgeClass = 'bg-secondary';
-  let badgeHTML = '';
+  let badgeClass = "bg-secondary";
+  let badgeHTML = "";
   if (qualityScore >= 80) {
-    badgeClass = 'bg-success';
+    badgeClass = "bg-success";
   } else if (qualityScore >= 60) {
-    badgeClass = 'bg-warning';
+    badgeClass = "bg-warning";
   } else if (qualityScore > 0) {
-    badgeClass = 'bg-danger';
+    badgeClass = "bg-danger";
   }
-  
+
   if (qualityScore > 0) {
-    badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(qualityScore)}%</span>`;
+    badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(
+      qualityScore
+    )}%</span>`;
   }
-  
+
   // Update modal content
-  document.getElementById("contentModalTitle").innerHTML = escapeHtml(article.title) + badgeHTML;
-  document.getElementById("contentModalBody").innerHTML = articleContent.replace(
-    /\n/g,
-    "<br>"
-  );
+  document.getElementById("contentModalTitle").innerHTML =
+    escapeHtml(article.title) + badgeHTML;
+  document.getElementById("contentModalBody").innerHTML =
+    articleContent.replace(/\n/g, "<br>");
 
   // Hide the image prompt button for LinkedIn articles (or show if you want)
   hideImagePromptButton();
@@ -838,7 +886,7 @@ function showLinkedInArticleModal(index) {
   // Show modal
   const modal = new bootstrap.Modal(document.getElementById("contentModal"));
   modal.show();
-  
+
   console.log(`✅ Modal opened successfully`);
 }
 
@@ -897,18 +945,20 @@ function escapeHtml(text) {
 }
 
 function getQualityBadge(qualityScore) {
-  if (!qualityScore || qualityScore === 0) return '';
-  
-  let badgeClass = 'bg-secondary';
+  if (!qualityScore || qualityScore === 0) return "";
+
+  let badgeClass = "bg-secondary";
   if (qualityScore >= 80) {
-    badgeClass = 'bg-success';
+    badgeClass = "bg-success";
   } else if (qualityScore >= 60) {
-    badgeClass = 'bg-warning';
+    badgeClass = "bg-warning";
   } else {
-    badgeClass = 'bg-danger';
+    badgeClass = "bg-danger";
   }
-  
-  return `<span class="badge ${badgeClass} ms-2">Quality: ${Math.round(qualityScore)}%</span>`;
+
+  return `<span class="badge ${badgeClass} ms-2">Quality: ${Math.round(
+    qualityScore
+  )}%</span>`;
 }
 
 function createContentModal() {
@@ -1067,7 +1117,157 @@ function createToastContainer() {
   document.body.insertAdjacentHTML("beforeend", containerHtml);
   return document.getElementById("toast-container");
 }
-// Dashboard Topic Selection Functions
+// Social Mode Selection Functions
+function showSocialModeSelection() {
+  console.log("showSocialModeSelection called - showing mode selection modal");
+  const modal = new bootstrap.Modal(document.getElementById("socialModeModal"));
+  modal.show();
+}
+
+function selectSocialMode(mode) {
+  console.log(`User selected social mode: ${mode}`);
+
+  // Hide mode selection modal
+  const modeModal = bootstrap.Modal.getInstance(
+    document.getElementById("socialModeModal")
+  );
+  if (modeModal) {
+    modeModal.hide();
+  }
+
+  if (mode === "automatic") {
+    // Existing automatic flow
+    setTimeout(() => {
+      showTopicSelection();
+    }, 300);
+  } else if (mode === "manual") {
+    // New manual flow
+    setTimeout(() => {
+      showManualSocialTopicInput();
+    }, 300);
+  }
+}
+
+function showManualSocialTopicInput() {
+  console.log("showManualSocialTopicInput called - showing manual input modal");
+
+  // Clear previous input
+  document.getElementById("manualSocialTopicInput").value = "";
+
+  // Set default industry
+  setDefaultIndustry();
+
+  // Show modal
+  const modal = new bootstrap.Modal(
+    document.getElementById("manualSocialTopicModal")
+  );
+  modal.show();
+}
+
+function toggleAllManualPlatforms() {
+  const checkboxes = document.querySelectorAll(".manual-platform-checkbox");
+  const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = !allChecked;
+  });
+
+  const button = event.target.closest("button");
+  if (allChecked) {
+    button.innerHTML = '<i class="fas fa-check-double me-1"></i>Select All';
+  } else {
+    button.innerHTML = '<i class="fas fa-times me-1"></i>Deselect All';
+  }
+}
+
+function generateSocialManual() {
+  const topic = document.getElementById("manualSocialTopicInput").value.trim();
+  const industry = document.getElementById("manualSocialIndustrySelect").value;
+  const tone = document.getElementById("manualSocialToneSelect").value;
+  const audience = document.getElementById("manualSocialAudienceSelect").value;
+
+  // Get selected platforms
+  const selectedPlatforms = [];
+  document
+    .querySelectorAll(".manual-platform-checkbox:checked")
+    .forEach((checkbox) => {
+      selectedPlatforms.push(checkbox.value);
+    });
+
+  if (!topic) {
+    showToast("error", "Please enter a topic");
+    return;
+  }
+
+  if (selectedPlatforms.length === 0) {
+    showToast("error", "Please select at least one platform");
+    return;
+  }
+
+  console.log(`📝 Manual social generation:`, {
+    topic,
+    industry,
+    tone,
+    audience,
+    platforms: selectedPlatforms,
+  });
+
+  // Hide modal
+  const modal = bootstrap.Modal.getInstance(
+    document.getElementById("manualSocialTopicModal")
+  );
+  if (modal) {
+    modal.hide();
+  }
+
+  // Show loading toast
+  const platformNames = selectedPlatforms
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1).replace("-", " "))
+    .join(", ");
+  showToast(
+    "info",
+    `Fetching trends for "${topic}" and generating content for ${platformNames}... This may take a few moments.`
+  );
+
+  // Call backend API
+  fetch("/generate_social_manual", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      topic: topic,
+      industry: industry,
+      tone: tone,
+      audience: audience,
+      platforms: selectedPlatforms,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        showToast("success", `Social content generated for ${platformNames}!`);
+
+        // Switch to social tab and refresh content
+        const socialTab = document.getElementById("social-tab");
+        const socialTabInstance = new bootstrap.Tab(socialTab);
+        socialTabInstance.show();
+
+        setTimeout(() => {
+          // Load first selected platform content
+          loadSocialContent(selectedPlatforms[0]);
+          refreshStats();
+        }, 1000);
+      } else {
+        showToast("error", data.error || "Failed to generate social content");
+      }
+    })
+    .catch((error) => {
+      showToast("error", "Failed to generate social content: " + error.message);
+    });
+}
+
+// Dashboard Topic Selection Functions (Automatic Mode)
 function showTopicSelection() {
   console.log("showTopicSelection called - showing on dashboard");
 
@@ -1195,9 +1395,11 @@ function generateSocialFromDashboard() {
 
   // Get selected platforms
   const selectedPlatforms = [];
-  document.querySelectorAll('.platform-checkbox:checked').forEach(checkbox => {
-    selectedPlatforms.push(checkbox.value);
-  });
+  document
+    .querySelectorAll(".platform-checkbox:checked")
+    .forEach((checkbox) => {
+      selectedPlatforms.push(checkbox.value);
+    });
 
   if (!selectedTopic) {
     showToast("error", "Please select a topic");
@@ -1216,7 +1418,9 @@ function generateSocialFromDashboard() {
   generateBtn.innerHTML =
     '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
 
-  const platformNames = selectedPlatforms.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ');
+  const platformNames = selectedPlatforms
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join(", ");
   showToast(
     "info",
     `Generating content for ${platformNames}... This may take a few moments.`
@@ -1228,7 +1432,7 @@ function generateSocialFromDashboard() {
     industry: industry,
     tone: tone,
     audience: audience,
-    platforms: selectedPlatforms
+    platforms: selectedPlatforms,
   };
 
   console.log("🚀 Sending request:", requestData);
@@ -1276,14 +1480,14 @@ function generateSocialFromDashboard() {
 
 // Toggle all platforms checkbox
 function toggleAllPlatforms() {
-  const checkboxes = document.querySelectorAll('.platform-checkbox');
-  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-  
-  checkboxes.forEach(checkbox => {
+  const checkboxes = document.querySelectorAll(".platform-checkbox");
+  const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+
+  checkboxes.forEach((checkbox) => {
     checkbox.checked = !allChecked;
   });
-  
-  const button = event.target.closest('button');
+
+  const button = event.target.closest("button");
   if (allChecked) {
     button.innerHTML = '<i class="fas fa-check-double me-1"></i>Select All';
   } else {
@@ -1340,7 +1544,122 @@ function setDefaultIndustry() {
   }
 }
 
-// Blog Topic Selection Functions
+// Blog Mode Selection Functions
+function showBlogModeSelection() {
+  console.log("showBlogModeSelection called - showing mode selection modal");
+  const modal = new bootstrap.Modal(document.getElementById("blogModeModal"));
+  modal.show();
+}
+
+function selectBlogMode(mode) {
+  console.log(`User selected blog mode: ${mode}`);
+
+  // Hide mode selection modal
+  const modeModal = bootstrap.Modal.getInstance(
+    document.getElementById("blogModeModal")
+  );
+  if (modeModal) {
+    modeModal.hide();
+  }
+
+  if (mode === "automatic") {
+    // Existing automatic flow
+    setTimeout(() => {
+      showBlogTopicSelection();
+    }, 300);
+  } else if (mode === "manual") {
+    // New manual flow
+    setTimeout(() => {
+      showManualBlogTopicInput();
+    }, 300);
+  }
+}
+
+function showManualBlogTopicInput() {
+  console.log("showManualBlogTopicInput called - showing manual input modal");
+
+  // Clear previous input
+  document.getElementById("manualBlogTopicInput").value = "";
+
+  // Set default industry
+  setDefaultIndustry();
+
+  // Show modal
+  const modal = new bootstrap.Modal(
+    document.getElementById("manualBlogTopicModal")
+  );
+  modal.show();
+}
+
+function generateBlogManual() {
+  const topic = document.getElementById("manualBlogTopicInput").value.trim();
+  const industry = document.getElementById("manualBlogIndustrySelect").value;
+  const tone = document.getElementById("manualBlogToneSelect").value;
+  const audience = document.getElementById("manualBlogAudienceSelect").value;
+
+  if (!topic) {
+    showToast("error", "Please enter a topic");
+    return;
+  }
+
+  console.log(`📝 Manual blog generation:`, {
+    topic,
+    industry,
+    tone,
+    audience,
+  });
+
+  // Hide modal
+  const modal = bootstrap.Modal.getInstance(
+    document.getElementById("manualBlogTopicModal")
+  );
+  if (modal) {
+    modal.hide();
+  }
+
+  // Show loading toast
+  showToast(
+    "info",
+    `Fetching trends for "${topic}"... This may take a few moments.`
+  );
+
+  // Call backend API
+  fetch("/generate_blog_manual", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      topic: topic,
+      industry: industry,
+      tone: tone,
+      audience: audience,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        showToast("success", `Blog "${data.title}" generated successfully!`);
+
+        // Switch to blogs tab and refresh content
+        const blogsTab = document.getElementById("blogs-tab");
+        const blogsTabInstance = new bootstrap.Tab(blogsTab);
+        blogsTabInstance.show();
+
+        setTimeout(() => {
+          loadContent("blogs");
+          refreshStats();
+        }, 1000);
+      } else {
+        showToast("error", data.error || "Failed to generate blog");
+      }
+    })
+    .catch((error) => {
+      showToast("error", "Failed to generate blog: " + error.message);
+    });
+}
+
+// Blog Topic Selection Functions (Automatic Mode)
 function showBlogTopicSelection() {
   console.log("showBlogTopicSelection called - showing on dashboard");
 

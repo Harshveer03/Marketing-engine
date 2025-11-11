@@ -240,6 +240,114 @@ class BlogGenerator:
             # Return a cleaned version of the response
             return response.strip().replace('"', '').replace('\n', ' ')[:100]
 
+    def generate_blog_topics_with_influence(self, trend_influence, trends_data, industry, trend_count, original_count):
+        """Generate blog topics based on trend influence slider value"""
+        print(f"🎯 DEBUG: Generating topics with influence: {trend_influence}")
+        print(f"📈 DEBUG: Trend topics: {trend_count}, Original topics: {original_count}")
+        
+        topics = []
+        niche = self.load_json(NICHE_FILE)
+        
+        # Generate trend-based topics
+        for i in range(trend_count):
+            if i < len(trends_data):
+                trend = trends_data[i]
+                print(f"📰 DEBUG: Generating trend-based topic from: {trend.get('title', 'N/A')}")
+                
+                # Create topic from trend
+                topic = {
+                    "title": trend.get('title', f"Trend Topic {i+1}"),
+                    "related_news": [trend],
+                    "relevance_score": trend.get('similarity_score', 75),
+                    "type": "trend_follower"
+                }
+                topics.append(topic)
+                print(f"✅ DEBUG: Added trend-based topic: {topic['title']}")
+        
+        # Generate original topics (trend setters)
+        for i in range(original_count):
+            print(f"💡 DEBUG: Generating original topic {i+1}/{original_count}")
+            
+            # Use a hybrid approach: reference trends but create unique angles
+            prompt = f"""
+            You are a B2B SaaS marketing strategist creating ORIGINAL, trend-setting content.
+            
+            Industry: {industry}
+            Niche Context: {json.dumps(niche, indent=2) if niche else 'N/A'}
+            
+            {"Recent trends for context (create unique angles, don't copy):" if trends_data else ""}
+            {json.dumps([t.get('title', '') for t in trends_data[:3]], indent=2) if trends_data else ''}
+            
+            Generate 1 ORIGINAL blog topic that:
+            - Creates a NEW perspective or trend in {industry}
+            - Goes beyond current discussions
+            - Provides strategic, forward-thinking insights
+            - Is analytical and thought-provoking
+            
+            Examples of trend-setting topics:
+            - "Why {industry} Needs to Rethink [Common Practice]"
+            - "The Hidden Cost of [Industry Standard] in {industry}"
+            - "Beyond [Current Trend]: What's Next for {industry}"
+            
+            Return ONLY in JSON:
+            {{
+              "topic": "Your original topic title",
+              "angle": "Brief description of the unique angle"
+            }}
+            """
+            
+            try:
+                # Ensure event loop
+                loop = None
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                
+                response = self.llm.invoke(prompt).content
+                
+                # Parse response
+                match = re.search(r"\{.*\}", response, re.DOTALL)
+                if match:
+                    json_str = match.group()
+                    data = json.loads(json_str)
+                    topic_title = data.get("topic", f"Original Topic {i+1}")
+                else:
+                    topic_title = response.strip()[:100]
+                
+                # Create original topic
+                topic = {
+                    "title": topic_title,
+                    "related_news": trends_data[:2] if trends_data else [],  # Reference some trends for context
+                    "relevance_score": 85,  # Higher score for original content
+                    "type": "trend_setter"
+                }
+                topics.append(topic)
+                print(f"✅ DEBUG: Added original topic: {topic['title']}")
+                
+            except Exception as e:
+                print(f"❌ DEBUG: Error generating original topic: {e}")
+                # Fallback original topic
+                fallback_topics = [
+                    f"Rethinking {industry}: A Strategic Imperative for 2025",
+                    f"The Future of {industry}: Beyond Current Trends",
+                    f"Why {industry} Leaders Are Missing the Bigger Picture",
+                    f"The Hidden Opportunity in {industry} Transformation",
+                    f"Breaking the {industry} Status Quo: A New Approach"
+                ]
+                topic = {
+                    "title": fallback_topics[i % len(fallback_topics)],
+                    "related_news": trends_data[:2] if trends_data else [],
+                    "relevance_score": 80,
+                    "type": "trend_setter"
+                }
+                topics.append(topic)
+                print(f"⚠️ DEBUG: Used fallback original topic: {topic['title']}")
+        
+        print(f"✅ DEBUG: Generated total {len(topics)} topics")
+        return topics
+
     # ---------- PDF Context ----------
     def build_pdf_context(self, query_text, niche=None):
         # Build context from niche data first

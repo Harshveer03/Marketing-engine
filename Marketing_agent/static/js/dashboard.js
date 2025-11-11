@@ -1131,7 +1131,7 @@ function showSocialModeSelection() {
 }
 
 function selectSocialMode(mode) {
-  console.log(`User selected social mode: ${mode}`);
+  console.log(`🎯 DEBUG: User selected social mode: ${mode}`);
 
   // Hide mode selection modal
   const modeModal = bootstrap.Modal.getInstance(
@@ -1142,12 +1142,12 @@ function selectSocialMode(mode) {
   }
 
   if (mode === "automatic") {
-    // Existing automatic flow
+    // NEW: Show industry and platform selection modal
     setTimeout(() => {
-      showTopicSelection();
+      showSocialIndustryPlatformSelection();
     }, 300);
   } else if (mode === "manual") {
-    // New manual flow
+    // Keep manual flow as-is
     setTimeout(() => {
       showManualSocialTopicInput();
     }, 300);
@@ -1373,19 +1373,19 @@ function generateSocialFromDashboard() {
   const selectedTopic = document.querySelector(
     'input[name="dashboardTopic"]:checked'
   );
-  const industry = document.getElementById("industrySelect").value;
   const tone = document.getElementById("toneSelect").value;
   const audience = document.getElementById("audienceSelect").value;
 
-  // Get selected platform from dropdown
-  const selectedPlatform = document.getElementById("platformSelect").value;
+  // Use stored industry and platform from previous steps
+  const industry = selectedSocialIndustry || "IT & Dev";
+  const selectedPlatform = selectedSocialPlatform || "linkedin-article";
+  
+  console.log(`📊 DEBUG: Using stored industry: ${industry}, platform: ${selectedPlatform}`);
 
   if (!selectedTopic) {
     showToast("error", "Please select a topic");
     return;
   }
-
-  // No need to validate platform - dropdown always has a value
 
   // Show loading state
   const generateBtn = document.getElementById("generateSocialBtn");
@@ -1748,9 +1748,12 @@ function generateBlogFromDashboard() {
   const selectedTopic = document.querySelector(
     'input[name="dashboardBlogTopic"]:checked'
   );
-  const industry = document.getElementById("blogIndustrySelect").value;
   const tone = document.getElementById("blogToneSelect").value;
   const audience = document.getElementById("blogAudienceSelect").value;
+  
+  // Use the stored industry from previous step
+  const industry = selectedBlogIndustry || "IT & Dev";
+  console.log(`📊 DEBUG: Using stored industry: ${industry}`);
 
   if (!selectedTopic) {
     showToast("error", "Please select a topic");
@@ -2298,3 +2301,530 @@ function copyVideoPromptToClipboard() {
 }
 
 console.log("✅ YouTube video prompt generation functions loaded");
+
+
+// ========================================
+// Blog Trend Slider Functions
+// ========================================
+
+// Global variables to store fetched trends and selected industry
+let fetchedBlogTrends = [];
+let selectedBlogIndustry = "";
+
+/**
+ * Show blog mode selection modal
+ */
+function showBlogModeSelection() {
+  console.log("🎯 DEBUG: showBlogModeSelection called");
+  const modal = new bootstrap.Modal(document.getElementById("blogModeModal"));
+  modal.show();
+}
+
+/**
+ * Handle blog mode selection
+ */
+function selectBlogMode(mode) {
+  console.log(`🎯 DEBUG: User selected blog mode: ${mode}`);
+
+  // Hide mode selection modal
+  const modeModal = bootstrap.Modal.getInstance(
+    document.getElementById("blogModeModal")
+  );
+  if (modeModal) {
+    modeModal.hide();
+  }
+
+  if (mode === "automatic") {
+    // Show industry selection modal
+    setTimeout(() => {
+      showBlogIndustrySelection();
+    }, 300);
+  } else if (mode === "manual") {
+    // Existing manual flow
+    setTimeout(() => {
+      showManualBlogTopicInput();
+    }, 300);
+  }
+}
+
+/**
+ * Show blog industry selection modal
+ */
+function showBlogIndustrySelection() {
+  console.log("📋 DEBUG: Showing blog industry selection modal");
+  const modal = new bootstrap.Modal(
+    document.getElementById("blogIndustryModal")
+  );
+  modal.show();
+}
+
+/**
+ * Fetch blog trends for selected industry
+ */
+function fetchBlogTrends() {
+  const industry = document.getElementById("blogTargetIndustrySelect").value;
+  console.log(`🔍 DEBUG: Fetching trends for industry: ${industry}`);
+
+  // Store selected industry globally
+  selectedBlogIndustry = industry;
+  console.log(`💾 DEBUG: Stored selected industry: ${selectedBlogIndustry}`);
+
+  // Hide industry modal
+  const industryModal = bootstrap.Modal.getInstance(
+    document.getElementById("blogIndustryModal")
+  );
+  if (industryModal) {
+    industryModal.hide();
+  }
+
+  // Show loading toast
+  showToast("info", `Fetching trends for ${industry}...`);
+
+  // Call backend to fetch trends
+  fetch("/fetch_blog_trends", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      industry: industry,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log(`✅ DEBUG: Fetched ${data.trends.length} trends`);
+        fetchedBlogTrends = data.trends;
+
+        // Show success toast
+        showToast("success", `Fetched ${data.trends.length} trends successfully!`);
+
+        // Show trend slider modal
+        setTimeout(() => {
+          showBlogTrendSlider();
+        }, 500);
+      } else {
+        console.error(`❌ DEBUG: Error fetching trends: ${data.error}`);
+        showToast(
+          "error",
+          `Failed to fetch trends: ${data.error || "Unknown error"}. Please try again.`
+        );
+      }
+    })
+    .catch((error) => {
+      console.error(`❌ DEBUG: Network error fetching trends:`, error);
+      showToast(
+        "error",
+        `Network error while fetching trends: ${error.message}. Please check your connection and try again.`
+      );
+    });
+}
+
+/**
+ * Show blog trend slider modal
+ */
+function showBlogTrendSlider() {
+  console.log("🎚️ DEBUG: Showing trend slider modal");
+
+  // Reset slider to default value (0)
+  const slider = document.getElementById("trendInfluenceSlider");
+  slider.value = 0;
+  document.getElementById("sliderValueDisplay").textContent = "Value: 0";
+
+  // Add event listener to update display
+  slider.addEventListener("input", function () {
+    document.getElementById("sliderValueDisplay").textContent =
+      `Value: ${this.value}`;
+    console.log(`🎚️ DEBUG: Slider value changed to: ${this.value}`);
+  });
+
+  const modal = new bootstrap.Modal(
+    document.getElementById("blogTrendSliderModal")
+  );
+  modal.show();
+}
+
+/**
+ * Generate blog topics with slider value
+ */
+function generateBlogTopicsWithSlider() {
+  const sliderValue = parseInt(
+    document.getElementById("trendInfluenceSlider").value
+  );
+  const industry = document.getElementById("blogTargetIndustrySelect").value;
+
+  console.log(`📝 DEBUG: Generating topics with slider value: ${sliderValue}`);
+  console.log(`📊 DEBUG: Industry: ${industry}`);
+  console.log(`📊 DEBUG: Trends count: ${fetchedBlogTrends.length}`);
+
+  // Hide slider modal
+  const sliderModal = bootstrap.Modal.getInstance(
+    document.getElementById("blogTrendSliderModal")
+  );
+  if (sliderModal) {
+    sliderModal.hide();
+  }
+
+  // Show topic selection section with loading
+  const blogTopicSection = document.getElementById("blogTopicSelectionSection");
+  blogTopicSection.classList.remove("d-none");
+  document.getElementById("blogTopicLoading").classList.remove("d-none");
+  document.getElementById("blogTopicSelectionContent").classList.add("d-none");
+
+  // Show loading toast
+  showToast("info", "Generating topics...");
+
+  // Call backend to generate topics
+  fetch("/generate_blog_topics", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      trend_influence: sliderValue,
+      trends_data: fetchedBlogTrends,
+      industry: industry,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success && data.topics) {
+        console.log(`✅ DEBUG: Generated ${data.topics.length} topics`);
+        console.log("📋 DEBUG: Topics:", data.topics);
+
+        // Display topics with badges
+        displayBlogTopicsWithBadges(data.topics);
+
+        // Show success toast
+        showToast("success", "Topics generated successfully!");
+      } else {
+        console.error(`❌ DEBUG: Error generating topics: ${data.error}`);
+        showToast("error", data.error || "Failed to generate topics");
+        hideBlogTopicSelection();
+      }
+    })
+    .catch((error) => {
+      console.error(`❌ DEBUG: Network error generating topics:`, error);
+      showToast("error", "Failed to generate topics: " + error.message);
+      hideBlogTopicSelection();
+    });
+}
+
+/**
+ * Display blog topics with trend follower/setter badges
+ */
+function displayBlogTopicsWithBadges(topics) {
+  console.log("🏷️ DEBUG: Displaying topics with badges");
+
+  const topicList = document.getElementById("blogTopicList");
+  topicList.innerHTML = "";
+
+  topics.forEach((topic, index) => {
+    const relatedCount = topic.related_news ? topic.related_news.length : 0;
+    const relevanceScore = topic.relevance_score || 0;
+    const topicType = topic.type || "trend_follower";
+
+    console.log(`📝 DEBUG: Topic ${index}: ${topic.title} | Type: ${topicType}`);
+
+    // Determine badge based on type
+    let badgeHTML = "";
+    if (topicType === "trend_follower") {
+      badgeHTML = `<span class="badge bg-primary me-2" style="font-size: 0.75rem;">
+        <i class="fas fa-chart-line me-1"></i>Trend Follower
+      </span>`;
+    } else if (topicType === "trend_setter") {
+      badgeHTML = `<span class="badge bg-success me-2" style="font-size: 0.75rem;">
+        <i class="fas fa-lightbulb me-1"></i>Trend Setter
+      </span>`;
+    }
+
+    topicList.innerHTML += `
+      <div class="card mb-3 blog-topic-card" style="cursor: pointer;" onclick="selectBlogTopic(${index})">
+        <div class="card-body">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="dashboardBlogTopic" value="${index}" id="dashboardBlogTopic${index}">
+            <label class="form-check-label w-100" for="dashboardBlogTopic${index}">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                  <div class="mb-2">
+                    ${badgeHTML}
+                  </div>
+                  <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
+                  <small class="text-muted">
+                    <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
+                  </small>
+                </div>
+                <span class="badge bg-info ms-2">
+                  Score: ${Math.round(relevanceScore)}
+                </span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  // Set default industry based on current business context
+  setDefaultIndustry();
+
+  // Show content and hide loading
+  document.getElementById("blogTopicLoading").classList.add("d-none");
+  document.getElementById("blogTopicSelectionContent").classList.remove("d-none");
+}
+
+console.log("✅ Blog trend slider functions loaded");
+
+
+// ========================================
+// Social Media Trend Slider Functions
+// ========================================
+
+// Global variables to store fetched trends, selected industry and platform
+let fetchedSocialTrends = [];
+let selectedSocialIndustry = "";
+let selectedSocialPlatform = "";
+
+/**
+ * Show social industry and platform selection modal
+ */
+function showSocialIndustryPlatformSelection() {
+  console.log("📋 DEBUG: Showing social industry and platform selection modal");
+  const modal = new bootstrap.Modal(
+    document.getElementById("socialIndustryPlatformModal")
+  );
+  modal.show();
+}
+
+/**
+ * Fetch social trends for selected industry
+ */
+function fetchSocialTrends() {
+  const industry = document.getElementById("socialTargetIndustrySelect").value;
+  const platform = document.getElementById("socialTargetPlatformSelect").value;
+  console.log(`🔍 DEBUG: Fetching trends for industry: ${industry}, platform: ${platform}`);
+
+  // Store selected industry and platform globally
+  selectedSocialIndustry = industry;
+  selectedSocialPlatform = platform;
+  console.log(`💾 DEBUG: Stored selected industry: ${selectedSocialIndustry}, platform: ${selectedSocialPlatform}`);
+
+  // Hide industry/platform modal
+  const industryModal = bootstrap.Modal.getInstance(
+    document.getElementById("socialIndustryPlatformModal")
+  );
+  if (industryModal) {
+    industryModal.hide();
+  }
+
+  // Show loading toast
+  showToast("info", `Fetching trends for ${industry}...`);
+
+  // Call backend to fetch trends
+  fetch("/fetch_social_trends", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      industry: industry,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log(`✅ DEBUG: Fetched ${data.trends.length} trends`);
+        fetchedSocialTrends = data.trends;
+
+        // Show success toast
+        showToast("success", `Fetched ${data.trends.length} trends successfully!`);
+
+        // Show trend slider modal
+        setTimeout(() => {
+          showSocialTrendSlider();
+        }, 500);
+      } else {
+        console.error(`❌ DEBUG: Error fetching trends: ${data.error}`);
+        showToast(
+          "error",
+          `Failed to fetch trends: ${data.error || "Unknown error"}. Please try again.`
+        );
+      }
+    })
+    .catch((error) => {
+      console.error(`❌ DEBUG: Network error fetching trends:`, error);
+      showToast(
+        "error",
+        `Network error while fetching trends: ${error.message}. Please check your connection and try again.`
+      );
+    });
+}
+
+/**
+ * Show social trend slider modal
+ */
+function showSocialTrendSlider() {
+  console.log("🎚️ DEBUG: Showing social trend slider modal");
+
+  // Reset slider to default value (0)
+  const slider = document.getElementById("socialTrendInfluenceSlider");
+  slider.value = 0;
+  document.getElementById("socialSliderValueDisplay").textContent = "Value: 0";
+
+  // Add event listener to update display
+  slider.addEventListener("input", function () {
+    document.getElementById("socialSliderValueDisplay").textContent =
+      `Value: ${this.value}`;
+    console.log(`🎚️ DEBUG: Social slider value changed to: ${this.value}`);
+  });
+
+  const modal = new bootstrap.Modal(
+    document.getElementById("socialTrendSliderModal")
+  );
+  modal.show();
+}
+
+/**
+ * Generate social topics with slider value
+ */
+function generateSocialTopicsWithSlider() {
+  const sliderValue = parseInt(
+    document.getElementById("socialTrendInfluenceSlider").value
+  );
+  const industry = selectedSocialIndustry;
+  const platform = selectedSocialPlatform;
+
+  console.log(`📝 DEBUG: Generating social topics with slider value: ${sliderValue}`);
+  console.log(`📊 DEBUG: Industry: ${industry}, Platform: ${platform}`);
+  console.log(`📊 DEBUG: Trends count: ${fetchedSocialTrends.length}`);
+
+  // Hide slider modal
+  const sliderModal = bootstrap.Modal.getInstance(
+    document.getElementById("socialTrendSliderModal")
+  );
+  if (sliderModal) {
+    sliderModal.hide();
+  }
+
+  // Show topic selection section with loading
+  const topicSection = document.getElementById("topicSelectionSection");
+  topicSection.classList.remove("d-none");
+  document.getElementById("topicLoading").classList.remove("d-none");
+  document.getElementById("topicSelectionContent").classList.add("d-none");
+
+  // Show loading toast
+  showToast("info", "Generating topics...");
+
+  // Call backend to generate topics
+  fetch("/generate_social_topics", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      trend_influence: sliderValue,
+      trends_data: fetchedSocialTrends,
+      industry: industry,
+      platform: platform,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success && data.topics) {
+        console.log(`✅ DEBUG: Generated ${data.topics.length} topics`);
+        console.log("📋 DEBUG: Topics:", data.topics);
+
+        // Display topics with badges
+        displaySocialTopicsWithBadges(data.topics);
+
+        // Show success toast
+        showToast("success", "Topics generated successfully!");
+      } else {
+        console.error(`❌ DEBUG: Error generating topics: ${data.error}`);
+        showToast("error", data.error || "Failed to generate topics");
+        hideTopicSelection();
+      }
+    })
+    .catch((error) => {
+      console.error(`❌ DEBUG: Network error generating topics:`, error);
+      showToast("error", "Failed to generate topics: " + error.message);
+      hideTopicSelection();
+    });
+}
+
+/**
+ * Display social topics with trend follower/setter badges
+ */
+function displaySocialTopicsWithBadges(topics) {
+  console.log("🏷️ DEBUG: Displaying social topics with badges");
+
+  const topicList = document.getElementById("topicList");
+  topicList.innerHTML = "";
+
+  topics.forEach((topic, index) => {
+    const relatedCount = topic.related_news ? topic.related_news.length : 0;
+    const relevanceScore = topic.relevance_score || 0;
+    const topicType = topic.type || "trend_follower";
+
+    console.log(`📝 DEBUG: Topic ${index}: ${topic.title} | Type: ${topicType} | Platform: ${selectedSocialPlatform}`);
+
+    // Determine badge based on type
+    let badgeHTML = "";
+    if (topicType === "trend_follower") {
+      badgeHTML = `<span class="badge bg-primary me-2" style="font-size: 0.75rem;">
+        <i class="fas fa-chart-line me-1"></i>Trend Follower
+      </span>`;
+    } else if (topicType === "trend_setter") {
+      badgeHTML = `<span class="badge bg-success me-2" style="font-size: 0.75rem;">
+        <i class="fas fa-lightbulb me-1"></i>Trend Setter
+      </span>`;
+    }
+
+    // Platform display badge
+    const platformDisplay = selectedSocialPlatform
+      .replace("-", " ")
+      .split(" ")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+    
+    const platformBadgeHTML = `<span class="badge bg-info me-2" style="font-size: 0.75rem;">
+      <i class="${getPlatformIcon(selectedSocialPlatform)} me-1"></i>${platformDisplay}
+    </span>`;
+
+    topicList.innerHTML += `
+      <div class="card mb-3 topic-card" style="cursor: pointer;" onclick="selectTopic(${index})">
+        <div class="card-body">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="dashboardTopic" value="${index}" id="dashboardTopic${index}">
+            <label class="form-check-label w-100" for="dashboardTopic${index}">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                  <div class="mb-2">
+                    ${badgeHTML}
+                    ${platformBadgeHTML}
+                  </div>
+                  <h6 class="mb-1">${escapeHtml(topic.title)}</h6>
+                  <small class="text-muted">
+                    <i class="fas fa-newspaper me-1"></i>${relatedCount} related articles
+                  </small>
+                </div>
+                <span class="badge bg-info ms-2">
+                  Score: ${Math.round(relevanceScore)}
+                </span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  // Set default industry based on current business context
+  setDefaultIndustry();
+
+  // Show content and hide loading
+  document.getElementById("topicLoading").classList.add("d-none");
+  document.getElementById("topicSelectionContent").classList.remove("d-none");
+}
+
+console.log("✅ Social media trend slider functions loaded");

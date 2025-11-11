@@ -155,28 +155,6 @@
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label">Industry:</label>
-                <select class="form-select" id="industrySelect">
-                  <option value="IT & Dev">IT & Development</option>
-                  <option value="Sales/Marketing">Sales/Marketing</option>
-                  <option value="Fintech">Fintech</option>
-                  <option value="Billing">Billing</option>
-                  <option value="Retail">Retail</option>
-                  <option value="Logistics">Logistics</option>
-                  <option value="Healthcare">Healthcare</option>
-                  <option value="Education">Education</option>
-                  <option value="HRTech">HRTech</option>
-                  <option value="Real Estate">Real Estate</option>
-                  <option value="Agritech">Agritech</option>
-                  <option value="Energy">Energy</option>
-                  <option value="Travel">Travel</option>
-                  <option value="Legal">Legal</option>
-                  <option value="Media">Media</option>
-                  <option value="Government">Government</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
                 <label class="form-label">Tone:</label>
                 <select class="form-select" id="toneSelect">
                   <option value="professional">Professional</option>
@@ -191,16 +169,6 @@
                   <option value="CXOs">CXOs</option>
                   <option value="Founders">Founders</option>
                   <option value="Marketers">Marketers</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Select Platform:</label>
-                <select class="form-select" id="platformSelect">
-                  <option value="linkedin-article">LinkedIn - Article</option>
-                  <option value="linkedin-post">LinkedIn - Post</option>
-                  <option value="twitter">X (Twitter)</option>
-                  <option value="youtube">YouTube</option>
                 </select>
               </div>
             </div>
@@ -260,28 +228,6 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label">Industry:</label>
-                <select class="form-select" id="blogIndustrySelect">
-                  <option value="IT & Dev">IT & Development</option>
-                  <option value="Sales/Marketing">Sales/Marketing</option>
-                  <option value="Fintech">Fintech</option>
-                  <option value="Billing">Billing</option>
-                  <option value="Retail">Retail</option>
-                  <option value="Logistics">Logistics</option>
-                  <option value="Healthcare">Healthcare</option>
-                  <option value="Education">Education</option>
-                  <option value="HRTech">HRTech</option>
-                  <option value="Real Estate">Real Estate</option>
-                  <option value="Agritech">Agritech</option>
-                  <option value="Energy">Energy</option>
-                  <option value="Travel">Travel</option>
-                  <option value="Legal">Legal</option>
-                  <option value="Media">Media</option>
-                  <option value="Government">Government</option>
-                </select>
-              </div>
-
               <div class="mb-3">
                 <label class="form-label">Tone:</label>
                 <select class="form-select" id="blogToneSelect">
@@ -628,6 +574,234 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Industry Selection Modal -->
+<div class="modal fade" id="blogIndustryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Target Industry</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Select the industry to fetch relevant trends for blog topic generation.
+        </div>
+        <div class="mb-3">
+          <label for="blogTargetIndustrySelect" class="form-label fw-bold">Target Industry:</label>
+          <select id="blogTargetIndustrySelect" class="form-select form-select-lg">
+            <option value="IT & Dev">IT & Development</option>
+            <option value="Sales/Marketing">Sales/Marketing</option>
+            <option value="Fintech">Fintech</option>
+            <option value="Billing">Billing</option>
+            <option value="Retail">Retail</option>
+            <option value="Logistics">Logistics</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="HRTech">HRTech</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Agritech">Agritech</option>
+            <option value="Energy">Energy</option>
+            <option value="Travel">Travel</option>
+            <option value="Legal">Legal</option>
+            <option value="Media">Media</option>
+            <option value="Government">Government</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="fetchBlogTrends()"
+        >
+          <i class="fas fa-arrow-right me-2"></i>Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Trend Slider Modal -->
+<div class="modal fade" id="blogTrendSliderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">How much should topics follow trends?</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Adjust the slider to control the balance between trend-following and original topics.
+        </div>
+        <div class="mb-4">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted"><i class="fas fa-chart-line me-1"></i>Follow Trends</span>
+            <span class="text-muted">Create Trends<i class="fas fa-lightbulb ms-1"></i></span>
+          </div>
+          <input
+            type="range"
+            class="form-range"
+            id="trendInfluenceSlider"
+            min="0"
+            max="100"
+            step="20"
+            value="0"
+            list="tickmarks"
+          />
+          <datalist id="tickmarks">
+            <option value="0" label="0"></option>
+            <option value="20" label="20"></option>
+            <option value="40" label="40"></option>
+            <option value="60" label="60"></option>
+            <option value="80" label="80"></option>
+            <option value="100" label="100"></option>
+          </datalist>
+          <div class="d-flex justify-content-between mt-1">
+            <small>0</small>
+            <small>20</small>
+            <small>40</small>
+            <small>60</small>
+            <small>80</small>
+            <small>100</small>
+          </div>
+          <div class="text-center mt-3">
+            <span class="badge bg-primary" id="sliderValueDisplay">Value: 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="generateBlogTopicsWithSlider()"
+        >
+          <i class="fas fa-magic me-2"></i>Generate Topics
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Industry and Platform Selection Modal -->
+<div class="modal fade" id="socialIndustryPlatformModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Target Industry and Platform</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Select the industry and platform to fetch relevant trends for social media topic generation.
+        </div>
+        <div class="mb-3">
+          <label for="socialTargetIndustrySelect" class="form-label fw-bold">Target Industry:</label>
+          <select id="socialTargetIndustrySelect" class="form-select form-select-lg">
+            <option value="IT & Dev">IT & Development</option>
+            <option value="Sales/Marketing">Sales/Marketing</option>
+            <option value="Fintech">Fintech</option>
+            <option value="Billing">Billing</option>
+            <option value="Retail">Retail</option>
+            <option value="Logistics">Logistics</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="HRTech">HRTech</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Agritech">Agritech</option>
+            <option value="Energy">Energy</option>
+            <option value="Travel">Travel</option>
+            <option value="Legal">Legal</option>
+            <option value="Media">Media</option>
+            <option value="Government">Government</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="socialTargetPlatformSelect" class="form-label fw-bold">Target Platform:</label>
+          <select id="socialTargetPlatformSelect" class="form-select form-select-lg">
+            <option value="linkedin-article">LinkedIn - Article</option>
+            <option value="linkedin-post">LinkedIn - Post</option>
+            <option value="twitter">X (Twitter)</option>
+            <option value="youtube">YouTube</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="fetchSocialTrends()">
+          <i class="fas fa-arrow-right me-2"></i>Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Trend Slider Modal -->
+<div class="modal fade" id="socialTrendSliderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">How much should topics follow trends?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Adjust the slider to control the balance between trend-following and original topics.
+        </div>
+        <div class="mb-4">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted"><i class="fas fa-chart-line me-1"></i>Follow Trends</span>
+            <span class="text-muted">Create Trends<i class="fas fa-lightbulb ms-1"></i></span>
+          </div>
+          <input type="range" class="form-range" id="socialTrendInfluenceSlider" min="0" max="100" step="20" value="0" list="socialTickmarks" />
+          <datalist id="socialTickmarks">
+            <option value="0" label="0"></option>
+            <option value="20" label="20"></option>
+            <option value="40" label="40"></option>
+            <option value="60" label="60"></option>
+            <option value="80" label="80"></option>
+            <option value="100" label="100"></option>
+          </datalist>
+          <div class="d-flex justify-content-between mt-1">
+            <small>0</small>
+            <small>20</small>
+            <small>40</small>
+            <small>60</small>
+            <small>80</small>
+            <small>100</small>
+          </div>
+          <div class="text-center mt-3">
+            <span class="badge bg-success" id="socialSliderValueDisplay">Value: 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="generateSocialTopicsWithSlider()">
+          <i class="fas fa-magic me-2"></i>Generate Topics
+        </button>
       </div>
     </div>
   </div>

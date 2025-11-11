@@ -1111,6 +1111,260 @@ def generate_blog_manual():
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
+@app.route('/fetch_blog_trends', methods=['POST'])
+def fetch_blog_trends():
+    """Fetch trends for blog topic generation based on selected industry"""
+    print("🔍 DEBUG: fetch_blog_trends endpoint called")
+    
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        industry = data.get('industry', 'IT & Dev')
+        
+        print(f"📊 DEBUG: Fetching trends for industry: {industry}")
+        
+        # Fetch trends using trend_fetcher
+        from trend_fetcher import TrendFetcher
+        fetcher = TrendFetcher()
+        
+        # Create a simplified ICP for trend fetching
+        simplified_icp = {
+            "industry": industry,
+            "target_audience": [industry],
+            "customer_pain_points": [],
+            "customer_needs": []
+        }
+        
+        print(f"🔧 DEBUG: Created simplified ICP: {simplified_icp}")
+        
+        # Fetch trends (limit to 10)
+        trends = fetcher.relevance_filter(
+            fetcher.parse_results(
+                fetcher.fetch_serpapi(f"{industry} trends", source="google_news", num=10),
+                source="google_news"
+            ),
+            simplified_icp,
+            top_k=10
+        )
+        
+        print(f"✅ DEBUG: Fetched {len(trends)} trends successfully")
+        
+        if not trends:
+            print("⚠️ DEBUG: No trends found, returning error")
+            return jsonify({
+                'success': False,
+                'error': f'No trends found for {industry}. Please try a different industry or check your API keys.'
+            }), 404
+        
+        return jsonify({
+            'success': True,
+            'trends': trends,
+            'message': f'Fetched {len(trends)} trends for {industry}'
+        })
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"❌ DEBUG: Error in fetch_blog_trends: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Failed to fetch trends: {str(e)}'
+        }), 500
+
+@app.route('/generate_blog_topics', methods=['POST'])
+def generate_blog_topics():
+    """Generate blog topics based on trend influence slider value"""
+    print("📝 DEBUG: generate_blog_topics endpoint called")
+    
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        trend_influence = data.get('trend_influence', 0)
+        trends_data = data.get('trends_data', [])
+        industry = data.get('industry', 'IT & Dev')
+        
+        print(f"🎚️ DEBUG: Trend influence: {trend_influence}")
+        print(f"📊 DEBUG: Trends count: {len(trends_data)}")
+        print(f"📊 DEBUG: Industry: {industry}")
+        
+        # Calculate split based on slider value
+        trend_count = (100 - trend_influence) // 20
+        original_count = 5 - trend_count
+        
+        print(f"📈 DEBUG: Trend-based topics: {trend_count}")
+        print(f"💡 DEBUG: Original topics: {original_count}")
+        
+        from blog_generator import BlogGenerator
+        generator = BlogGenerator()
+        
+        # Generate topics with trend influence
+        topics = generator.generate_blog_topics_with_influence(
+            trend_influence=trend_influence,
+            trends_data=trends_data,
+            industry=industry,
+            trend_count=trend_count,
+            original_count=original_count
+        )
+        
+        print(f"✅ DEBUG: Generated {len(topics)} topics")
+        for i, topic in enumerate(topics):
+            print(f"  {i}: {topic['title']} | Type: {topic.get('type', 'unknown')}")
+        
+        # Store topics in session for later use
+        stored_topics_file = "./generated/topics/current_session_topics.json"
+        os.makedirs(os.path.dirname(stored_topics_file), exist_ok=True)
+        with open(stored_topics_file, "w", encoding="utf-8") as f:
+            json.dump(topics, f, indent=2, ensure_ascii=False)
+        
+        print(f"💾 DEBUG: Saved topics to session storage")
+        
+        return jsonify({
+            'success': True,
+            'topics': topics,
+            'message': f'Generated {len(topics)} topics'
+        })
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"❌ DEBUG: Error in generate_blog_topics: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Failed to generate topics: {str(e)}'
+        }), 500
+
+@app.route('/fetch_social_trends', methods=['POST'])
+def fetch_social_trends():
+    """Fetch trends for social media topic generation based on selected industry"""
+    print("🔍 DEBUG: fetch_social_trends endpoint called")
+    
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        industry = data.get('industry', 'IT & Dev')
+        
+        print(f"📊 DEBUG: Fetching trends for industry: {industry}")
+        
+        # Fetch trends using trend_fetcher
+        from trend_fetcher import TrendFetcher
+        fetcher = TrendFetcher()
+        
+        # Create a simplified ICP for trend fetching
+        simplified_icp = {
+            "industry": industry,
+            "target_audience": [industry],
+            "customer_pain_points": [],
+            "customer_needs": []
+        }
+        
+        print(f"🔧 DEBUG: Created simplified ICP: {simplified_icp}")
+        
+        # Fetch trends (limit to 10)
+        trends = fetcher.relevance_filter(
+            fetcher.parse_results(
+                fetcher.fetch_serpapi(f"{industry} trends", source="google_news", num=10),
+                source="google_news"
+            ),
+            simplified_icp,
+            top_k=10
+        )
+        
+        print(f"✅ DEBUG: Fetched {len(trends)} trends successfully")
+        
+        if not trends:
+            print("⚠️ DEBUG: No trends found, returning error")
+            return jsonify({
+                'success': False,
+                'error': f'No trends found for {industry}. Please try a different industry or check your API keys.'
+            }), 404
+        
+        return jsonify({
+            'success': True,
+            'trends': trends,
+            'message': f'Fetched {len(trends)} trends for {industry}'
+        })
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"❌ DEBUG: Error in fetch_social_trends: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Failed to fetch trends: {str(e)}'
+        }), 500
+
+@app.route('/generate_social_topics', methods=['POST'])
+def generate_social_topics():
+    """Generate social media topics based on trend influence slider value"""
+    print("📝 DEBUG: generate_social_topics endpoint called")
+    
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        trend_influence = data.get('trend_influence', 0)
+        trends_data = data.get('trends_data', [])
+        industry = data.get('industry', 'IT & Dev')
+        platform = data.get('platform', 'linkedin-article')
+        
+        print(f"🎚️ DEBUG: Trend influence: {trend_influence}")
+        print(f"📊 DEBUG: Trends count: {len(trends_data)}")
+        print(f"📊 DEBUG: Industry: {industry}, Platform: {platform}")
+        
+        # Calculate split based on slider value
+        trend_count = (100 - trend_influence) // 20
+        original_count = 5 - trend_count
+        
+        print(f"📈 DEBUG: Trend-based topics: {trend_count}")
+        print(f"💡 DEBUG: Original topics: {original_count}")
+        
+        from post_generator import PostGenerator
+        generator = PostGenerator()
+        
+        # Generate topics with trend influence
+        topics = generator.generate_social_topics_with_influence(
+            trend_influence=trend_influence,
+            trends_data=trends_data,
+            industry=industry,
+            platform=platform,
+            trend_count=trend_count,
+            original_count=original_count
+        )
+        
+        print(f"✅ DEBUG: Generated {len(topics)} topics")
+        for i, topic in enumerate(topics):
+            print(f"  {i}: {topic['title']} | Type: {topic.get('type', 'unknown')}")
+        
+        # Store topics in session for later use
+        stored_topics_file = "./generated/topics/current_session_topics.json"
+        os.makedirs(os.path.dirname(stored_topics_file), exist_ok=True)
+        with open(stored_topics_file, "w", encoding="utf-8") as f:
+            json.dump(topics, f, indent=2, ensure_ascii=False)
+        
+        print(f"💾 DEBUG: Saved topics to session storage")
+        
+        return jsonify({
+            'success': True,
+            'topics': topics,
+            'message': f'Generated {len(topics)} topics'
+        })
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"❌ DEBUG: Error in generate_social_topics: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Failed to generate topics: {str(e)}'
+        }), 500
+
 @app.route('/api/generate_image_prompt', methods=['POST'])
 def generate_image_prompt():
     """Generate optimized image prompt for blog, LinkedIn, or X (Twitter) content, or video prompt for YouTube"""

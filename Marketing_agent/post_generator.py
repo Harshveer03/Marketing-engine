@@ -919,6 +919,147 @@ class ContentPipeline:
         print("  - YouTube          → content/generated_content/youtube.json")
 
 
+    def generate_social_topics_with_influence(self, trend_influence, trends_data, industry, platform, trend_count, original_count):
+        """Generate social media topics based on trend influence slider value"""
+        print(f"🎯 DEBUG: Generating social topics with influence: {trend_influence}")
+        print(f"📈 DEBUG: Trend topics: {trend_count}, Original topics: {original_count}")
+        print(f"📱 DEBUG: Platform: {platform}")
+        
+        topics = []
+        niche = self.load_json(NICHE_FILE)
+        
+        # Platform-specific context
+        platform_contexts = {
+            "linkedin-article": "professional, thought leadership, long-form analytical content",
+            "linkedin-post": "professional, engaging, concise insights",
+            "twitter": "concise, viral-worthy, trending, conversational",
+            "youtube": "video-focused, tutorial-style, engaging storytelling"
+        }
+        platform_context = platform_contexts.get(platform, "engaging social media content")
+        
+        # Generate trend-based topics
+        for i in range(trend_count):
+            if i < len(trends_data):
+                trend = trends_data[i]
+                print(f"📰 DEBUG: Generating trend-based topic from: {trend.get('title', 'N/A')}")
+                
+                # Create topic from trend
+                topic = {
+                    "title": trend.get('title', f"Trend Topic {i+1}"),
+                    "related_news": [trend],
+                    "relevance_score": trend.get('similarity_score', 75),
+                    "type": "trend_follower"
+                }
+                topics.append(topic)
+                print(f"✅ DEBUG: Added trend-based topic: {topic['title']}")
+        
+        # Generate original topics (trend setters) - platform-specific
+        for i in range(original_count):
+            print(f"💡 DEBUG: Generating original topic {i+1}/{original_count} for {platform}")
+            
+            prompt = f"""
+            You are a social media strategist creating ORIGINAL, trend-setting content for {platform}.
+            
+            Industry: {industry}
+            Platform: {platform}
+            Platform Style: {platform_context}
+            Niche Context: {json.dumps(niche, indent=2) if niche else 'N/A'}
+            
+            {"Recent trends for context (create unique angles, don't copy):" if trends_data else ""}
+            {json.dumps([t.get('title', '') for t in trends_data[:3]], indent=2) if trends_data else ''}
+            
+            Generate 1 ORIGINAL social media topic that:
+            - Creates a NEW perspective or trend in {industry}
+            - Is tailored for {platform} ({platform_context})
+            - Goes beyond current discussions
+            - Provides strategic, forward-thinking insights
+            - Is engaging and shareable
+            
+            Platform-specific examples:
+            - LinkedIn Article: "Why {industry} Needs to Rethink [Common Practice]: A Deep Dive"
+            - LinkedIn Post: "The Hidden Cost of [Industry Standard] in {industry}"
+            - X (Twitter): "Hot take: {industry} is missing [opportunity]. Here's why 🧵"
+            - YouTube: "I Tested [New Approach] in {industry} for 30 Days - Results Shocked Me"
+            
+            Return ONLY in JSON:
+            {{
+              "topic": "Your original topic title tailored for {platform}",
+              "angle": "Brief description of the unique angle"
+            }}
+            """
+            
+            try:
+                # Ensure event loop
+                loop = None
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                
+                response = self.llm.invoke(prompt).content
+                
+                # Parse response
+                match = re.search(r"\{.*\}", response, re.DOTALL)
+                if match:
+                    json_str = match.group()
+                    data = json.loads(json_str)
+                    topic_title = data.get("topic", f"Original Topic {i+1}")
+                else:
+                    topic_title = response.strip()[:100]
+                
+                # Create original topic
+                topic = {
+                    "title": topic_title,
+                    "related_news": trends_data[:2] if trends_data else [],
+                    "relevance_score": 85,
+                    "type": "trend_setter"
+                }
+                topics.append(topic)
+                print(f"✅ DEBUG: Added original topic: {topic['title']}")
+                
+            except Exception as e:
+                print(f"❌ DEBUG: Error generating original topic: {e}")
+                # Fallback original topics - platform-specific
+                fallback_topics = {
+                    "linkedin-article": [
+                        f"Rethinking {industry}: A Strategic Imperative for 2025",
+                        f"The Future of {industry}: Beyond Current Trends",
+                        f"Why {industry} Leaders Are Missing the Bigger Picture"
+                    ],
+                    "linkedin-post": [
+                        f"The {industry} shift nobody's talking about",
+                        f"3 {industry} trends that will define 2025",
+                        f"Why traditional {industry} approaches are failing"
+                    ],
+                    "twitter": [
+                        f"Hot take: {industry} is broken. Here's how to fix it 🧵",
+                        f"Everyone in {industry} is doing this wrong",
+                        f"The {industry} playbook needs a rewrite"
+                    ],
+                    "youtube": [
+                        f"I Tried the New {industry} Strategy - Results Were Shocking",
+                        f"The {industry} Secret Nobody Tells You",
+                        f"Why {industry} Experts Are Wrong About This"
+                    ]
+                }
+                platform_fallbacks = fallback_topics.get(platform, fallback_topics["linkedin-post"])
+                topic = {
+                    "title": platform_fallbacks[i % len(platform_fallbacks)],
+                    "related_news": trends_data[:2] if trends_data else [],
+                    "relevance_score": 80,
+                    "type": "trend_setter"
+                }
+                topics.append(topic)
+                print(f"⚠️ DEBUG: Used fallback original topic: {topic['title']}")
+        
+        print(f"✅ DEBUG: Generated total {len(topics)} topics for {platform}")
+        return topics
+
+
+# Create alias for backward compatibility
+PostGenerator = ContentPipeline
+
 if __name__ == "__main__":
     pipeline = ContentPipeline()
     pipeline.run()

@@ -29,6 +29,10 @@ class TrendFetcher:
     def build_queries(self, icp_json: dict) -> list:
         """Generate exactly 1 concise query using LLM"""
         industry = icp_json.get("industry", "")
+        target_audience = icp_json.get("target_audience", [])
+        
+        # Extract actual industry from target audience if industry is too specific
+        audience_text = " ".join(target_audience) if target_audience else ""
 
         # Extract just 'challenge' text if pain points are dicts
         pain_points_data = icp_json.get("customer_pain_points", [])
@@ -43,16 +47,22 @@ class TrendFetcher:
         )
 
         prompt = f"""
-        Generate exactly 1 concise search query (2–3 words) related to {industry} trends, strategy, or customer challenges.
+        Generate exactly 1 concise search query (2–3 words) for Google News.
+        
+        Context:
+        - Target audience: {audience_text}
+        - Industry/domain: {industry}
+        - Pain points: {pain_points[:200]}
+        
         Requirements:
-        - The query MUST include either {industry}, {pain_points}, or {needs}.
-        - Do not copy phrases directly from the input; rephrase into natural search terms.
-        - Keep the query short (2–3 words max), distinct, and meaningful.
-        - Avoid filler words, commas, or generic terms like "insights", "overview", "update".
-        - Query should reflect a specific angle (e.g., a core challenge, need, or trend), not a vague phrase.
+        - Use COMMON, SEARCHABLE terms that would appear in news articles (e.g., "B2B SaaS", "sales automation", "GTM strategy")
+        - Extract the REAL industry from the context (e.g., if audience is "B2B SaaS Founders", use "B2B SaaS")
+        - Avoid product names, niche jargon, or overly specific terms
+        - Keep it 2-3 words maximum
+        - Must return actual Google News results
 
-        Example:
-        ["B2B SaaS GTM trends", "SaaS churn issues", "AI in SaaS", "SaaS CXO strategy", "SaaS growth 2025"]
+        Return only the query as a JSON array with 1 item.
+        Example: ["B2B SaaS trends"]
         """
 
         try:
@@ -91,6 +101,12 @@ class TrendFetcher:
         """Normalize SerpAPI results into a common schema"""
         results = []
         if not isinstance(data, dict):
+            return results
+
+        print(f"   SerpAPI response keys: {list(data.keys())}")
+        
+        if "error" in data:
+            print(f"   ⚠️ SerpAPI error: {data['error']}")
             return results
 
         if source == "google_news":
@@ -214,7 +230,7 @@ class TrendFetcher:
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
             
-            with open(icp_json_path, "r") as f:
+            with open(icp_json_path, "r", encoding="utf-8") as f:
                 icp_json = json.load(f)
 
             queries = self.build_queries(icp_json)

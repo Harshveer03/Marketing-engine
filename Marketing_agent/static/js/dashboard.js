@@ -600,9 +600,13 @@ function renderTrends(data) {
                         <i class="fas fa-external-link-alt ms-1 small"></i>
                     </a>
                 </h6>
-                <p class="card-text text-muted">${escapeHtml(
-                  trend.description || "No description available"
-                )}</p>
+                ${
+                  trend.description
+                    ? `<p class="card-text text-muted">${escapeHtml(
+                        trend.description
+                      )}</p>`
+                    : ""
+                }
                 <div class="d-flex justify-content-between align-items-center">
                     <small class="text-muted">
                         <i class="fas fa-newspaper me-1"></i>
@@ -1173,7 +1177,9 @@ function generateSocialManual() {
   const audience = document.getElementById("manualSocialAudienceSelect").value;
 
   // Get selected platform from dropdown
-  const selectedPlatform = document.getElementById("manualPlatformSelect").value;
+  const selectedPlatform = document.getElementById(
+    "manualPlatformSelect"
+  ).value;
 
   if (!topic) {
     showToast("error", "Please enter a topic");
@@ -1449,8 +1455,6 @@ function generateSocialFromDashboard() {
       showToast("error", "Failed to generate content: " + error.message);
     });
 }
-
-
 
 // Set default industry based on current business context
 function setDefaultIndustry() {

@@ -195,67 +195,13 @@
               </div>
 
               <div class="mb-3">
-                <label class="form-label">Select Platforms:</label>
-                <div class="d-flex flex-column gap-2">
-                  <div class="form-check">
-                    <input
-                      class="form-check-input platform-checkbox"
-                      type="checkbox"
-                      value="linkedin-article"
-                      id="platformLinkedInArticle"
-                      checked
-                    />
-                    <label
-                      class="form-check-label"
-                      for="platformLinkedInArticle"
-                    >
-                      <i class="fab fa-linkedin me-1"></i>LinkedIn - Article
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input platform-checkbox"
-                      type="checkbox"
-                      value="linkedin-post"
-                      id="platformLinkedInPost"
-                      checked
-                    />
-                    <label class="form-check-label" for="platformLinkedInPost">
-                      <i class="fab fa-linkedin me-1"></i>LinkedIn - Post
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input platform-checkbox"
-                      type="checkbox"
-                      value="twitter"
-                      id="platformTwitter"
-                      checked
-                    />
-                    <label class="form-check-label" for="platformTwitter">
-                      <i class="fab fa-twitter me-1"></i>Twitter
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input platform-checkbox"
-                      type="checkbox"
-                      value="youtube"
-                      id="platformYouTube"
-                      checked
-                    />
-                    <label class="form-check-label" for="platformYouTube">
-                      <i class="fab fa-youtube me-1"></i>YouTube
-                    </label>
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-outline-secondary mt-1"
-                    onclick="toggleAllPlatforms()"
-                  >
-                    <i class="fas fa-check-double me-1"></i>Select All
-                  </button>
-                </div>
+                <label class="form-label">Select Platform:</label>
+                <select class="form-select" id="platformSelect">
+                  <option value="linkedin-article">LinkedIn - Article</option>
+                  <option value="linkedin-post">LinkedIn - Post</option>
+                  <option value="twitter">X (Twitter)</option>
+                  <option value="youtube">YouTube</option>
+                </select>
               </div>
             </div>
           </div>
@@ -511,7 +457,7 @@
                       type="button"
                       role="tab"
                     >
-                      <i class="fab fa-twitter me-2"></i>Twitter
+                      <i class="fab fa-x-twitter me-2"></i>X (Twitter)
                     </button>
                   </li>
                   <li class="nav-item" role="presentation">
@@ -554,12 +500,12 @@
                     </div>
                   </div>
 
-                  <!-- Twitter Content -->
+                  <!-- X (Twitter) Content -->
                   <div class="tab-pane fade" id="twitter" role="tabpanel">
                     <div id="twitter-content">
                       <div class="text-center text-muted">
-                        <i class="fab fa-twitter fa-3x mb-3"></i>
-                        <p>No Twitter content generated yet.</p>
+                        <i class="fab fa-x-twitter fa-3x mb-3"></i>
+                        <p>No X (Twitter) content generated yet.</p>
                       </div>
                     </div>
                   </div>
@@ -829,67 +775,13 @@
           </div>
         </div>
         <div class="mb-3">
-          <label class="form-label fw-bold">Select Platforms:</label>
-          <div class="d-flex flex-column gap-2">
-            <div class="form-check">
-              <input
-                class="form-check-input manual-platform-checkbox"
-                type="checkbox"
-                value="linkedin-article"
-                id="manualPlatformLinkedInArticle"
-                checked
-              />
-              <label
-                class="form-check-label"
-                for="manualPlatformLinkedInArticle"
-              >
-                <i class="fab fa-linkedin me-1"></i>LinkedIn - Article
-              </label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input manual-platform-checkbox"
-                type="checkbox"
-                value="linkedin-post"
-                id="manualPlatformLinkedInPost"
-                checked
-              />
-              <label class="form-check-label" for="manualPlatformLinkedInPost">
-                <i class="fab fa-linkedin me-1"></i>LinkedIn - Post
-              </label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input manual-platform-checkbox"
-                type="checkbox"
-                value="twitter"
-                id="manualPlatformTwitter"
-                checked
-              />
-              <label class="form-check-label" for="manualPlatformTwitter">
-                <i class="fab fa-twitter me-1"></i>Twitter
-              </label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input manual-platform-checkbox"
-                type="checkbox"
-                value="youtube"
-                id="manualPlatformYouTube"
-                checked
-              />
-              <label class="form-check-label" for="manualPlatformYouTube">
-                <i class="fab fa-youtube me-1"></i>YouTube
-              </label>
-            </div>
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-secondary mt-1"
-              onclick="toggleAllManualPlatforms()"
-            >
-              <i class="fas fa-check-double me-1"></i>Select All
-            </button>
-          </div>
+          <label class="form-label fw-bold">Select Platform:</label>
+          <select class="form-select" id="manualPlatformSelect">
+            <option value="linkedin-article">LinkedIn - Article</option>
+            <option value="linkedin-post">LinkedIn - Post</option>
+            <option value="twitter">X (Twitter)</option>
+            <option value="youtube">YouTube</option>
+          </select>
         </div>
       </div>
       <div class="modal-footer">

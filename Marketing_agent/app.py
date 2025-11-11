@@ -460,20 +460,17 @@ def generate_social_manual():
         industry = data.get('industry', 'IT & Development')
         tone = data.get('tone', 'professional')
         audience = data.get('audience', 'CXOs')
-        platforms = data.get('platforms', ['linkedin-article', 'linkedin-post', 'twitter', 'youtube'])
+        platform = data.get('platform', 'linkedin-article')
         
         print(f"📝 Manual social generation:")
         print(f"   Topic: {user_topic}")
         print(f"   Industry: {industry}")
         print(f"   Tone: {tone}")
         print(f"   Audience: {audience}")
-        print(f"   Platforms: {platforms}")
+        print(f"   Platform: {platform}")
         
         if not user_topic:
             return jsonify({'error': 'Topic is required'}), 400
-        
-        if not platforms or len(platforms) == 0:
-            return jsonify({'error': 'At least one platform must be selected'}), 400
         
         from post_generator import ContentPipeline
         from blog_generator import BlogGenerator
@@ -498,16 +495,14 @@ def generate_social_manual():
             "related_news": topic_trends
         }
         
-        # Step 4: Generate content for selected platforms
-        print(f"✍️ Generating content for platforms: {platforms}")
+        # Step 4: Generate content for the selected platform
+        print(f"✍️ Generating content for platform: {platform}")
         
         output_dir = "./generated/content/social"
         os.makedirs(output_dir, exist_ok=True)
         
-        generated_count = 0
-        
         # LinkedIn Article
-        if 'linkedin-article' in platforms:
+        if platform == 'linkedin-article':
             print(f"📝 Generating LinkedIn Article...")
             linkedin_article = pipeline.generate_linkedin_article(
                 topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
@@ -533,11 +528,10 @@ def generate_social_manual():
             }
             
             pipeline.append_json(os.path.join(output_dir, "linkedin_article.json"), linkedin_article_data)
-            generated_count += 1
             print(f"✅ LinkedIn Article generated")
         
         # LinkedIn Post
-        if 'linkedin-post' in platforms:
+        elif platform == 'linkedin-post':
             print(f"📝 Generating LinkedIn Post...")
             linkedin_post = pipeline.generate_linkedin_post(
                 topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
@@ -563,12 +557,11 @@ def generate_social_manual():
             }
             
             pipeline.append_json(os.path.join(output_dir, "linkedin_post.json"), linkedin_post_data)
-            generated_count += 1
             print(f"✅ LinkedIn Post generated")
         
-        # Twitter
-        if 'twitter' in platforms:
-            print(f"📝 Generating Twitter content...")
+        # X (Twitter)
+        elif platform == 'twitter':
+            print(f"📝 Generating X (Twitter) content...")
             twitter = pipeline.generate_twitter(
                 topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
             )
@@ -593,11 +586,10 @@ def generate_social_manual():
             }
             
             pipeline.append_json(os.path.join(output_dir, "twitter.json"), twitter_data)
-            generated_count += 1
-            print(f"✅ Twitter content generated")
+            print(f"✅ X (Twitter) content generated")
         
         # YouTube
-        if 'youtube' in platforms:
+        elif platform == 'youtube':
             print(f"📝 Generating YouTube content...")
             youtube = pipeline.generate_youtube(
                 topic_obj, topic_trends, niche, audience, tone, pdf_context, industry
@@ -624,10 +616,9 @@ def generate_social_manual():
             }
             
             pipeline.append_json(os.path.join(output_dir, "youtube.json"), youtube_data)
-            generated_count += 1
             print(f"✅ YouTube content generated")
         
-        print(f"✅ Manual social generation complete: {generated_count} platforms")
+        print(f"✅ Manual social generation complete for: {platform}")
         
         # Save the topic to topics.json (for current session)
         print(f"🔄 Saving topic: '{user_topic}'")
@@ -642,9 +633,18 @@ def generate_social_manual():
         pipeline.save_json(topics_file, [topic_entry])
         print(f"✅ Successfully saved topic to topics.json")
         
-        # Save the used topic to prevent duplicates
-        print(f"🔄 Saving used social topic: '{user_topic}'")
-        used_topics_file = "./generated/topics/used_social_topics.json"
+        # Save the used topic to platform-specific file to prevent duplicates
+        print(f"🔄 Saving used topic for {platform}: '{user_topic}'")
+        
+        # Determine platform-specific file
+        platform_file_map = {
+            'linkedin-article': 'used_linkedin_article_topics.json',
+            'linkedin-post': 'used_linkedin_post_topics.json',
+            'twitter': 'used_twitter_topics.json',
+            'youtube': 'used_youtube_topics.json'
+        }
+        
+        used_topics_file = f"./generated/topics/{platform_file_map.get(platform, 'used_social_topics.json')}"
         os.makedirs(os.path.dirname(used_topics_file), exist_ok=True)
         
         used_topics = []
@@ -652,9 +652,9 @@ def generate_social_manual():
             try:
                 with open(used_topics_file, "r", encoding="utf-8") as f:
                     used_topics = json.load(f)
-                print(f"📊 Found {len(used_topics)} existing used social topics")
+                print(f"📊 Found {len(used_topics)} existing used topics for {platform}")
             except json.JSONDecodeError as e:
-                print(f"⚠️ JSON decode error in used social topics file: {e}")
+                print(f"⚠️ JSON decode error in {platform} topics file: {e}")
                 used_topics = []
         
         new_topic_entry = {"title": user_topic, "generated_on": datetime.now().isoformat(), "mode": "manual"}
@@ -663,13 +663,13 @@ def generate_social_manual():
         with open(used_topics_file, "w", encoding="utf-8") as f:
             json.dump(used_topics, f, indent=2, ensure_ascii=False)
         
-        print(f"✅ Successfully saved used social topic: '{user_topic}'")
-        print(f"📊 Total used social topics now: {len(used_topics)}")
+        print(f"✅ Successfully saved used topic to {platform_file_map.get(platform)}")
+        print(f"📊 Total used topics for {platform}: {len(used_topics)}")
         
+        platform_display = platform.replace('-', ' ').title()
         return jsonify({
             'success': True,
-            'message': f'Social content generated for {generated_count} platforms',
-            'platforms_generated': generated_count
+            'message': f'{platform_display} content generated successfully'
         })
         
     except Exception as e:
@@ -691,16 +691,13 @@ def generate_social_with_selection():
         industry = data.get('industry', 'IT & Dev')
         tone = data.get('tone', 'professional')
         audience = data.get('audience', 'Founders')
-        platforms = data.get('platforms', ['linkedin', 'twitter', 'youtube'])  # Get selected platforms
+        platform = data.get('platform', 'linkedin-article')  # Get single selected platform
         
         print(f"🔢 Topic index: {topic_index}, Industry: {industry}, Tone: {tone}, Audience: {audience}")
-        print(f"📱 Selected platforms: {platforms}")
+        print(f"📱 Selected platform: {platform}")
         
         if topic_index is None:
             return jsonify({'error': 'Missing topic selection'}), 400
-        
-        if not platforms or len(platforms) == 0:
-            return jsonify({'error': 'Please select at least one platform'}), 400
         
         from post_generator import ContentPipeline
         pipeline = ContentPipeline()
@@ -735,17 +732,17 @@ def generate_social_with_selection():
             print(f"Error getting context: {e}")
             return jsonify({'error': f'Failed to get context: {str(e)}'}), 500
         
-        # Generate content ONLY for selected platforms
+        # Generate content ONLY for the selected platform
         print(f"🚀 Generating content for topic: '{selected_topic['title']}'")
         print(f"📊 Industry: {industry}, Tone: {tone}, Audience: {audience}")
-        print(f"📱 Generating for platforms: {', '.join(platforms)}")
+        print(f"📱 Generating for platform: {platform}")
         
         output_dir = "./generated/content/social"
         os.makedirs(output_dir, exist_ok=True)
         topic_title = selected_topic["title"]
         
-        # Generate and save content only for selected platforms
-        if 'linkedin-article' in platforms:
+        # Generate and save content for the single selected platform
+        if platform == 'linkedin-article':
             print("📝 Generating LinkedIn Article content...")
             linkedin_article = pipeline.generate_linkedin_article(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
             linkedin_article_quality = pipeline.calculate_social_quality_score(
@@ -768,7 +765,7 @@ def generate_social_with_selection():
             pipeline.append_json(os.path.join(output_dir, "linkedin_article.json"), linkedin_article_data)
             print("✅ LinkedIn Article content saved")
         
-        if 'linkedin-post' in platforms:
+        elif platform == 'linkedin-post':
             print("📝 Generating LinkedIn Post content...")
             linkedin_post = pipeline.generate_linkedin_post(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
             linkedin_post_quality = pipeline.calculate_social_quality_score(
@@ -791,8 +788,8 @@ def generate_social_with_selection():
             pipeline.append_json(os.path.join(output_dir, "linkedin_post.json"), linkedin_post_data)
             print("✅ LinkedIn Post content saved")
         
-        if 'twitter' in platforms:
-            print("📝 Generating Twitter content...")
+        elif platform == 'twitter':
+            print("📝 Generating X (Twitter) content...")
             twitter = pipeline.generate_twitter(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
             twitter_quality = pipeline.calculate_social_quality_score(
                 "twitter",
@@ -811,9 +808,9 @@ def generate_social_with_selection():
                 "timestamp": datetime.now().isoformat()
             }
             pipeline.append_json(os.path.join(output_dir, "twitter.json"), twitter_data)
-            print("✅ Twitter content saved")
+            print("✅ X (Twitter) content saved")
         
-        if 'youtube' in platforms:
+        elif platform == 'youtube':
             print("📝 Generating YouTube content...")
             youtube = pipeline.generate_youtube(selected_topic, selected_topic.get("related_news", []), niche, audience, tone, pdf_context, industry)
             youtube_quality = pipeline.calculate_social_quality_score(
@@ -836,11 +833,20 @@ def generate_social_with_selection():
             pipeline.append_json(os.path.join(output_dir, "youtube.json"), youtube_data)
             print("✅ YouTube content saved")
         
-        print(f"💾 Content generation complete for: {', '.join(platforms)}")
+        print(f"💾 Content generation complete for: {platform}")
         
-        # Save the used topic to prevent duplicates
-        print(f"🔄 Saving used social topic: '{selected_topic['title']}'")
-        used_topics_file = "./generated/topics/used_social_topics.json"
+        # Save the used topic to platform-specific file to prevent duplicates
+        print(f"🔄 Saving used topic for {platform}: '{selected_topic['title']}'")
+        
+        # Determine platform-specific file
+        platform_file_map = {
+            'linkedin-article': 'used_linkedin_article_topics.json',
+            'linkedin-post': 'used_linkedin_post_topics.json',
+            'twitter': 'used_twitter_topics.json',
+            'youtube': 'used_youtube_topics.json'
+        }
+        
+        used_topics_file = f"./generated/topics/{platform_file_map.get(platform, 'used_social_topics.json')}"
         os.makedirs(os.path.dirname(used_topics_file), exist_ok=True)
         
         used_topics = []
@@ -848,9 +854,9 @@ def generate_social_with_selection():
             try:
                 with open(used_topics_file, "r", encoding="utf-8") as f:
                     used_topics = json.load(f)
-                print(f"📊 Found {len(used_topics)} existing used social topics")
+                print(f"📊 Found {len(used_topics)} existing used topics for {platform}")
             except json.JSONDecodeError as e:
-                print(f"⚠️ JSON decode error in used social topics file: {e}")
+                print(f"⚠️ JSON decode error in {platform} topics file: {e}")
                 used_topics = []
         
         new_topic_entry = {"title": selected_topic['title'], "generated_on": datetime.now().isoformat(), "mode": "automatic"}
@@ -859,10 +865,11 @@ def generate_social_with_selection():
         with open(used_topics_file, "w", encoding="utf-8") as f:
             json.dump(used_topics, f, indent=2, ensure_ascii=False)
         
-        print(f"✅ Successfully saved used social topic: '{selected_topic['title']}'")
-        print(f"📊 Total used social topics now: {len(used_topics)}")
+        print(f"✅ Successfully saved used topic to {platform_file_map.get(platform)}")
+        print(f"📊 Total used topics for {platform}: {len(used_topics)}")
         
-        return jsonify({'success': True, 'message': f'Social content generated for {", ".join(platforms)}'})
+        platform_display = platform.replace('-', ' ').title()
+        return jsonify({'success': True, 'message': f'{platform_display} content generated successfully'})
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -1106,7 +1113,7 @@ def generate_blog_manual():
 
 @app.route('/api/generate_image_prompt', methods=['POST'])
 def generate_image_prompt():
-    """Generate optimized image prompt for blog, LinkedIn, or Twitter content, or video prompt for YouTube"""
+    """Generate optimized image prompt for blog, LinkedIn, or X (Twitter) content, or video prompt for YouTube"""
     try:
         data = request.get_json()
         content_type = data.get('type', 'blog')
@@ -1141,11 +1148,11 @@ def generate_image_prompt():
             from image_prompt_builder import twitter_image_prompt
             prompt = twitter_image_prompt(content_data)
             
-            print(f"✅ Twitter image prompt generated successfully")
+            print(f"✅ X (Twitter) image prompt generated successfully")
             return jsonify({
                 'success': True, 
                 'prompt': prompt,
-                'message': 'Twitter image prompt generated successfully'
+                'message': 'X (Twitter) image prompt generated successfully'
             })
         elif content_type == 'youtube':
             from image_prompt_builder import youtube_video_prompt

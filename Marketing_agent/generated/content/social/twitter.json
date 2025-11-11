@@ -1,31 +1,31 @@
 [
     {
-        "title": "AI-Powered Sales Execution: Drive Predictable Revenue Growth.",
-        "caption": "Is your pipeline forecasting based on 'vibes'? Founder-led sales breaking? Stop repeating GTM mistakes. AI-powered sales execution rewires GTM behavior in real-time for predictable revenue growth. Move beyond insights to action. #AI #GTM #SalesStrategy",
+        "title": "AI-Powered Sales: Eliminate \"Vibes\" for Predictable Revenue.",
+        "caption": "Billing CXOs: Stop letting 'Vibes' dictate your recurring revenue. Founder-led sales breaks at scale. AI rewires GTM behavior for predictable pipeline, anchoring buyers on risk & urgency. No more guesswork; just data-driven growth.",
         "hashtags": [
-            "#AI",
-            "#GTM",
-            "#SalesStrategy"
+            "#BillingTech",
+            "#RevenueOps",
+            "#AIforsales"
         ],
-        "quality_score": 75.06,
-        "industry": "Sales/Marketing",
-        "tone": "bold",
+        "quality_score": 71.6,
+        "industry": "Billing",
+        "tone": "professional",
         "audience": "CXOs",
-        "timestamp": "2025-11-10T22:17:36.756166"
+        "timestamp": "2025-11-11T14:08:28.391727"
     },
     {
-        "title": "AI revolutionizing B2B SAAS Market",
-        "caption": "Your GTM isn't scaling: 'Vibe'-based forecasts, <1% reply rates, changes don't stick. AI moves beyond insight-only tools. It's a real-time system for *GTM behavior rewiring*, driving predictable pipeline & rep fluency, anchoring buyers on urgency.",
+        "title": "AI enhances buyer engagement: personalize messaging, build trust.",
+        "caption": "Real Estate marketers: Low engagement & 'vibes'-based forecasts sink deals. AI personalizes buyer messaging, building trust by anchoring on *their* specific risks. Rewire GTM for predictable, scalable growth. #RealEstate #PropTech #GTM",
         "hashtags": [
-            "#AI",
-            "#GTMStrategy",
-            "#SalesOps"
+            "#RealEstate",
+            "#PropTech",
+            "#GTM"
         ],
-        "quality_score": 74.54,
-        "industry": "Sales/Marketing",
-        "tone": "technical",
-        "audience": "Developers",
+        "quality_score": 68.33,
+        "industry": "Real Estate",
+        "tone": "professional",
+        "audience": "Marketers",
         "generation_mode": "manual",
-        "timestamp": "2025-11-10T22:19:43.332785"
+        "timestamp": "2025-11-11T14:09:49.521296"
     }
 ]

@@ -390,7 +390,7 @@ function loadSocialContent(platform) {
       if (!data || !data[platform]) {
         contentDiv.innerHTML = `
           <div class="text-center text-muted">
-            <i class="fab fa-${platform} fa-3x mb-3"></i>
+            <i class="${getPlatformIcon(platform)} fa-3x mb-3"></i>
             <p>No ${
               platform.charAt(0).toUpperCase() + platform.slice(1)
             } content generated yet.</p>
@@ -451,7 +451,7 @@ function loadSocialContent(platform) {
                 }
               </h6>
               <small class="text-muted">
-                <i class="fab fa-linkedin me-1"></i>
+                <i class="${getPlatformIcon(platform)} me-1"></i>
                 ${platformDisplay}
                 ${post.timestamp ? ` | ${formatDate(post.timestamp)}` : ""}
               </small>
@@ -914,7 +914,9 @@ function copyBlogContent(index) {
 function getPlatformIcon(platform) {
   const icons = {
     linkedin: "fab fa-linkedin",
-    twitter: "fab fa-twitter",
+    "linkedin-article": "fab fa-linkedin",
+    "linkedin-post": "fab fa-linkedin",
+    twitter: "fab fa-x-twitter",
     youtube: "fab fa-youtube",
     facebook: "fab fa-facebook",
     instagram: "fab fa-instagram",
@@ -1164,43 +1166,17 @@ function showManualSocialTopicInput() {
   modal.show();
 }
 
-function toggleAllManualPlatforms() {
-  const checkboxes = document.querySelectorAll(".manual-platform-checkbox");
-  const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
-
-  checkboxes.forEach((checkbox) => {
-    checkbox.checked = !allChecked;
-  });
-
-  const button = event.target.closest("button");
-  if (allChecked) {
-    button.innerHTML = '<i class="fas fa-check-double me-1"></i>Select All';
-  } else {
-    button.innerHTML = '<i class="fas fa-times me-1"></i>Deselect All';
-  }
-}
-
 function generateSocialManual() {
   const topic = document.getElementById("manualSocialTopicInput").value.trim();
   const industry = document.getElementById("manualSocialIndustrySelect").value;
   const tone = document.getElementById("manualSocialToneSelect").value;
   const audience = document.getElementById("manualSocialAudienceSelect").value;
 
-  // Get selected platforms
-  const selectedPlatforms = [];
-  document
-    .querySelectorAll(".manual-platform-checkbox:checked")
-    .forEach((checkbox) => {
-      selectedPlatforms.push(checkbox.value);
-    });
+  // Get selected platform from dropdown
+  const selectedPlatform = document.getElementById("manualPlatformSelect").value;
 
   if (!topic) {
     showToast("error", "Please enter a topic");
-    return;
-  }
-
-  if (selectedPlatforms.length === 0) {
-    showToast("error", "Please select at least one platform");
     return;
   }
 
@@ -1209,7 +1185,7 @@ function generateSocialManual() {
     industry,
     tone,
     audience,
-    platforms: selectedPlatforms,
+    platform: selectedPlatform,
   });
 
   // Hide modal
@@ -1221,12 +1197,14 @@ function generateSocialManual() {
   }
 
   // Show loading toast
-  const platformNames = selectedPlatforms
-    .map((p) => p.charAt(0).toUpperCase() + p.slice(1).replace("-", " "))
-    .join(", ");
+  const platformName = selectedPlatform
+    .replace("-", " ")
+    .split(" ")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
   showToast(
     "info",
-    `Fetching trends for "${topic}" and generating content for ${platformNames}... This may take a few moments.`
+    `Fetching trends for "${topic}" and generating ${platformName} content... This may take a few moments.`
   );
 
   // Call backend API
@@ -1240,13 +1218,13 @@ function generateSocialManual() {
       industry: industry,
       tone: tone,
       audience: audience,
-      platforms: selectedPlatforms,
+      platform: selectedPlatform,
     }),
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        showToast("success", `Social content generated for ${platformNames}!`);
+        showToast("success", `${platformName} content generated successfully!`);
 
         // Switch to social tab and refresh content
         const socialTab = document.getElementById("social-tab");
@@ -1254,8 +1232,8 @@ function generateSocialManual() {
         socialTabInstance.show();
 
         setTimeout(() => {
-          // Load first selected platform content
-          loadSocialContent(selectedPlatforms[0]);
+          // Load the generated platform content
+          loadSocialContent(selectedPlatform);
           refreshStats();
         }, 1000);
       } else {
@@ -1393,23 +1371,15 @@ function generateSocialFromDashboard() {
   const tone = document.getElementById("toneSelect").value;
   const audience = document.getElementById("audienceSelect").value;
 
-  // Get selected platforms
-  const selectedPlatforms = [];
-  document
-    .querySelectorAll(".platform-checkbox:checked")
-    .forEach((checkbox) => {
-      selectedPlatforms.push(checkbox.value);
-    });
+  // Get selected platform from dropdown
+  const selectedPlatform = document.getElementById("platformSelect").value;
 
   if (!selectedTopic) {
     showToast("error", "Please select a topic");
     return;
   }
 
-  if (selectedPlatforms.length === 0) {
-    showToast("error", "Please select at least one platform");
-    return;
-  }
+  // No need to validate platform - dropdown always has a value
 
   // Show loading state
   const generateBtn = document.getElementById("generateSocialBtn");
@@ -1418,12 +1388,14 @@ function generateSocialFromDashboard() {
   generateBtn.innerHTML =
     '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
 
-  const platformNames = selectedPlatforms
-    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
-    .join(", ");
+  const platformName = selectedPlatform
+    .replace("-", " ")
+    .split(" ")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
   showToast(
     "info",
-    `Generating content for ${platformNames}... This may take a few moments.`
+    `Generating ${platformName} content... This may take a few moments.`
   );
 
   // Debug: Log what we're sending
@@ -1432,11 +1404,11 @@ function generateSocialFromDashboard() {
     industry: industry,
     tone: tone,
     audience: audience,
-    platforms: selectedPlatforms,
+    platform: selectedPlatform,
   };
 
   console.log("🚀 Sending request:", requestData);
-  console.log("📝 Selected platforms:", selectedPlatforms);
+  console.log("📝 Selected platform:", selectedPlatform);
 
   // Generate content with selections
   fetch("/generate_social_with_selection", {
@@ -1452,7 +1424,7 @@ function generateSocialFromDashboard() {
       generateBtn.innerHTML = originalText;
 
       if (data.success) {
-        showToast("success", `Content generated for ${platformNames}!`);
+        showToast("success", `${platformName} content generated successfully!`);
 
         // Hide topic selection
         hideTopicSelection();
@@ -1463,8 +1435,8 @@ function generateSocialFromDashboard() {
         socialTabInstance.show();
 
         setTimeout(() => {
-          // Load first selected platform content
-          loadSocialContent(selectedPlatforms[0]);
+          // Load the generated platform content
+          loadSocialContent(selectedPlatform);
           refreshStats();
         }, 1000);
       } else {
@@ -1478,22 +1450,7 @@ function generateSocialFromDashboard() {
     });
 }
 
-// Toggle all platforms checkbox
-function toggleAllPlatforms() {
-  const checkboxes = document.querySelectorAll(".platform-checkbox");
-  const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
 
-  checkboxes.forEach((checkbox) => {
-    checkbox.checked = !allChecked;
-  });
-
-  const button = event.target.closest("button");
-  if (allChecked) {
-    button.innerHTML = '<i class="fas fa-check-double me-1"></i>Select All';
-  } else {
-    button.innerHTML = '<i class="fas fa-times me-1"></i>Deselect All';
-  }
-}
 
 // Set default industry based on current business context
 function setDefaultIndustry() {
@@ -2061,7 +2018,7 @@ console.log("✅ Image prompt generation functions loaded");
 // ========================================
 
 /**
- * Generate image prompt for LinkedIn or Twitter content
+ * Generate image prompt for LinkedIn or X (Twitter) content
  */
 function generateSocialImagePrompt(platform, postIndex) {
   console.log(
@@ -2147,10 +2104,10 @@ function generateLinkedInImagePrompt(linkedinData) {
 }
 
 /**
- * Generate Twitter image prompt (convenience function)
+ * Generate X (Twitter) image prompt (convenience function)
  */
 function generateTwitterImagePrompt(twitterData) {
-  console.log("📸 Generating Twitter image prompt:", twitterData.title);
+  console.log("📸 Generating X (Twitter) image prompt:", twitterData.title);
 
   // Call backend API
   fetch("/api/generate_image_prompt", {
@@ -2166,7 +2123,7 @@ function generateTwitterImagePrompt(twitterData) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        console.log("✅ Twitter image prompt generated successfully");
+        console.log("✅ X (Twitter) image prompt generated successfully");
         showImagePromptModal(data.prompt, twitterData.title, "twitter");
       } else {
         console.error("❌ Error:", data.error);
@@ -2174,7 +2131,7 @@ function generateTwitterImagePrompt(twitterData) {
       }
     })
     .catch((error) => {
-      console.error("❌ Error generating Twitter image prompt:", error);
+      console.error("❌ Error generating X (Twitter) image prompt:", error);
       showToast("error", "Failed to generate image prompt. Please try again.");
     });
 }

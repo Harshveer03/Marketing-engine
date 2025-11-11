@@ -195,8 +195,35 @@ class ContentPipeline:
         if not news_list:
             raise FileNotFoundError("⚠ No news data found. Run trend_fetcher first.")
         
-        used_list = self.load_json(TOPICS_FILE)
-        used_text = "\n".join([f"- {t['title']}" for t in used_list]) if used_list else "None"
+        # Load used topics from all platform-specific files
+        used_list = []
+        platform_files = [
+            './generated/topics/used_linkedin_article_topics.json',
+            './generated/topics/used_linkedin_post_topics.json',
+            './generated/topics/used_twitter_topics.json',
+            './generated/topics/used_youtube_topics.json'
+        ]
+        
+        for platform_file in platform_files:
+            if os.path.exists(platform_file):
+                try:
+                    platform_topics = self.load_json(platform_file)
+                    if platform_topics:
+                        used_list.extend(platform_topics)
+                except Exception as e:
+                    print(f"⚠️ Error loading {platform_file}: {e}")
+        
+        # Remove duplicates based on title
+        seen_titles = set()
+        unique_used_list = []
+        for topic in used_list:
+            title = topic.get('title', '')
+            if title and title not in seen_titles:
+                seen_titles.add(title)
+                unique_used_list.append(topic)
+        
+        used_text = "\n".join([f"- {t['title']}" for t in unique_used_list]) if unique_used_list else "None"
+        print(f"📊 Loaded {len(unique_used_list)} unique used topics from all platforms")
 
         feedback_summary = (
             self.feedback.get("overall_recommendation", "") + "\n" +
@@ -430,7 +457,7 @@ class ContentPipeline:
                 # LinkedIn: Caption 60% + Topic 25% + Hashtags 15%
                 quality_score = (content_similarity * 0.6 + topic_similarity * 0.25 + tags_similarity * 0.15) * 100
             elif platform == "twitter":
-                # Twitter: Tweet 70% + Topic 20% + Hashtags 10%
+                # X (Twitter): Tweet 70% + Topic 20% + Hashtags 10%
                 quality_score = (content_similarity * 0.7 + topic_similarity * 0.2 + tags_similarity * 0.1) * 100
             elif platform == "youtube":
                 # YouTube: Script+Description 50% + Topic 30% + Tags 20%
@@ -676,7 +703,7 @@ class ContentPipeline:
             
             # Debug: Ensure we're using the correct topic
             topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
-            print(f"🐦 Twitter: Generating content for topic: '{topic_title}'")
+            print(f"🐦 X (Twitter): Generating content for topic: '{topic_title}'")
             
             prompt = f"""
         You are an AI assistant specialized in writing high-impact Twitter (X) posts for industry leaders.
@@ -715,10 +742,10 @@ class ContentPipeline:
             
             response = self.llm.invoke(prompt).content
             result = self.clean_response(response).get("twitter", {})
-            print(f"✅ Twitter content generated successfully")
+            print(f"✅ X (Twitter) content generated successfully")
             return result
         except Exception as e:
-            print(f"❌ Error generating Twitter content: {e}")
+            print(f"❌ Error generating X (Twitter) content: {e}")
             return {
                 "tweet": f"{topic_title} is transforming {target_industry}. Are you ready for what's next?",
                 "hashtags": [f"#{target_industry.replace(' ', '').replace('&', '')}", "#Innovation", "#Growth"]
@@ -888,7 +915,7 @@ class ContentPipeline:
         print("\n✅ Content generated and saved:")
         print("  - LinkedIn Post    → content/generated_content/linkedin_post.json")
         print("  - LinkedIn Article → content/generated_content/linkedin_article.json")
-        print("  - Twitter          → content/generated_content/twitter.json")
+        print("  - X (Twitter)      → content/generated_content/twitter.json")
         print("  - YouTube          → content/generated_content/youtube.json")
 
 

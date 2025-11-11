@@ -1,0 +1,581 @@
+[
+    {
+        "title": "AI enhances buyer engagement: personalize messaging, build trust.",
+        "related_news": [
+            {
+                "title": "GenAI’s Retail Edge: Data Dominance and Budget Battles in 2025",
+                "url": "https://www.webpronews.com/genais-retail-edge-data-dominance-and-budget-battles-in-2025/",
+                "snippet": null,
+                "publishedAt": "11/10/2025, 09:07 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Reimagining the B2B Buyer Journey: How AI Is Reshaping Mid-Funnel Engagement",
+                "url": "https://aijourn.com/reimagining-the-b2b-buyer-journey-how-ai-is-reshaping-mid-funnel-engagement/",
+                "snippet": null,
+                "publishedAt": "11/07/2025, 09:04 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Enhancing the retail customer experience with personalization",
+                "url": "https://www.devprojournal.com/market-trends/retail/enhancing-the-retail-customer-experience-with-personalization/",
+                "snippet": null,
+                "publishedAt": "07/01/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI-powered success—with more than 1,000 stories of customer transformation and innovation",
+                "url": "https://www.microsoft.com/en-us/microsoft-cloud/blog/2025/07/24/ai-powered-success-with-1000-stories-of-customer-transformation-and-innovation/",
+                "snippet": null,
+                "publishedAt": "07/24/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Next best experience: How AI can power every customer interaction",
+                "url": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/next-best-experience-how-ai-can-power-every-customer-interaction",
+                "snippet": null,
+                "publishedAt": "10/09/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How AI Chatbots Are Improving Customer Service",
+                "url": "https://www.netguru.com/blog/ai-chatbots-improving-customer-service",
+                "snippet": null,
+                "publishedAt": "09/25/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI in Customer Service",
+                "url": "https://www.ibm.com/think/topics/ai-in-customer-service",
+                "snippet": null,
+                "publishedAt": "05/19/2025, 04:37 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Iterable and Movable Ink Unlock Enhanced Personalization With Strategic Partnership Expansion",
+                "url": "https://www.businesswire.com/news/home/20250723616859/en/Iterable-and-Movable-Ink-Unlock-Enhanced-Personalization-With-Strategic-Partnership-Expansion",
+                "snippet": null,
+                "publishedAt": "07/23/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How Businesses Are Harnessing AI to Transform Retail Strategy",
+                "url": "https://customerthink.com/how-businesses-are-harnessing-ai-to-transform-retail-strategy/",
+                "snippet": null,
+                "publishedAt": "10/07/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI Is No Longer an Option—It’s the Future of Retail",
+                "url": "https://www.pwc.com/gx/en/services/alliances/microsoft/ai-retail-transformation-future.html",
+                "snippet": null,
+                "publishedAt": "03/13/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How will AI significantly enhance WhatsApp and RCS services to grow the volume in the next 1-2 years?",
+                "url": "https://cio.economictimes.indiatimes.com/news/artificial-intelligence/ai-powered-messaging-the-future-of-whatsapp-and-rcs-in-driving-customer-engagement/122365562",
+                "snippet": null,
+                "publishedAt": "07/12/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How AI-assisted shopping will shake up the retail landscape",
+                "url": "https://www.thedrum.com/opinion/how-ai-assisted-shopping-will-shake-up-the-retail-landscape",
+                "snippet": null,
+                "publishedAt": "05/27/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "From clicks to keys: Digital marketing tools revolutionizing the car-buying experience",
+                "url": "https://www.cbtnews.com/from-clicks-to-keys-digital-marketing-tools-revolutionizing-the-car-buying-experience/",
+                "snippet": null,
+                "publishedAt": "01/22/2025, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI On: How AI Agents Enhance Online Shopping",
+                "url": "https://blogs.nvidia.com/blog/ai-agents-online-shopping/",
+                "snippet": null,
+                "publishedAt": "04/03/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "KredosAi Launches RCS in Production to Hyper-personalize Customer Communications for UScellular, Delivering a New Standard in Customer Experience",
+                "url": "https://www.businesswire.com/news/home/20250709211249/en/KredosAi-Launches-RCS-in-Production-to-Hyper-personalize-Customer-Communications-for-UScellular-Delivering-a-New-Standard-in-Customer-Experience",
+                "snippet": null,
+                "publishedAt": "07/09/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Computer Vision in Retail | Enhancing Shopping & Security",
+                "url": "https://appinventiv.com/blog/computer-vision-in-retail/",
+                "snippet": null,
+                "publishedAt": "02/22/2025, 07:19 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "THE IMPACT OF AI CHATBOTS ON CUSTOMER EXPERIENCE AND LOYALTY",
+                "url": "https://vocal.media/education/the-impact-of-ai-chatbots-on-customer-experience-and-loyalty",
+                "snippet": null,
+                "publishedAt": "02/03/2025, 10:13 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Using AI Personalization to Increase Customer Satisfaction",
+                "url": "https://influencermarketinghub.com/ai-personalization/",
+                "snippet": null,
+                "publishedAt": "12/10/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Unlocking the next frontier of personalized marketing",
+                "url": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/unlocking-the-next-frontier-of-personalized-marketing",
+                "snippet": null,
+                "publishedAt": "01/30/2025, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "17 Proven LLM Use Cases in E-commerce That Boost Sales in 2025",
+                "url": "https://www.netguru.com/blog/llm-use-cases-in-e-commerce",
+                "snippet": null,
+                "publishedAt": "09/12/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "The World’s Greatest Advertising Company – A Benchmark Report 2025",
+                "url": "https://influencermarketinghub.com/social-media-marketing-report-monthly/",
+                "snippet": null,
+                "publishedAt": "05/08/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Seamless shopping: How retail brands can master omnichannel, enhance customer journeys",
+                "url": "https://www.retailcustomerexperience.com/blogs/seamless-shopping-how-retail-brands-can-master-omnichannel-enhance-customer-journeys/",
+                "snippet": null,
+                "publishedAt": "12/19/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "The State of Social Media Marketing in 2025",
+                "url": "https://influencermarketinghub.com/social-media-marketing-benchmark-report/",
+                "snippet": null,
+                "publishedAt": "02/21/2025, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Generative AI’s Potential to Improve Customer Experience",
+                "url": "https://www.bain.com/insights/generative-ai-potential-to-improve-customer-experience/",
+                "snippet": null,
+                "publishedAt": "11/13/2024, 01:39 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI in Customer Engagement: 2025 Industry Data Report",
+                "url": "https://learn.g2.com/ai-in-customer-engagement-report",
+                "snippet": null,
+                "publishedAt": "08/29/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "When AI Personalization Crosses the Line: The Hidden Cost to Customer Choice",
+                "url": "https://www.cmswire.com/customer-experience/cognitive-debt-in-cx-how-ai-may-be-quietly-steering-your-customers/",
+                "snippet": null,
+                "publishedAt": "08/15/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Unlock AI’s role in customer-centric engagement",
+                "url": "https://www.ey.com/en_us/cmo/unlock-ai-role-in-customer-centric-engagement",
+                "snippet": null,
+                "publishedAt": "12/18/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI Avatars for Business: Enhancing Customer Engagement & Branding",
+                "url": "https://vocal.media/education/ai-avatars-for-business-enhancing-customer-engagement-and-branding",
+                "snippet": null,
+                "publishedAt": "08/25/2025, 12:59 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI in CRM: The New Language of Customer Engagement",
+                "url": "https://learn.g2.com/ai-in-crm",
+                "snippet": null,
+                "publishedAt": "10/30/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "3 Ways to Build Better Relationships with AI in Customer Experience",
+                "url": "https://www.cmswire.com/customer-experience/3-ai-use-cases-that-can-seriously-elevate-customer-experience/",
+                "snippet": null,
+                "publishedAt": "11/05/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How Generative AI Personalization Transforms Marketing",
+                "url": "https://www.eweek.com/artificial-intelligence/generative-ai-personalization/",
+                "snippet": null,
+                "publishedAt": "06/03/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Accenture Helps Organizations Personalize Experiences on Salesforce using Data and AI",
+                "url": "https://newsroom.accenture.com/news/2024/accenture-helps-organizations-personalize-experiences-on-salesforce-using-data-and-ai",
+                "snippet": null,
+                "publishedAt": "09/10/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Enhancing customer experiences with emerging technology",
+                "url": "https://www.microsoft.com/en-us/industry/microsoft-in-business/customer-experience/2024/03/27/trends-in-customer-experience-personalizing-with-ai/",
+                "snippet": null,
+                "publishedAt": "03/27/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI for government: Future of public engagement",
+                "url": "https://www.deloitte.com/us/en/Industries/government-public/articles/ai-driven-innovation-in-public-engagement.html",
+                "snippet": null,
+                "publishedAt": "06/18/2025, 02:16 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI in Social Media: Applications, Advantages, Examples & More",
+                "url": "https://appinventiv.com/blog/ai-in-social-media/",
+                "snippet": null,
+                "publishedAt": "09/05/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "The Future of AI in Customer Service",
+                "url": "https://www.ibm.com/think/insights/customer-service-future",
+                "snippet": null,
+                "publishedAt": "08/10/2024, 02:56 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How Generative AI Is Bridging the Brand-Consumer Gap",
+                "url": "https://builtin.com/articles/generative-ai-bridging-brand-consumer-gap",
+                "snippet": null,
+                "publishedAt": "02/24/2025, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Revolutionize Your Brand with a Customer-Centric AI Strategy",
+                "url": "https://www.cmswire.com/customer-experience/customer-centric-ai-strategies-and-why-you-need-one/",
+                "snippet": null,
+                "publishedAt": "03/26/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "The next frontier of customer engagement: AI-enabled customer service",
+                "url": "https://www.mckinsey.com/capabilities/operations/our-insights/the-next-frontier-of-customer-engagement-ai-enabled-customer-service",
+                "snippet": null,
+                "publishedAt": "03/27/2023, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Why Is Customer Loyalty Important?",
+                "url": "https://www.business.com/articles/what-makes-customer-loyalty-so-important/",
+                "snippet": null,
+                "publishedAt": "10/02/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Assessing artificial intelligence’s impact on e-customer loyalty in the Saudi Arabian market",
+                "url": "https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2025.1541678/full",
+                "snippet": null,
+                "publishedAt": "04/29/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI-Powered Customer Engagement: Personalization, Commerce, and Trust",
+                "url": "https://aijourn.com/ai-powered-customer-engagement-personalization-commerce-and-trust/",
+                "snippet": null,
+                "publishedAt": "10/07/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Decoding The Customer Journey — AI's Role In Meaningful Advertising",
+                "url": "https://www.forbes.com/sites/garydrenik/2024/12/19/decoding-the-customer-journey---ais-role-in-meaningful-advertising/",
+                "snippet": null,
+                "publishedAt": "12/19/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Win with Conversations",
+                "url": "https://www.bain.com/insights/win-with-conversations/",
+                "snippet": null,
+                "publishedAt": "05/22/2024, 09:14 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Exploring the Era of AI: Navigating the Authenticity and Automation Paradox",
+                "url": "https://aws.amazon.com/blogs/industries/exploring-the-era-of-ai-navigating-the-authenticity-and-automation-paradox/",
+                "snippet": null,
+                "publishedAt": "12/04/2023, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI Takes Center Stage at Apple’s WWDC 2024",
+                "url": "https://www.cmswire.com/digital-experience/wwdc-2024-apple-intelligence-rcs-messaging-and-more/",
+                "snippet": null,
+                "publishedAt": "06/13/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI for Lead Generation",
+                "url": "https://www.ibm.com/think/topics/ai-lead-generation",
+                "snippet": null,
+                "publishedAt": "03/07/2025, 05:50 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Omdia Universe: Customer Engagement Platforms, 2025",
+                "url": "https://omdia.tech.informa.com/om121537/omdia-universe-customer-engagement-platforms-2025",
+                "snippet": null,
+                "publishedAt": "12/20/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "What is personalized marketing and how is it used today?",
+                "url": "https://martech.org/what-is-personalized-marketing-and-how-is-it-used-today/",
+                "snippet": null,
+                "publishedAt": "10/09/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How generative AI can boost consumer marketing",
+                "url": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/how-generative-ai-can-boost-consumer-marketing",
+                "snippet": null,
+                "publishedAt": "12/05/2023, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "10 key customer engagement strategies for retailers",
+                "url": "https://fintech.global/2024/09/23/10-key-customer-engagement-strategies-for-retailers/",
+                "snippet": null,
+                "publishedAt": "09/23/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "5 Research-Driven AI Marketing Tactics to Boost ROI",
+                "url": "https://www.techfunnel.com/martech/ai-marketing-tactics/",
+                "snippet": null,
+                "publishedAt": "09/05/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Generative AI Trends For All Facets of Business",
+                "url": "https://www.forrester.com/technology/generative-ai/",
+                "snippet": null,
+                "publishedAt": "06/16/2023, 03:52 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Scaling the AI-native telco",
+                "url": "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/scaling-the-ai-native-telco",
+                "snippet": null,
+                "publishedAt": "02/27/2025, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "The value of getting personalization right—or wrong—is multiplying",
+                "url": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/the-value-of-getting-personalization-right-or-wrong-is-multiplying",
+                "snippet": null,
+                "publishedAt": "11/12/2021, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Fabletics’ AI-Powered CRM Strategy with Iterable Delivers 2.5x Higher Customer Value",
+                "url": "https://www.businesswire.com/news/home/20250325323812/en/Fabletics-AI-Powered-CRM-Strategy-with-Iterable-Delivers-2.5x-Higher-Customer-Value",
+                "snippet": null,
+                "publishedAt": "03/25/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Study: 80% of consumers switch brands due to AI emails",
+                "url": "https://www.contentgrip.com/ai-emails-impact-brand-loyalty/",
+                "snippet": null,
+                "publishedAt": "10/24/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "GenAI reshapes CPG, retail and consumer relationships",
+                "url": "https://www.ey.com/en_us/insights/consumer-products/how-genai-changes-the-way-cpg-and-retail-operate-and-consumers-too",
+                "snippet": null,
+                "publishedAt": "03/18/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "The Future of Personalization Is Here: The Trends to Look Out for in 2025",
+                "url": "https://www.shopify.com/hk-en/enterprise/blog/personalization-trends",
+                "snippet": null,
+                "publishedAt": "03/01/2024, 08:05 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "How Much is Too Much? Navigating the Fine Line With AI-Driven Personalization",
+                "url": "https://customerthink.com/how-much-is-too-much-navigating-the-fine-line-with-ai-driven-personalization/",
+                "snippet": null,
+                "publishedAt": "06/12/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Why emotions matter in retail customer journeys",
+                "url": "https://www.retailcustomerexperience.com/blogs/why-emotions-matter-in-retail-customer-journeys/",
+                "snippet": null,
+                "publishedAt": "01/07/2025, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI-Powered Employee Experience: How Organisations Can Unlock Higher Engagement and Productivity",
+                "url": "https://www.deloitte.com/uk/en/services/consulting/blogs/2024/ai-powered-employee-experience.html",
+                "snippet": null,
+                "publishedAt": "06/17/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Generative AI and Retail: Beyond the Skateboarding Panda",
+                "url": "https://www.bain.com/insights/generative-ai-and-retail-beyond-the-skateboarding-panda/",
+                "snippet": null,
+                "publishedAt": "04/24/2023, 08:03 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "What is Customer Experience in Banking?",
+                "url": "https://www.ibm.com/think/topics/customer-experience-banking",
+                "snippet": null,
+                "publishedAt": "08/10/2024, 02:57 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "33 New Branding Statistics and Trends for 2025",
+                "url": "https://explodingtopics.com/blog/branding-stats",
+                "snippet": null,
+                "publishedAt": "06/29/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Next in consumer markets industry trends and insights 2025",
+                "url": "https://www.pwc.com/us/en/industries/consumer-markets/library/consumer-markets-trends.html",
+                "snippet": null,
+                "publishedAt": "01/08/2023, 10:55 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Conversational AI Examples, Applications & Use Cases",
+                "url": "https://www.ibm.com/think/topics/conversational-ai-use-cases",
+                "snippet": null,
+                "publishedAt": "08/10/2024, 02:57 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI is transforming the way Shopify merchants do business",
+                "url": "https://www.shopify.com/news/ai-tools-for-business",
+                "snippet": null,
+                "publishedAt": "09/09/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI-powered marketing and sales reach new heights with generative AI",
+                "url": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/ai-powered-marketing-and-sales-reach-new-heights-with-generative-ai",
+                "snippet": null,
+                "publishedAt": "05/11/2023, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "The Future of Personalization Is Here: The Trends to Look Out for in 2025",
+                "url": "https://www.shopify.com/nz/enterprise/blog/personalization-trends",
+                "snippet": null,
+                "publishedAt": "02/22/2024, 08:25 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Personalizing the customer experience: Driving differentiation in retail",
+                "url": "https://www.mckinsey.com/industries/retail/our-insights/personalizing-the-customer-experience-driving-differentiation-in-retail",
+                "snippet": null,
+                "publishedAt": "04/28/2020, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "AI Emotion Recognition: Applications and Examples",
+                "url": "https://appinventiv.com/blog/emotion-ai-applications-and-examples/",
+                "snippet": null,
+                "publishedAt": "10/03/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Comment: retailers must tread cautiously as they embrace artificial intelligence amidst digital transformation pushes",
+                "url": "https://retailtechinnovationhub.com/home/2024/5/16/comment-retailers-must-tread-cautiously-as-they-embrace-artificial-intelligence-amidst-digital-transformation-pushes",
+                "snippet": null,
+                "publishedAt": "05/16/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Amazon Marketing Strategy: Case Study (2025)",
+                "url": "https://businessmodelanalyst.com/amazon-marketing-strategy/",
+                "snippet": null,
+                "publishedAt": "05/21/2024, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "TikTok Marketing Report – Key Trends, Statistics, and Insights",
+                "url": "https://influencermarketinghub.com/tiktok-marketing-report/",
+                "snippet": null,
+                "publishedAt": "04/25/2025, 07:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "6 benefits of omnichannel marketing",
+                "url": "https://www.techtarget.com/searchcustomerexperience/feature/Benefits-of-omnichannel-marketing",
+                "snippet": null,
+                "publishedAt": "03/01/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Samsung Marketing Strategy (2025)",
+                "url": "https://businessmodelanalyst.com/samsung-marketing-strategy/",
+                "snippet": null,
+                "publishedAt": "12/25/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Top 10 AI eCommerce Tools to Drive Sales in 2025",
+                "url": "https://influencermarketinghub.com/ai-ecommerce-tools/",
+                "snippet": null,
+                "publishedAt": "05/15/2023, 12:27 PM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Shop Smarter, Not Harder: How AI is Personalizing the Shopping Experience",
+                "url": "https://www.indianretailer.com/article/retail-business/retail/shop-smarter-not-harder-how-ai-personalizing-shopping-experience",
+                "snippet": null,
+                "publishedAt": "01/24/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "TikTok Shop Report: The Future of Social Commerce",
+                "url": "https://influencermarketinghub.com/tiktok-shop-report/",
+                "snippet": null,
+                "publishedAt": "12/20/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "15 social media trends shaping 2025 [mid-year update]",
+                "url": "https://blog.hootsuite.com/social-media-trends/",
+                "snippet": null,
+                "publishedAt": "12/05/2018, 12:42 AM, +0000 UTC",
+                "source": "Google News"
+            },
+            {
+                "title": "Why AI Avatar Video Ads Are the Future of E-commerce Success",
+                "url": "https://www.intelligentliving.co/ai-avatar-video-ads-e-commerce/",
+                "snippet": null,
+                "publishedAt": "11/12/2024, 08:00 AM, +0000 UTC",
+                "source": "Google News"
+            }
+        ]
+    }
+]

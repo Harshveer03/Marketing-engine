@@ -492,10 +492,11 @@ class ContentPipeline:
             prompt = f"""
         You are an AI assistant specialized in crafting high-impact LinkedIn posts for CXO and industry audiences.
 
-        Your Task:
-        Create a LinkedIn post on the topic: "{topic_title}"
+        CRITICAL: Your LinkedIn post MUST be specifically about this topic: "{topic_title}"
+        
+        The topic "{topic_title}" is your PRIMARY focus. Everything else below is background context to help you understand the audience and tone, but your post content MUST directly address "{topic_title}".
 
-        Context Provided:
+        Background Context (for tone and style only):
         -Target Industry: {target_industry}
         -Original Industry Context: {niche.get("industry")}
         -Pain Points: {pain_points}
@@ -509,16 +510,19 @@ class ContentPipeline:
         {feedback_text}
 
         Requirements:
-            1. Write a professional, insight-driven caption (≤ 200 words).
-            2. Ensure the content is engaging, authoritative, and strategically valuable for decision-makers in {target_industry}.
-            3. Highlight {target_industry}-specific pain points, emerging needs, or opportunities with clarity.
-            4. Incorporate storytelling or thought-leadership hooks to maximize engagement.
-            5. Add 5–7 relevant, high-impact hashtags tailored to the {target_industry} industry and {audience} audience.
-            6. Maintain a credible, CXO-level voice (avoid fluff, generic advice, or overselling).
-            7. Reference {target_industry} trends, challenges, or opportunities where relevant.
+            1. The post MUST be about "{topic_title}" - this is non-negotiable.
+            2. Write a professional, insight-driven caption (≤ 200 words) that discusses "{topic_title}".
+            3. Ensure the content is engaging, authoritative, and strategically valuable for {target_industry} decision-makers.
+            4. Connect "{topic_title}" to {target_industry}-specific pain points, emerging needs, or opportunities with clarity.
+            5. Incorporate storytelling or thought-leadership hooks related to "{topic_title}" to maximize engagement.
+            6. Add 5–7 relevant, high-impact hashtags that relate to both "{topic_title}" and {target_industry}.
+            7. Maintain a credible, CXO-level voice (avoid fluff, generic advice, or overselling).
+            8. You can reference {target_industry} trends, but only as they relate to "{topic_title}".
 
         Goal:
-        - The post should educate, provoke thought, and position the brand/author as a trusted authority in the {target_industry} space.
+        - The post should educate about "{topic_title}", provoke thought, and position the brand/author as a trusted authority.
+
+        REMINDER: Your post must be about "{topic_title}" - do not drift to other topics even if they seem related.
 
         Output in JSON:
         {{
@@ -556,10 +560,11 @@ class ContentPipeline:
             prompt = f"""
         You are an AI assistant specialized in crafting comprehensive LinkedIn articles for CXO and industry audiences.
 
-        Your Task:
-        Create a detailed LinkedIn article on the topic: "{topic_title}"
+        CRITICAL: Your LinkedIn article MUST be specifically about this topic: "{topic_title}"
+        
+        The topic "{topic_title}" is your PRIMARY focus. Everything else below is background context to help you understand the audience and tone, but your article content MUST directly address "{topic_title}".
 
-        Context Provided:
+        Background Context (for tone and style only):
         -Target Industry: {target_industry}
         -Original Industry Context: {niche.get("industry")}
         -Pain Points: {pain_points}
@@ -573,23 +578,26 @@ class ContentPipeline:
         {feedback_text}
 
         Requirements:
-            1. Write a comprehensive, well-structured article (500-600 words).
-            2. Structure the article with clear sections:
-               - Introduction: Hook the reader and establish the importance of the topic
-               - Main Body: 3-4 sections with subheadings covering different aspects
-               - Key Insights: Data-driven observations and strategic implications
-               - Actionable Takeaways: Practical recommendations for {audience}
-               - Conclusion: Summary and forward-looking perspective
-            3. Ensure the content is authoritative, research-backed, and strategically valuable for {target_industry} decision-makers.
-            4. Incorporate specific examples, case studies, or data points where relevant.
-            5. Highlight {target_industry}-specific challenges, opportunities, and emerging trends.
-            6. Maintain a professional, thought-leadership voice throughout.
-            7. Add 5–7 relevant, high-impact hashtags tailored to the {target_industry} industry and {audience} audience.
-            8. Use clear formatting with section breaks and bullet points where appropriate.
+            1. The article MUST be about "{topic_title}" - this is non-negotiable.
+            2. Write a comprehensive, well-structured article (500-600 words) that explores "{topic_title}".
+            3. Structure the article with clear sections:
+               - Introduction: Hook the reader and establish why "{topic_title}" matters
+               - Main Body: 3-4 sections with subheadings covering different aspects of "{topic_title}"
+               - Key Insights: Data-driven observations about "{topic_title}" and strategic implications
+               - Actionable Takeaways: Practical recommendations for {audience} related to "{topic_title}"
+               - Conclusion: Summary of "{topic_title}" and forward-looking perspective
+            4. Ensure the content is authoritative, research-backed, and strategically valuable for {target_industry} decision-makers.
+            5. Incorporate specific examples, case studies, or data points related to "{topic_title}".
+            6. Connect "{topic_title}" to {target_industry}-specific challenges, opportunities, and emerging trends.
+            7. Maintain a professional, thought-leadership voice throughout.
+            8. Add 5–7 relevant, high-impact hashtags that relate to both "{topic_title}" and {target_industry}.
+            9. Use clear formatting with section breaks and bullet points where appropriate.
 
         Goal:
-        - The article should establish authority, provide deep insights, and position the author as a trusted expert in the {target_industry} space.
+        - The article should establish authority on "{topic_title}", provide deep insights, and position the author as a trusted expert.
         - It should be educational, comprehensive, and actionable for {audience}.
+
+        REMINDER: Your article must be about "{topic_title}" - do not drift to other topics even if they seem related.
 
         IMPORTANT: Return ONLY valid JSON. Do not use markdown code blocks. Escape all special characters properly.
         
@@ -708,28 +716,34 @@ class ContentPipeline:
             prompt = f"""
         You are an AI assistant specialized in writing high-impact Twitter (X) posts for industry leaders.
 
-        Task: Create a tweet on "{topic_title}"
-        Context:
+        CRITICAL: Your tweet MUST be specifically about this topic: "{topic_title}"
+        
+        The topic "{topic_title}" is your PRIMARY focus. Everything else below is just background context to help you understand the audience and tone, but your tweet content MUST directly address "{topic_title}".
+
+        Background Context (for tone and style only):
         -Target Industry: {target_industry}
         -Original Industry Context: {niche.get("industry")}
         -Pain Points: {pain_points}
         -Needs: {needs}
         -Audience: {audience}
-        -Tone: {tone}
+        -Desired Tone: {tone}
 
         Use the following performance feedback to guide brevity, tone, and structure:
         {feedback_text}
 
         Requirements:
-            1. Must fit within 280 characters.
-            2. Be punchy, concise, and attention-grabbing — avoid filler or generic phrasing.
-            3. Deliver a sharp insight, challenge, or opportunity that resonates with {target_industry} CXO-level readers.
-            4. Include 2–3 trending, relevant hashtags specific to {target_industry}.
-            5. Style should be thought-leadership driven (not just promotional).
-            6. Reference {target_industry} context where possible.
+            1. The tweet MUST be about "{topic_title}" - this is non-negotiable.
+            2. Must fit within 280 characters.
+            3. Be punchy, concise, and attention-grabbing — avoid filler or generic phrasing.
+            4. Deliver a sharp insight, challenge, or opportunity related to "{topic_title}" that resonates with {target_industry} {audience}.
+            5. Include 2–3 trending, relevant hashtags that relate to both "{topic_title}" and {target_industry}.
+            6. Style should be thought-leadership driven (not just promotional).
+            7. You can reference {target_industry} context, but only as it relates to "{topic_title}".
 
         Goal:
-        The tweet should spark conversation, showcase authority, and connect {target_industry} pain points with strategic opportunities in a way that encourages engagement.
+        Create a tweet that discusses "{topic_title}" in a way that sparks conversation, showcases authority, and engages {target_industry} professionals.
+
+        REMINDER: Your tweet must be about "{topic_title}" - do not drift to other topics even if they seem related.
 
         Output in JSON:
         {{
@@ -767,7 +781,9 @@ class ContentPipeline:
             prompt = f"""
         You are an AI assistant specialized in creating YouTube video scripts and descriptions.
 
-        Task: Generate a YouTube video intro and description for "{topic_title}"
+        CRITICAL: Your YouTube video MUST be specifically about this topic: "{topic_title}"
+        
+        The topic "{topic_title}" is your PRIMARY focus. Everything else below is background context to help you understand the audience and tone, but your video content MUST directly address "{topic_title}".
 
         Context:
         -Target Industry: {target_industry}

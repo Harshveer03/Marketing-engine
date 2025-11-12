@@ -1123,6 +1123,37 @@ function createToastContainer() {
   document.body.insertAdjacentHTML("beforeend", containerHtml);
   return document.getElementById("toast-container");
 }
+
+// Loading Modal Functions
+function showLoadingModal(message) {
+  // Reset to loading state
+  document.getElementById("loading-state").classList.remove("d-none");
+  document.getElementById("loading-error-state").classList.add("d-none");
+  
+  // Set message
+  document.getElementById("loading-message").textContent = message || "Processing...";
+  
+  // Show modal
+  const loadingModal = new bootstrap.Modal(document.getElementById("loadingModal"));
+  loadingModal.show();
+}
+
+function hideLoadingModal() {
+  const loadingModal = bootstrap.Modal.getInstance(document.getElementById("loadingModal"));
+  if (loadingModal) {
+    loadingModal.hide();
+  }
+}
+
+function showLoadingError(errorMessage) {
+  // Hide loading state
+  document.getElementById("loading-state").classList.add("d-none");
+  
+  // Show error state
+  document.getElementById("loading-error-state").classList.remove("d-none");
+  document.getElementById("loading-error-message").textContent = errorMessage;
+}
+
 // Social Mode Selection Functions
 function showSocialModeSelection() {
   console.log("showSocialModeSelection called - showing mode selection modal");
@@ -2377,8 +2408,8 @@ function fetchBlogTrends() {
     industryModal.hide();
   }
 
-  // Show loading toast
-  showToast("info", `Fetching trends for ${industry}...`);
+  // Show loading modal with custom message
+  showLoadingModal("Analyzing industry trends...");
 
   // Call backend to fetch trends
   fetch("/fetch_blog_trends", {
@@ -2396,25 +2427,25 @@ function fetchBlogTrends() {
         console.log(`✅ DEBUG: Fetched ${data.trends.length} trends`);
         fetchedBlogTrends = data.trends;
 
-        // Show success toast
-        showToast("success", `Fetched ${data.trends.length} trends successfully!`);
+        // Hide loading modal
+        hideLoadingModal();
 
         // Show trend slider modal
         setTimeout(() => {
           showBlogTrendSlider();
-        }, 500);
+        }, 300);
       } else {
         console.error(`❌ DEBUG: Error fetching trends: ${data.error}`);
-        showToast(
-          "error",
+        // Show error in loading modal
+        showLoadingError(
           `Failed to fetch trends: ${data.error || "Unknown error"}. Please try again.`
         );
       }
     })
     .catch((error) => {
       console.error(`❌ DEBUG: Network error fetching trends:`, error);
-      showToast(
-        "error",
+      // Show error in loading modal
+      showLoadingError(
         `Network error while fetching trends: ${error.message}. Please check your connection and try again.`
       );
     });
@@ -2617,8 +2648,8 @@ function fetchSocialTrends() {
     industryModal.hide();
   }
 
-  // Show loading toast
-  showToast("info", `Fetching trends for ${industry}...`);
+  // Show loading modal with custom message
+  showLoadingModal("Analyzing industry trends...");
 
   // Call backend to fetch trends
   fetch("/fetch_social_trends", {
@@ -2636,25 +2667,25 @@ function fetchSocialTrends() {
         console.log(`✅ DEBUG: Fetched ${data.trends.length} trends`);
         fetchedSocialTrends = data.trends;
 
-        // Show success toast
-        showToast("success", `Fetched ${data.trends.length} trends successfully!`);
+        // Hide loading modal
+        hideLoadingModal();
 
         // Show trend slider modal
         setTimeout(() => {
           showSocialTrendSlider();
-        }, 500);
+        }, 300);
       } else {
         console.error(`❌ DEBUG: Error fetching trends: ${data.error}`);
-        showToast(
-          "error",
+        // Show error in loading modal
+        showLoadingError(
           `Failed to fetch trends: ${data.error || "Unknown error"}. Please try again.`
         );
       }
     })
     .catch((error) => {
       console.error(`❌ DEBUG: Network error fetching trends:`, error);
-      showToast(
-        "error",
+      // Show error in loading modal
+      showLoadingError(
         `Network error while fetching trends: ${error.message}. Please check your connection and try again.`
       );
     });

@@ -40,5 +40,33 @@
         "tone": "bold",
         "audience": "Founders",
         "timestamp": "2025-11-12T01:18:43.465207"
+    },
+    {
+        "title": "The #RepFluencyDebt: Your Silent Sales Killer. Why 'just coaching' isn't enough to fix it. A new era of GTM #BehaviorRewiring is here. 🧵",
+        "caption": "Is the #RepFluencyDebt silently sabotaging your GTM? 'Just coaching' won't cut it anymore. It's time to move beyond insights & embrace #BehaviorRewiring for lasting sales performance. A new era is here. 🧵",
+        "hashtags": [
+            "#SalesLeadership",
+            "#GTMStrategy",
+            "#SalesEnablement"
+        ],
+        "quality_score": 74.64,
+        "industry": "Sales/Marketing",
+        "tone": "professional",
+        "audience": "CXOs",
+        "timestamp": "2025-11-12T14:51:47.781683"
+    },
+    {
+        "title": "Hot take: Your 'uncoachable' sales team isn't the problem. It's your GTM's *behavioral tech debt*. We need a full *refactor*, not just new playbooks. 🛠️",
+        "caption": "Hot take: That 'uncoachable' sales team? It's a symptom. The real culprit is your GTM's *behavioral tech debt*. Stop patching with playbooks. It's time for a full GTM *refactor* to scale effectively. 🛠️",
+        "hashtags": [
+            "#GTM",
+            "#TechDebt",
+            "#SalesLeadership"
+        ],
+        "quality_score": 78.13,
+        "industry": "IT & Dev",
+        "tone": "professional",
+        "audience": "CXOs",
+        "timestamp": "2025-11-12T15:17:57.439063"
     }
 ]

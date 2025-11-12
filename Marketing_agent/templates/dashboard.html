@@ -1075,15 +1075,28 @@
 </div>
 
 <!-- Loading Modal -->
-<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center">
-        <div class="spinner-border text-primary mb-3" role="status">
-          <span class="visually-hidden">Loading...</span>
+        <!-- Loading State -->
+        <div id="loading-state">
+          <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <h5 id="loading-message">Processing...</h5>
+          <p class="text-muted">This may take a few moments.</p>
         </div>
-        <h5 id="loading-message">Processing...</h5>
-        <p class="text-muted">This may take a few moments.</p>
+        
+        <!-- Error State (hidden by default) -->
+        <div id="loading-error-state" class="d-none">
+          <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+          <h5 class="text-danger">Error</h5>
+          <p id="loading-error-message" class="text-muted"></p>
+          <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">
+            <i class="fas fa-times me-2"></i>Close
+          </button>
+        </div>
       </div>
     </div>
   </div>

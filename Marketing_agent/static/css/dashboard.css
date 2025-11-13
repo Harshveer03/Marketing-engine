@@ -322,3 +322,86 @@ body {
   background-color: #cce7ff;
   color: #055160;
 }
+
+/* LinkedIn Post Modal Styles */
+.linkedin-post-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.linkedin-post-content {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.9);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.linkedin-post-content .hashtag {
+  color: #0a66c2;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.linkedin-post-content .hashtag:hover {
+  text-decoration: underline;
+}
+
+.linkedin-post-content p {
+  margin-bottom: 12px;
+}
+
+.linkedin-post-content strong {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.95);
+}
+
+.linkedin-post-content em {
+  font-style: italic;
+}
+
+.linkedin-post-body {
+  background-color: #f3f2ef !important;
+  padding: 16px;
+}
+
+#linkedinPostModal .modal-header {
+  background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+  border-bottom: none;
+}
+
+#linkedinPostModal .modal-content {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* LinkedIn Post Hashtags */
+.linkedin-post-hashtags {
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.linkedin-post-hashtags .hashtag-badge {
+  display: inline-block;
+  background-color: transparent;
+  color: #0a66c2;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 0;
+  margin-right: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.linkedin-post-hashtags .hashtag-badge:hover {
+  color: #004182;
+  text-decoration: underline;
+}

@@ -496,17 +496,36 @@ function loadSocialContent(platform) {
                     <i class="fas fa-eye me-1"></i>Read Full Article
                   </button>
                 `
+                    : platform === "linkedin-post"
+                    ? `
+                  <button class="btn btn-sm btn-outline-primary" onclick="showLinkedInPostModal(${index})">
+                    <i class="fas fa-eye me-1"></i>View Full Post
+                  </button>
+                `
                     : ""
                 }
+                ${
+                  platform !== "linkedin-post"
+                    ? `
                 <button class="btn btn-sm btn-outline-secondary ${
                   isArticle ? "ms-2" : ""
-                }" onclick="copyToClipboard('${escapeHtml(
-          contentField || ""
-        ).replace(/'/g, "\\'")}')">
+                }" onclick="copySocialContent('${platform}', ${index})">
                   <i class="fas fa-copy me-1"></i>Copy ${
                     isArticle ? "Article" : "Text"
                   }
                 </button>
+                `
+                    : ""
+                }
+                ${
+                  platform === "twitter"
+                    ? `
+                <button class="btn btn-sm btn-outline-warning ms-2" id="regenerateTwitterBtn-${index}" onclick="regenerateTwitterPost(${index})">
+                  <i class="fas fa-sync-alt me-1"></i>Regenerate
+                </button>
+                `
+                    : ""
+                }
                 ${
                   post.script_intro
                     ? `
@@ -552,7 +571,7 @@ function loadSocialContent(platform) {
       }
       window.socialContentData[platform] = posts;
 
-      // Store LinkedIn articles in contentData for modal access (similar to blogs)
+      // Store LinkedIn articles and posts in contentData for modal access (similar to blogs)
       if (platform === "linkedin-article") {
         if (!window.contentData) {
           window.contentData = {};
@@ -561,6 +580,18 @@ function loadSocialContent(platform) {
         console.log(
           `✅ Stored ${posts.length} LinkedIn articles in contentData`,
           window.contentData["linkedin-article"]
+        );
+      }
+      
+      // Store LinkedIn posts in contentData for modal access
+      if (platform === "linkedin-post") {
+        if (!window.contentData) {
+          window.contentData = {};
+        }
+        window.contentData["linkedin-post"] = posts;
+        console.log(
+          `✅ Stored ${posts.length} LinkedIn posts in contentData`,
+          window.contentData["linkedin-post"]
         );
       }
     })
@@ -892,6 +923,377 @@ function showLinkedInArticleModal(index) {
   modal.show();
 
   console.log(`✅ Modal opened successfully`);
+}
+
+// LinkedIn Post-specific functions
+function showLinkedInPostModal(index) {
+  console.log(`🔍 Opening LinkedIn Post modal for index: ${index}`);
+  console.log(`📦 contentData available:`, window.contentData);
+
+  const posts = window.contentData
+    ? window.contentData["linkedin-post"]
+    : null;
+
+  console.log(`📚 Posts array:`, posts);
+
+  if (!posts || !posts[index]) {
+    console.error(
+      `❌ Post not found at index ${index}. Available posts:`,
+      posts
+    );
+    showToast(
+      "error",
+      "LinkedIn Post content not found. Please refresh the page."
+    );
+    return;
+  }
+
+  const post = posts[index];
+  console.log(`📄 Post data:`, post);
+
+  let postContent = post.caption || post.content || "";
+
+  if (!postContent) {
+    console.error(`❌ No content found in post:`, post);
+    showToast("error", "Post content is empty.");
+    return;
+  }
+
+  // Set title with quality score badge
+  const qualityScore = post.quality_score || 0;
+  let badgeClass = "bg-secondary";
+  let badgeHTML = "";
+  if (qualityScore >= 80) {
+    badgeClass = "bg-success";
+  } else if (qualityScore >= 60) {
+    badgeClass = "bg-warning";
+  } else if (qualityScore > 0) {
+    badgeClass = "bg-danger";
+  }
+
+  if (qualityScore > 0) {
+    badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(
+      qualityScore
+    )}%</span>`;
+  }
+
+  // Update modal title
+  document.getElementById("linkedinPostModalTitle").innerHTML =
+    `<i class="fab fa-linkedin me-2"></i>${escapeHtml(post.title)}` + badgeHTML;
+
+  // Format the post content with LinkedIn-style formatting
+  const formattedContent = formatLinkedInPost(postContent);
+  document.getElementById("linkedinPostContent").innerHTML = formattedContent;
+
+  // Display hashtags
+  const hashtagsContainer = document.getElementById("linkedinPostHashtags");
+  if (post.hashtags && post.hashtags.length > 0) {
+    const hashtagsHTML = post.hashtags
+      .map(tag => {
+        // Ensure hashtag starts with #
+        const displayTag = tag.startsWith('#') ? tag : `#${tag}`;
+        return `<span class="hashtag-badge">${escapeHtml(displayTag)}</span>`;
+      })
+      .join('');
+    hashtagsContainer.innerHTML = hashtagsHTML;
+    hashtagsContainer.style.display = 'block';
+  } else {
+    hashtagsContainer.innerHTML = '';
+    hashtagsContainer.style.display = 'none';
+  }
+
+  // Store the current post index and original content for copying
+  window.currentLinkedInPostIndex = index;
+  window.currentLinkedInPostContent = postContent;
+
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById("linkedinPostModal"));
+  modal.show();
+
+  console.log(`✅ LinkedIn Post modal opened successfully`);
+}
+
+function formatLinkedInPost(content) {
+  if (!content) return "";
+  
+  // Escape HTML first
+  let formatted = escapeHtml(content);
+  
+  // Convert hashtags to styled spans
+  formatted = formatted.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+  
+  // Convert line breaks to <br> tags
+  formatted = formatted.replace(/\n/g, '<br>');
+  
+  // Wrap in paragraphs for better spacing
+  const paragraphs = formatted.split('<br><br>');
+  formatted = paragraphs.map(p => p.trim() ? `<p>${p}</p>` : '').join('');
+  
+  return formatted;
+}
+
+function copyLinkedInPostContent() {
+  // Get the original content with preserved formatting (line breaks)
+  let contentToCopy = window.currentLinkedInPostContent || '';
+  
+  // Get the current post to access hashtags
+  const postIndex = window.currentLinkedInPostIndex;
+  const posts = window.contentData ? window.contentData["linkedin-post"] : null;
+  
+  if (posts && posts[postIndex] && posts[postIndex].hashtags && posts[postIndex].hashtags.length > 0) {
+    // Add hashtags to the content
+    const hashtags = posts[postIndex].hashtags.map(tag => {
+      // Ensure hashtag starts with #
+      return tag.startsWith('#') ? tag : `#${tag}`;
+    }).join(' ');
+    
+    // Combine content with hashtags (add two line breaks for spacing)
+    contentToCopy = contentToCopy + '\n\n' + hashtags;
+  }
+  
+  if (contentToCopy) {
+    copyToClipboard(contentToCopy);
+  } else {
+    // Fallback to textContent if original content is not available
+    const content = document.getElementById("linkedinPostContent").textContent;
+    copyToClipboard(content);
+  }
+}
+
+function copySocialContent(platform, index) {
+  // Get the posts for the platform
+  const posts = window.socialContentData ? window.socialContentData[platform] : null;
+  
+  if (!posts || !posts[index]) {
+    showToast('error', 'Unable to copy: Post data not found');
+    return;
+  }
+  
+  const post = posts[index];
+  let contentToCopy = post.caption || post.content || '';
+  
+  // Add hashtags if available
+  if (post.hashtags && post.hashtags.length > 0) {
+    const hashtags = post.hashtags.map(tag => {
+      return tag.startsWith('#') ? tag : `#${tag}`;
+    }).join(' ');
+    
+    contentToCopy = contentToCopy + '\n\n' + hashtags;
+  }
+  
+  if (contentToCopy) {
+    copyToClipboard(contentToCopy);
+  } else {
+    showToast('error', 'No content to copy');
+  }
+}
+
+function regenerateLinkedInPost() {
+  console.log('🔄 Regenerate button clicked');
+  
+  const postIndex = window.currentLinkedInPostIndex;
+  
+  if (postIndex === undefined || postIndex === null) {
+    showToast('error', 'Unable to regenerate: Post index not found');
+    return;
+  }
+  
+  const posts = window.contentData ? window.contentData["linkedin-post"] : null;
+  
+  if (!posts || !posts[postIndex]) {
+    showToast('error', 'Unable to regenerate: Post data not found');
+    return;
+  }
+  
+  const post = posts[postIndex];
+  
+  // Disable the regenerate button and show loading state
+  const regenerateBtn = document.getElementById('regenerateLinkedInPostBtn');
+  const originalBtnText = regenerateBtn.innerHTML;
+  regenerateBtn.disabled = true;
+  regenerateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Regenerating...';
+  
+  // Show loading state in modal content
+  const contentDiv = document.getElementById('linkedinPostContent');
+  const originalContent = contentDiv.innerHTML;
+  contentDiv.innerHTML = `
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary mb-3" role="status">
+        <span class="visually-hidden">Regenerating...</span>
+      </div>
+      <p class="text-muted">Regenerating post content...</p>
+    </div>
+  `;
+  
+  console.log('📤 Sending regenerate request for post:', {
+    post_index: postIndex,
+    title: post.title,
+    industry: post.industry,
+    tone: post.tone,
+    audience: post.audience
+  });
+  
+  // Call backend to regenerate
+  fetch('/regenerate_linkedin_post', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      post_index: postIndex,
+      title: post.title,
+      industry: post.industry || 'IT & Dev',
+      tone: post.tone || 'professional',
+      audience: post.audience || 'Founders'
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log('✅ Post regenerated successfully:', data.post);
+      
+      // Update the stored data
+      posts[postIndex] = data.post;
+      window.contentData["linkedin-post"] = posts;
+      
+      // Update the modal content
+      const newContent = data.post.caption || data.post.content || '';
+      const formattedContent = formatLinkedInPost(newContent);
+      contentDiv.innerHTML = formattedContent;
+      
+      // Update the stored content for copying
+      window.currentLinkedInPostContent = newContent;
+      
+      // Update hashtags
+      const hashtagsContainer = document.getElementById("linkedinPostHashtags");
+      if (data.post.hashtags && data.post.hashtags.length > 0) {
+        const hashtagsHTML = data.post.hashtags
+          .map(tag => {
+            const displayTag = tag.startsWith('#') ? tag : `#${tag}`;
+            return `<span class="hashtag-badge">${escapeHtml(displayTag)}</span>`;
+          })
+          .join('');
+        hashtagsContainer.innerHTML = hashtagsHTML;
+        hashtagsContainer.style.display = 'block';
+      } else {
+        hashtagsContainer.innerHTML = '';
+        hashtagsContainer.style.display = 'none';
+      }
+      
+      // Update quality score in title if present
+      const qualityScore = data.post.quality_score || 0;
+      let badgeHTML = '';
+      if (qualityScore > 0) {
+        let badgeClass = 'bg-secondary';
+        if (qualityScore >= 80) {
+          badgeClass = 'bg-success';
+        } else if (qualityScore >= 60) {
+          badgeClass = 'bg-warning';
+        } else {
+          badgeClass = 'bg-danger';
+        }
+        badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(qualityScore)}%</span>`;
+      }
+      
+      document.getElementById('linkedinPostModalTitle').innerHTML =
+        `<i class="fab fa-linkedin me-2"></i>${escapeHtml(data.post.title)}` + badgeHTML;
+      
+      showToast('success', 'LinkedIn Post regenerated successfully!');
+      
+      // Reload the LinkedIn post content in the background to update the card view
+      setTimeout(() => {
+        loadSocialContent('linkedin-post');
+      }, 1000);
+    } else {
+      contentDiv.innerHTML = originalContent;
+      showToast('error', data.error || 'Failed to regenerate post');
+    }
+    
+    // Re-enable the button
+    regenerateBtn.disabled = false;
+    regenerateBtn.innerHTML = originalBtnText;
+  })
+  .catch(error => {
+    console.error('❌ Regenerate error:', error);
+    contentDiv.innerHTML = originalContent;
+    regenerateBtn.disabled = false;
+    regenerateBtn.innerHTML = originalBtnText;
+    showToast('error', 'Failed to regenerate post: ' + error.message);
+  });
+}
+
+function regenerateTwitterPost(index) {
+  console.log('🔄 Regenerate Twitter post button clicked for index:', index);
+  
+  const posts = window.socialContentData ? window.socialContentData['twitter'] : null;
+  
+  if (!posts || !posts[index]) {
+    showToast('error', 'Unable to regenerate: Twitter post data not found');
+    return;
+  }
+  
+  const post = posts[index];
+  
+  // Get the button and show loading state
+  const regenerateBtn = document.getElementById(`regenerateTwitterBtn-${index}`);
+  const originalBtnText = regenerateBtn.innerHTML;
+  regenerateBtn.disabled = true;
+  regenerateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Regenerating...';
+  
+  console.log('📤 Sending regenerate request for Twitter post:', {
+    post_index: index,
+    title: post.title,
+    industry: post.industry,
+    tone: post.tone,
+    audience: post.audience
+  });
+  
+  // Show loading toast
+  showToast('info', 'Regenerating Twitter post... This may take a few moments.');
+  
+  // Call backend to regenerate
+  fetch('/regenerate_twitter_post', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      post_index: index,
+      title: post.title,
+      industry: post.industry || 'IT & Dev',
+      tone: post.tone || 'professional',
+      audience: post.audience || 'Founders'
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log('✅ Twitter post regenerated successfully:', data.post);
+      
+      // Update the stored data
+      posts[index] = data.post;
+      window.socialContentData['twitter'] = posts;
+      
+      showToast('success', 'Twitter post regenerated successfully!');
+      
+      // Reload the Twitter content to update the card view
+      setTimeout(() => {
+        loadSocialContent('twitter');
+      }, 1000);
+    } else {
+      // Re-enable button on error
+      regenerateBtn.disabled = false;
+      regenerateBtn.innerHTML = originalBtnText;
+      showToast('error', data.error || 'Failed to regenerate Twitter post');
+    }
+  })
+  .catch(error => {
+    console.error('❌ Regenerate Twitter error:', error);
+    // Re-enable button on error
+    regenerateBtn.disabled = false;
+    regenerateBtn.innerHTML = originalBtnText;
+    showToast('error', 'Failed to regenerate Twitter post: ' + error.message);
+  });
 }
 
 function copyBlogContent(index) {

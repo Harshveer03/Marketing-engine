@@ -875,6 +875,213 @@ def generate_social_with_selection():
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
+@app.route('/regenerate_linkedin_post', methods=['POST'])
+def regenerate_linkedin_post():
+    """Regenerate a LinkedIn post with the same parameters"""
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        print(f"🔄 Regenerate request data: {data}")
+        
+        post_index = data.get('post_index')
+        title = data.get('title')
+        industry = data.get('industry', 'IT & Dev')
+        tone = data.get('tone', 'professional')
+        audience = data.get('audience', 'Founders')
+        
+        print(f"🔄 Regenerating LinkedIn Post #{post_index}: '{title}'")
+        print(f"📊 Parameters - Industry: {industry}, Tone: {tone}, Audience: {audience}")
+        
+        if post_index is None or title is None:
+            return jsonify({'error': 'Missing post index or title'}), 400
+        
+        from post_generator import ContentPipeline
+        pipeline = ContentPipeline()
+        
+        # Load the LinkedIn post file to get all posts
+        linkedin_post_file = "./generated/content/social/linkedin_post.json"
+        if not os.path.exists(linkedin_post_file):
+            return jsonify({'error': 'LinkedIn post file not found'}), 404
+        
+        with open(linkedin_post_file, "r", encoding="utf-8") as f:
+            posts = json.load(f)
+        
+        if post_index >= len(posts):
+            return jsonify({'error': f'Invalid post index {post_index}'}), 400
+        
+        # Get the post to regenerate
+        old_post = posts[post_index]
+        print(f"📄 Old post: {old_post.get('title', 'No title')}")
+        
+        # Create a topic structure from the post title
+        selected_topic = {
+            "title": title,
+            "related_news": []  # We'll regenerate without specific news articles
+        }
+        
+        # Get context
+        try:
+            niche, pdf_context = pipeline.get_context(selected_topic)
+        except Exception as e:
+            print(f"Error getting context: {e}")
+            return jsonify({'error': f'Failed to get context: {str(e)}'}), 500
+        
+        # Regenerate the LinkedIn post
+        print(f"🚀 Regenerating LinkedIn Post content...")
+        linkedin_post = pipeline.generate_linkedin_post(
+            selected_topic, 
+            selected_topic.get("related_news", []), 
+            niche, 
+            audience, 
+            tone, 
+            pdf_context, 
+            industry
+        )
+        
+        # Calculate quality score
+        linkedin_post_quality = pipeline.calculate_social_quality_score(
+            "linkedin",
+            selected_topic,
+            linkedin_post.get("caption", ""),
+            linkedin_post.get("hashtags", [])
+        )
+        
+        # Update the post data at the specific index
+        print(f"📝 Updating post at index {post_index} (Total posts before: {len(posts)})")
+        posts[post_index] = {
+            "title": title,
+            "caption": linkedin_post.get("caption", ""),
+            "hashtags": linkedin_post.get("hashtags", []),
+            "quality_score": linkedin_post_quality,
+            "industry": industry,
+            "tone": tone,
+            "audience": audience,
+            "content_type": "post",
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        # Save the updated posts (overwriting the entire file)
+        print(f"💾 Saving {len(posts)} posts to file (should be same count)")
+        with open(linkedin_post_file, "w", encoding="utf-8") as f:
+            json.dump(posts, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ LinkedIn Post regenerated successfully at index {post_index}")
+        
+        return jsonify({
+            'success': True, 
+            'message': 'LinkedIn Post regenerated successfully',
+            'post': posts[post_index]
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/regenerate_twitter_post', methods=['POST'])
+def regenerate_twitter_post():
+    """Regenerate a Twitter post with the same parameters"""
+    if not is_configured():
+        return jsonify({'error': 'System not configured'}), 400
+    
+    try:
+        data = request.get_json()
+        print(f"🔄 Regenerate Twitter request data: {data}")
+        
+        post_index = data.get('post_index')
+        title = data.get('title')
+        industry = data.get('industry', 'IT & Dev')
+        tone = data.get('tone', 'professional')
+        audience = data.get('audience', 'Founders')
+        
+        print(f"🔄 Regenerating Twitter Post #{post_index}: '{title}'")
+        print(f"📊 Parameters - Industry: {industry}, Tone: {tone}, Audience: {audience}")
+        
+        if post_index is None or title is None:
+            return jsonify({'error': 'Missing post index or title'}), 400
+        
+        from post_generator import ContentPipeline
+        pipeline = ContentPipeline()
+        
+        # Load the Twitter post file to get all posts
+        twitter_file = "./generated/content/social/twitter.json"
+        if not os.path.exists(twitter_file):
+            return jsonify({'error': 'Twitter post file not found'}), 404
+        
+        with open(twitter_file, "r", encoding="utf-8") as f:
+            posts = json.load(f)
+        
+        if post_index >= len(posts):
+            return jsonify({'error': f'Invalid post index {post_index}'}), 400
+        
+        # Get the post to regenerate
+        old_post = posts[post_index]
+        print(f"📄 Old post: {old_post.get('title', 'No title')}")
+        
+        # Create a topic structure from the post title
+        selected_topic = {
+            "title": title,
+            "related_news": []  # We'll regenerate without specific news articles
+        }
+        
+        # Get context
+        try:
+            niche, pdf_context = pipeline.get_context(selected_topic)
+        except Exception as e:
+            print(f"Error getting context: {e}")
+            return jsonify({'error': f'Failed to get context: {str(e)}'}), 500
+        
+        # Regenerate the Twitter post
+        print(f"🚀 Regenerating Twitter Post content...")
+        twitter_post = pipeline.generate_twitter(
+            selected_topic, 
+            selected_topic.get("related_news", []), 
+            niche, 
+            audience, 
+            tone, 
+            pdf_context, 
+            industry
+        )
+        
+        # Calculate quality score
+        twitter_quality = pipeline.calculate_social_quality_score(
+            "twitter",
+            selected_topic,
+            twitter_post.get("tweet", ""),
+            twitter_post.get("hashtags", [])
+        )
+        
+        # Update the post data at the specific index
+        print(f"📝 Updating post at index {post_index} (Total posts before: {len(posts)})")
+        posts[post_index] = {
+            "title": title,
+            "caption": twitter_post.get("tweet", ""),
+            "hashtags": twitter_post.get("hashtags", []),
+            "quality_score": twitter_quality,
+            "industry": industry,
+            "tone": tone,
+            "audience": audience,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        # Save the updated posts (overwriting the entire file)
+        print(f"💾 Saving {len(posts)} posts to file (should be same count)")
+        with open(twitter_file, "w", encoding="utf-8") as f:
+            json.dump(posts, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Twitter Post regenerated successfully at index {post_index}")
+        
+        return jsonify({
+            'success': True, 
+            'message': 'Twitter Post regenerated successfully',
+            'post': posts[post_index]
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/generate_blog_with_selection', methods=['POST'])
 def generate_blog_with_selection():
     """Generate blog content with user selections"""

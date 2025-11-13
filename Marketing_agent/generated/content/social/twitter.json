@@ -1,72 +1,16 @@
 [
-    {
-        "title": "AI-Powered Sales: Eliminate \"Vibes\" for Predictable Revenue.",
-        "caption": "Billing CXOs: Stop letting 'Vibes' dictate your recurring revenue. Founder-led sales breaks at scale. AI rewires GTM behavior for predictable pipeline, anchoring buyers on risk & urgency. No more guesswork; just data-driven growth.",
-        "hashtags": [
-            "#BillingTech",
-            "#RevenueOps",
-            "#AIforsales"
-        ],
-        "quality_score": 71.6,
-        "industry": "Billing",
-        "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-11T14:08:28.391727"
-    },
-    {
-        "title": "AI enhances buyer engagement: personalize messaging, build trust.",
-        "caption": "Real Estate marketers: Low engagement & 'vibes'-based forecasts sink deals. AI personalizes buyer messaging, building trust by anchoring on *their* specific risks. Rewire GTM for predictable, scalable growth. #RealEstate #PropTech #GTM",
-        "hashtags": [
-            "#RealEstate",
-            "#PropTech",
-            "#GTM"
-        ],
-        "quality_score": 68.33,
-        "industry": "Real Estate",
-        "tone": "professional",
-        "audience": "Marketers",
-        "generation_mode": "manual",
-        "timestamp": "2025-11-11T14:09:49.521296"
-    },
-    {
-        "title": "Hot take: Your next 'dream vacation' isn't on Instagram. We're entering the #DeInfluencerTravel era – actively seeking the un-curated, the unexpected, the truly *local*. Ditch the photo op, find the real adventure. Who's in? 👇",
-        "caption": "Hot take: Your next 'dream vacation' isn't on Instagram. We're entering the #DeInfluencerTravel era – seeking the un-curated, unexpected, truly *local*. Ditch the photo op, find the real adventure. Who's in? 👇",
-        "hashtags": [
-            "#DeInfluencerTravel",
-            "#FutureOfTravel"
-        ],
-        "quality_score": 41.43,
-        "industry": "Travel",
-        "tone": "bold",
-        "audience": "Founders",
-        "timestamp": "2025-11-12T01:18:43.465207"
-    },
-    {
-        "title": "The #RepFluencyDebt: Your Silent Sales Killer. Why 'just coaching' isn't enough to fix it. A new era of GTM #BehaviorRewiring is here. 🧵",
-        "caption": "Is the #RepFluencyDebt silently sabotaging your GTM? 'Just coaching' won't cut it anymore. It's time to move beyond insights & embrace #BehaviorRewiring for lasting sales performance. A new era is here. 🧵",
-        "hashtags": [
-            "#SalesLeadership",
-            "#GTMStrategy",
-            "#SalesEnablement"
-        ],
-        "quality_score": 74.64,
-        "industry": "Sales/Marketing",
-        "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-12T14:51:47.781683"
-    },
-    {
-        "title": "Hot take: Your 'uncoachable' sales team isn't the problem. It's your GTM's *behavioral tech debt*. We need a full *refactor*, not just new playbooks. 🛠️",
-        "caption": "Hot take: That 'uncoachable' sales team? It's a symptom. The real culprit is your GTM's *behavioral tech debt*. Stop patching with playbooks. It's time for a full GTM *refactor* to scale effectively. 🛠️",
-        "hashtags": [
-            "#GTM",
-            "#TechDebt",
-            "#SalesLeadership"
-        ],
-        "quality_score": 78.13,
-        "industry": "IT & Dev",
-        "tone": "professional",
-        "audience": "CXOs",
-        "timestamp": "2025-11-12T15:17:57.439063"
-    }
+  {
+    "title": "Sales 'education' is broken. We're teaching reps *what* to say, not *how to rewire* their GTM behavior. That's why 'vibes' run your pipeline. 🧵",
+    "caption": "Sales 'education' is failing us. We teach reps *what* to say, not *how to rewire* GTM behavior. That's why pipeline forecasts in EdTech rely on 'vibes,' not data. Time to fix the curriculum. 🧵",
+    "hashtags": [
+      "#SalesStrategy",
+      "#EdTech",
+      "#GTM"
+    ],
+    "quality_score": 71.51,
+    "industry": "Education",
+    "tone": "professional",
+    "audience": "CXOs",
+    "timestamp": "2025-11-13T17:01:27.480703"
+  }
 ]

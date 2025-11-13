@@ -1143,6 +1143,58 @@
     </div>
   </div>
 </div>
+
+<!-- LinkedIn Post Modal -->
+<div class="modal fade" id="linkedinPostModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="linkedinPostModalTitle">
+          <i class="fab fa-linkedin me-2"></i>LinkedIn Post
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div
+        class="modal-body linkedin-post-body"
+        id="linkedinPostModalBody"
+        style="max-height: 70vh; overflow-y: auto; background-color: #f3f2ef;"
+      >
+        <div class="linkedin-post-container">
+          <div class="linkedin-post-content" id="linkedinPostContent">
+            Post content will appear here...
+          </div>
+          <div class="linkedin-post-hashtags mt-3" id="linkedinPostHashtags">
+            <!-- Hashtags will be populated here -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-warning"
+          id="regenerateLinkedInPostBtn"
+          onclick="regenerateLinkedInPost()"
+        >
+          <i class="fas fa-sync-alt me-1"></i>Regenerate
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="copyLinkedInPostContent()"
+        >
+          <i class="fas fa-copy me-1"></i>Copy Post
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %} {% block scripts %}
 <script>
   // Dashboard initialization - delegated to external JS file

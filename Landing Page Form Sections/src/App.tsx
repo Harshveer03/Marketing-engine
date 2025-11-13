@@ -22,8 +22,7 @@ export default function App() {
     const authStatus = localStorage.getItem("isAuthenticated");
     if (authStatus === "true") {
       setIsAuthenticated(true);
-      setShowLanding(false);
-      setShowAuth(false);
+      // Don't automatically hide landing page - let user navigate
     }
   }, []);
 
@@ -36,13 +35,21 @@ export default function App() {
   };
 
   const handleGetStarted = () => {
-    setShowLanding(false);
-    setShowAuth(true);
+    // If already authenticated, go directly to form
+    if (isAuthenticated) {
+      setShowLanding(false);
+      setShowAuth(false);
+    } else {
+      // Otherwise, show auth page
+      setShowLanding(false);
+      setShowAuth(true);
+    }
   };
 
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
     setShowAuth(false);
+    setShowLanding(false);
     setActiveSection("what-use");
   };
 

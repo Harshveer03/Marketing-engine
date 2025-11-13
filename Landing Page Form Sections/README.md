@@ -77,12 +77,6 @@ npm run dev
 http://localhost:3000
 ```
 
-## 🔑 Test Credentials
-
-For testing the authentication system, use:
-
-- **Email:** `test@company.com`
-- **Password:** `Harshveer@24`
 
 ## 🏗️ Project Structure
 

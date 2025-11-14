@@ -11,20 +11,72 @@ import { motion, AnimatePresence } from "motion/react";
 
 export type Section = "what-use" | "brand-info" | "score";
 
+// Form data types
+interface FormData {
+  whatUse: string | null;
+  brandInfo: {
+    brandName: string;
+    industry: string;
+    description: string;
+    targetAudience: string;
+  };
+}
+
 export default function App() {
   const [showLanding, setShowLanding] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeSection, setActiveSection] = useState<Section>("what-use");
 
-  // Check if user is already authenticated on mount
+  // Form data state
+  const [formData, setFormData] = useState<FormData>({
+    whatUse: null,
+    brandInfo: {
+      brandName: "",
+      industry: "",
+      description: "",
+      targetAudience: "",
+    },
+  });
+
+  // Check if user is already authenticated on mount and restore state
   useEffect(() => {
     const authStatus = localStorage.getItem("isAuthenticated");
     if (authStatus === "true") {
       setIsAuthenticated(true);
-      // Don't automatically hide landing page - let user navigate
+
+      // Restore active section
+      const savedSection = localStorage.getItem("activeSection") as Section;
+      if (savedSection) {
+        setActiveSection(savedSection);
+        setShowLanding(false);
+      }
+
+      // Restore form data
+      const savedFormData = localStorage.getItem("formData");
+      if (savedFormData) {
+        try {
+          setFormData(JSON.parse(savedFormData));
+        } catch (e) {
+          console.error("Failed to parse saved form data", e);
+        }
+      }
     }
   }, []);
+
+  // Save active section to localStorage whenever it changes
+  useEffect(() => {
+    if (isAuthenticated && !showLanding) {
+      localStorage.setItem("activeSection", activeSection);
+    }
+  }, [activeSection, isAuthenticated, showLanding]);
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      localStorage.setItem("formData", JSON.stringify(formData));
+    }
+  }, [formData, isAuthenticated]);
 
   const handleNext = () => {
     const sections: Section[] = ["what-use", "brand-info", "score"];
@@ -64,10 +116,33 @@ export default function App() {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
+    // Don't clear form data on logout - only on successful submission
     setIsAuthenticated(false);
     setShowLanding(true);
     setShowAuth(false);
     setActiveSection("what-use");
+  };
+
+  const handleClearForm = () => {
+    const emptyFormData: FormData = {
+      whatUse: null,
+      brandInfo: {
+        brandName: "",
+        industry: "",
+        description: "",
+        targetAudience: "",
+      },
+    };
+    setFormData(emptyFormData);
+    localStorage.setItem("formData", JSON.stringify(emptyFormData));
+    setActiveSection("what-use");
+  };
+
+  const updateFormData = (section: keyof FormData, data: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: data,
+    }));
   };
 
   // Show landing page
@@ -100,7 +175,7 @@ export default function App() {
       />
       <div className="relative z-10">
         <Header onBackToLanding={handleBackToLanding} onLogout={handleLogout} />
-        <TopNav activeSection={activeSection} />
+        <TopNav activeSection={activeSection} onClearForm={handleClearForm} />
         <div className="flex h-[calc(100vh-160px)]">
           <Sidebar
             activeSection={activeSection}
@@ -116,10 +191,20 @@ export default function App() {
                 transition={{ duration: 0.3 }}
               >
                 {activeSection === "what-use" && (
-                  <WhatUseSection onNext={handleNext} />
+                  <WhatUseSection
+                    onNext={handleNext}
+                    selectedOption={formData.whatUse}
+                    onSelectOption={(option) =>
+                      updateFormData("whatUse", option)
+                    }
+                  />
                 )}
                 {activeSection === "brand-info" && (
-                  <BrandInfoSection onNext={handleNext} />
+                  <BrandInfoSection
+                    onNext={handleNext}
+                    formData={formData.brandInfo}
+                    onUpdateData={(data) => updateFormData("brandInfo", data)}
+                  />
                 )}
                 {activeSection === "score" && <ScoreSection />}
               </motion.div>

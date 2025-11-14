@@ -287,6 +287,11 @@ function renderBlogs(data) {
                         <button class="btn btn-sm btn-outline-primary" onclick="showBlogModal(${index})">
                             <i class="fas fa-eye me-1"></i>Read Full Post
                         </button>
+                        <button class="btn btn-sm btn-outline-info" onclick="fetchAndShowImage('${escapeHtml(
+                          blog.title
+                        ).replace(/'/g, "\\'")}', 'blog')">
+                            <i class="fas fa-image me-1"></i>Get Image
+                        </button>
                         ${
                           qualityScore > 0
                             ? `<span class="badge ${badgeClass} ms-2">Quality: ${Math.round(
@@ -582,7 +587,7 @@ function loadSocialContent(platform) {
           window.contentData["linkedin-article"]
         );
       }
-      
+
       // Store LinkedIn posts in contentData for modal access
       if (platform === "linkedin-post") {
         if (!window.contentData) {
@@ -930,9 +935,7 @@ function showLinkedInPostModal(index) {
   console.log(`🔍 Opening LinkedIn Post modal for index: ${index}`);
   console.log(`📦 contentData available:`, window.contentData);
 
-  const posts = window.contentData
-    ? window.contentData["linkedin-post"]
-    : null;
+  const posts = window.contentData ? window.contentData["linkedin-post"] : null;
 
   console.log(`📚 Posts array:`, posts);
 
@@ -989,17 +992,17 @@ function showLinkedInPostModal(index) {
   const hashtagsContainer = document.getElementById("linkedinPostHashtags");
   if (post.hashtags && post.hashtags.length > 0) {
     const hashtagsHTML = post.hashtags
-      .map(tag => {
+      .map((tag) => {
         // Ensure hashtag starts with #
-        const displayTag = tag.startsWith('#') ? tag : `#${tag}`;
+        const displayTag = tag.startsWith("#") ? tag : `#${tag}`;
         return `<span class="hashtag-badge">${escapeHtml(displayTag)}</span>`;
       })
-      .join('');
+      .join("");
     hashtagsContainer.innerHTML = hashtagsHTML;
-    hashtagsContainer.style.display = 'block';
+    hashtagsContainer.style.display = "block";
   } else {
-    hashtagsContainer.innerHTML = '';
-    hashtagsContainer.style.display = 'none';
+    hashtagsContainer.innerHTML = "";
+    hashtagsContainer.style.display = "none";
   }
 
   // Store the current post index and original content for copying
@@ -1007,7 +1010,9 @@ function showLinkedInPostModal(index) {
   window.currentLinkedInPostContent = postContent;
 
   // Show modal
-  const modal = new bootstrap.Modal(document.getElementById("linkedinPostModal"));
+  const modal = new bootstrap.Modal(
+    document.getElementById("linkedinPostModal")
+  );
   modal.show();
 
   console.log(`✅ LinkedIn Post modal opened successfully`);
@@ -1015,42 +1020,49 @@ function showLinkedInPostModal(index) {
 
 function formatLinkedInPost(content) {
   if (!content) return "";
-  
+
   // Escape HTML first
   let formatted = escapeHtml(content);
-  
+
   // Convert hashtags to styled spans
   formatted = formatted.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
-  
+
   // Convert line breaks to <br> tags
-  formatted = formatted.replace(/\n/g, '<br>');
-  
+  formatted = formatted.replace(/\n/g, "<br>");
+
   // Wrap in paragraphs for better spacing
-  const paragraphs = formatted.split('<br><br>');
-  formatted = paragraphs.map(p => p.trim() ? `<p>${p}</p>` : '').join('');
-  
+  const paragraphs = formatted.split("<br><br>");
+  formatted = paragraphs.map((p) => (p.trim() ? `<p>${p}</p>` : "")).join("");
+
   return formatted;
 }
 
 function copyLinkedInPostContent() {
   // Get the original content with preserved formatting (line breaks)
-  let contentToCopy = window.currentLinkedInPostContent || '';
-  
+  let contentToCopy = window.currentLinkedInPostContent || "";
+
   // Get the current post to access hashtags
   const postIndex = window.currentLinkedInPostIndex;
   const posts = window.contentData ? window.contentData["linkedin-post"] : null;
-  
-  if (posts && posts[postIndex] && posts[postIndex].hashtags && posts[postIndex].hashtags.length > 0) {
+
+  if (
+    posts &&
+    posts[postIndex] &&
+    posts[postIndex].hashtags &&
+    posts[postIndex].hashtags.length > 0
+  ) {
     // Add hashtags to the content
-    const hashtags = posts[postIndex].hashtags.map(tag => {
-      // Ensure hashtag starts with #
-      return tag.startsWith('#') ? tag : `#${tag}`;
-    }).join(' ');
-    
+    const hashtags = posts[postIndex].hashtags
+      .map((tag) => {
+        // Ensure hashtag starts with #
+        return tag.startsWith("#") ? tag : `#${tag}`;
+      })
+      .join(" ");
+
     // Combine content with hashtags (add two line breaks for spacing)
-    contentToCopy = contentToCopy + '\n\n' + hashtags;
+    contentToCopy = contentToCopy + "\n\n" + hashtags;
   }
-  
+
   if (contentToCopy) {
     copyToClipboard(contentToCopy);
   } else {
@@ -1062,59 +1074,64 @@ function copyLinkedInPostContent() {
 
 function copySocialContent(platform, index) {
   // Get the posts for the platform
-  const posts = window.socialContentData ? window.socialContentData[platform] : null;
-  
+  const posts = window.socialContentData
+    ? window.socialContentData[platform]
+    : null;
+
   if (!posts || !posts[index]) {
-    showToast('error', 'Unable to copy: Post data not found');
+    showToast("error", "Unable to copy: Post data not found");
     return;
   }
-  
+
   const post = posts[index];
-  let contentToCopy = post.caption || post.content || '';
-  
+  let contentToCopy = post.caption || post.content || "";
+
   // Add hashtags if available
   if (post.hashtags && post.hashtags.length > 0) {
-    const hashtags = post.hashtags.map(tag => {
-      return tag.startsWith('#') ? tag : `#${tag}`;
-    }).join(' ');
-    
-    contentToCopy = contentToCopy + '\n\n' + hashtags;
+    const hashtags = post.hashtags
+      .map((tag) => {
+        return tag.startsWith("#") ? tag : `#${tag}`;
+      })
+      .join(" ");
+
+    contentToCopy = contentToCopy + "\n\n" + hashtags;
   }
-  
+
   if (contentToCopy) {
     copyToClipboard(contentToCopy);
   } else {
-    showToast('error', 'No content to copy');
+    showToast("error", "No content to copy");
   }
 }
 
 function regenerateLinkedInPost() {
-  console.log('🔄 Regenerate button clicked');
-  
+  console.log("🔄 Regenerate button clicked");
+
   const postIndex = window.currentLinkedInPostIndex;
-  
+
   if (postIndex === undefined || postIndex === null) {
-    showToast('error', 'Unable to regenerate: Post index not found');
+    showToast("error", "Unable to regenerate: Post index not found");
     return;
   }
-  
+
   const posts = window.contentData ? window.contentData["linkedin-post"] : null;
-  
+
   if (!posts || !posts[postIndex]) {
-    showToast('error', 'Unable to regenerate: Post data not found');
+    showToast("error", "Unable to regenerate: Post data not found");
     return;
   }
-  
+
   const post = posts[postIndex];
-  
+
   // Disable the regenerate button and show loading state
-  const regenerateBtn = document.getElementById('regenerateLinkedInPostBtn');
+  const regenerateBtn = document.getElementById("regenerateLinkedInPostBtn");
   const originalBtnText = regenerateBtn.innerHTML;
   regenerateBtn.disabled = true;
-  regenerateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Regenerating...';
-  
+  regenerateBtn.innerHTML =
+    '<span class="spinner-border spinner-border-sm me-1"></span>Regenerating...';
+
   // Show loading state in modal content
-  const contentDiv = document.getElementById('linkedinPostContent');
+  const contentDiv = document.getElementById("linkedinPostContent");
   const originalContent = contentDiv.innerHTML;
   contentDiv.innerHTML = `
     <div class="text-center py-5">
@@ -1124,176 +1141,191 @@ function regenerateLinkedInPost() {
       <p class="text-muted">Regenerating post content...</p>
     </div>
   `;
-  
-  console.log('📤 Sending regenerate request for post:', {
+
+  console.log("📤 Sending regenerate request for post:", {
     post_index: postIndex,
     title: post.title,
     industry: post.industry,
     tone: post.tone,
-    audience: post.audience
+    audience: post.audience,
   });
-  
+
   // Call backend to regenerate
-  fetch('/regenerate_linkedin_post', {
-    method: 'POST',
+  fetch("/regenerate_linkedin_post", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       post_index: postIndex,
       title: post.title,
-      industry: post.industry || 'IT & Dev',
-      tone: post.tone || 'professional',
-      audience: post.audience || 'Founders'
-    })
+      industry: post.industry || "IT & Dev",
+      tone: post.tone || "professional",
+      audience: post.audience || "Founders",
+    }),
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      console.log('✅ Post regenerated successfully:', data.post);
-      
-      // Update the stored data
-      posts[postIndex] = data.post;
-      window.contentData["linkedin-post"] = posts;
-      
-      // Update the modal content
-      const newContent = data.post.caption || data.post.content || '';
-      const formattedContent = formatLinkedInPost(newContent);
-      contentDiv.innerHTML = formattedContent;
-      
-      // Update the stored content for copying
-      window.currentLinkedInPostContent = newContent;
-      
-      // Update hashtags
-      const hashtagsContainer = document.getElementById("linkedinPostHashtags");
-      if (data.post.hashtags && data.post.hashtags.length > 0) {
-        const hashtagsHTML = data.post.hashtags
-          .map(tag => {
-            const displayTag = tag.startsWith('#') ? tag : `#${tag}`;
-            return `<span class="hashtag-badge">${escapeHtml(displayTag)}</span>`;
-          })
-          .join('');
-        hashtagsContainer.innerHTML = hashtagsHTML;
-        hashtagsContainer.style.display = 'block';
-      } else {
-        hashtagsContainer.innerHTML = '';
-        hashtagsContainer.style.display = 'none';
-      }
-      
-      // Update quality score in title if present
-      const qualityScore = data.post.quality_score || 0;
-      let badgeHTML = '';
-      if (qualityScore > 0) {
-        let badgeClass = 'bg-secondary';
-        if (qualityScore >= 80) {
-          badgeClass = 'bg-success';
-        } else if (qualityScore >= 60) {
-          badgeClass = 'bg-warning';
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("✅ Post regenerated successfully:", data.post);
+
+        // Update the stored data
+        posts[postIndex] = data.post;
+        window.contentData["linkedin-post"] = posts;
+
+        // Update the modal content
+        const newContent = data.post.caption || data.post.content || "";
+        const formattedContent = formatLinkedInPost(newContent);
+        contentDiv.innerHTML = formattedContent;
+
+        // Update the stored content for copying
+        window.currentLinkedInPostContent = newContent;
+
+        // Update hashtags
+        const hashtagsContainer = document.getElementById(
+          "linkedinPostHashtags"
+        );
+        if (data.post.hashtags && data.post.hashtags.length > 0) {
+          const hashtagsHTML = data.post.hashtags
+            .map((tag) => {
+              const displayTag = tag.startsWith("#") ? tag : `#${tag}`;
+              return `<span class="hashtag-badge">${escapeHtml(
+                displayTag
+              )}</span>`;
+            })
+            .join("");
+          hashtagsContainer.innerHTML = hashtagsHTML;
+          hashtagsContainer.style.display = "block";
         } else {
-          badgeClass = 'bg-danger';
+          hashtagsContainer.innerHTML = "";
+          hashtagsContainer.style.display = "none";
         }
-        badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(qualityScore)}%</span>`;
+
+        // Update quality score in title if present
+        const qualityScore = data.post.quality_score || 0;
+        let badgeHTML = "";
+        if (qualityScore > 0) {
+          let badgeClass = "bg-secondary";
+          if (qualityScore >= 80) {
+            badgeClass = "bg-success";
+          } else if (qualityScore >= 60) {
+            badgeClass = "bg-warning";
+          } else {
+            badgeClass = "bg-danger";
+          }
+          badgeHTML = ` <span class="badge ${badgeClass}">Quality: ${Math.round(
+            qualityScore
+          )}%</span>`;
+        }
+
+        document.getElementById("linkedinPostModalTitle").innerHTML =
+          `<i class="fab fa-linkedin me-2"></i>${escapeHtml(data.post.title)}` +
+          badgeHTML;
+
+        showToast("success", "LinkedIn Post regenerated successfully!");
+
+        // Reload the LinkedIn post content in the background to update the card view
+        setTimeout(() => {
+          loadSocialContent("linkedin-post");
+        }, 1000);
+      } else {
+        contentDiv.innerHTML = originalContent;
+        showToast("error", data.error || "Failed to regenerate post");
       }
-      
-      document.getElementById('linkedinPostModalTitle').innerHTML =
-        `<i class="fab fa-linkedin me-2"></i>${escapeHtml(data.post.title)}` + badgeHTML;
-      
-      showToast('success', 'LinkedIn Post regenerated successfully!');
-      
-      // Reload the LinkedIn post content in the background to update the card view
-      setTimeout(() => {
-        loadSocialContent('linkedin-post');
-      }, 1000);
-    } else {
+
+      // Re-enable the button
+      regenerateBtn.disabled = false;
+      regenerateBtn.innerHTML = originalBtnText;
+    })
+    .catch((error) => {
+      console.error("❌ Regenerate error:", error);
       contentDiv.innerHTML = originalContent;
-      showToast('error', data.error || 'Failed to regenerate post');
-    }
-    
-    // Re-enable the button
-    regenerateBtn.disabled = false;
-    regenerateBtn.innerHTML = originalBtnText;
-  })
-  .catch(error => {
-    console.error('❌ Regenerate error:', error);
-    contentDiv.innerHTML = originalContent;
-    regenerateBtn.disabled = false;
-    regenerateBtn.innerHTML = originalBtnText;
-    showToast('error', 'Failed to regenerate post: ' + error.message);
-  });
+      regenerateBtn.disabled = false;
+      regenerateBtn.innerHTML = originalBtnText;
+      showToast("error", "Failed to regenerate post: " + error.message);
+    });
 }
 
 function regenerateTwitterPost(index) {
-  console.log('🔄 Regenerate Twitter post button clicked for index:', index);
-  
-  const posts = window.socialContentData ? window.socialContentData['twitter'] : null;
-  
+  console.log("🔄 Regenerate Twitter post button clicked for index:", index);
+
+  const posts = window.socialContentData
+    ? window.socialContentData["twitter"]
+    : null;
+
   if (!posts || !posts[index]) {
-    showToast('error', 'Unable to regenerate: Twitter post data not found');
+    showToast("error", "Unable to regenerate: Twitter post data not found");
     return;
   }
-  
+
   const post = posts[index];
-  
+
   // Get the button and show loading state
-  const regenerateBtn = document.getElementById(`regenerateTwitterBtn-${index}`);
+  const regenerateBtn = document.getElementById(
+    `regenerateTwitterBtn-${index}`
+  );
   const originalBtnText = regenerateBtn.innerHTML;
   regenerateBtn.disabled = true;
-  regenerateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Regenerating...';
-  
-  console.log('📤 Sending regenerate request for Twitter post:', {
+  regenerateBtn.innerHTML =
+    '<span class="spinner-border spinner-border-sm me-1"></span>Regenerating...';
+
+  console.log("📤 Sending regenerate request for Twitter post:", {
     post_index: index,
     title: post.title,
     industry: post.industry,
     tone: post.tone,
-    audience: post.audience
+    audience: post.audience,
   });
-  
+
   // Show loading toast
-  showToast('info', 'Regenerating Twitter post... This may take a few moments.');
-  
+  showToast(
+    "info",
+    "Regenerating Twitter post... This may take a few moments."
+  );
+
   // Call backend to regenerate
-  fetch('/regenerate_twitter_post', {
-    method: 'POST',
+  fetch("/regenerate_twitter_post", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       post_index: index,
       title: post.title,
-      industry: post.industry || 'IT & Dev',
-      tone: post.tone || 'professional',
-      audience: post.audience || 'Founders'
-    })
+      industry: post.industry || "IT & Dev",
+      tone: post.tone || "professional",
+      audience: post.audience || "Founders",
+    }),
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      console.log('✅ Twitter post regenerated successfully:', data.post);
-      
-      // Update the stored data
-      posts[index] = data.post;
-      window.socialContentData['twitter'] = posts;
-      
-      showToast('success', 'Twitter post regenerated successfully!');
-      
-      // Reload the Twitter content to update the card view
-      setTimeout(() => {
-        loadSocialContent('twitter');
-      }, 1000);
-    } else {
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("✅ Twitter post regenerated successfully:", data.post);
+
+        // Update the stored data
+        posts[index] = data.post;
+        window.socialContentData["twitter"] = posts;
+
+        showToast("success", "Twitter post regenerated successfully!");
+
+        // Reload the Twitter content to update the card view
+        setTimeout(() => {
+          loadSocialContent("twitter");
+        }, 1000);
+      } else {
+        // Re-enable button on error
+        regenerateBtn.disabled = false;
+        regenerateBtn.innerHTML = originalBtnText;
+        showToast("error", data.error || "Failed to regenerate Twitter post");
+      }
+    })
+    .catch((error) => {
+      console.error("❌ Regenerate Twitter error:", error);
       // Re-enable button on error
       regenerateBtn.disabled = false;
       regenerateBtn.innerHTML = originalBtnText;
-      showToast('error', data.error || 'Failed to regenerate Twitter post');
-    }
-  })
-  .catch(error => {
-    console.error('❌ Regenerate Twitter error:', error);
-    // Re-enable button on error
-    regenerateBtn.disabled = false;
-    regenerateBtn.innerHTML = originalBtnText;
-    showToast('error', 'Failed to regenerate Twitter post: ' + error.message);
-  });
+      showToast("error", "Failed to regenerate Twitter post: " + error.message);
+    });
 }
 
 function copyBlogContent(index) {
@@ -1531,17 +1563,22 @@ function showLoadingModal(message) {
   // Reset to loading state
   document.getElementById("loading-state").classList.remove("d-none");
   document.getElementById("loading-error-state").classList.add("d-none");
-  
+
   // Set message
-  document.getElementById("loading-message").textContent = message || "Processing...";
-  
+  document.getElementById("loading-message").textContent =
+    message || "Processing...";
+
   // Show modal
-  const loadingModal = new bootstrap.Modal(document.getElementById("loadingModal"));
+  const loadingModal = new bootstrap.Modal(
+    document.getElementById("loadingModal")
+  );
   loadingModal.show();
 }
 
 function hideLoadingModal() {
-  const loadingModal = bootstrap.Modal.getInstance(document.getElementById("loadingModal"));
+  const loadingModal = bootstrap.Modal.getInstance(
+    document.getElementById("loadingModal")
+  );
   if (loadingModal) {
     loadingModal.hide();
   }
@@ -1550,7 +1587,7 @@ function hideLoadingModal() {
 function showLoadingError(errorMessage) {
   // Hide loading state
   document.getElementById("loading-state").classList.add("d-none");
-  
+
   // Show error state
   document.getElementById("loading-error-state").classList.remove("d-none");
   document.getElementById("loading-error-message").textContent = errorMessage;
@@ -1812,8 +1849,10 @@ function generateSocialFromDashboard() {
   // Use stored industry and platform from previous steps
   const industry = selectedSocialIndustry || "IT & Dev";
   const selectedPlatform = selectedSocialPlatform || "linkedin-article";
-  
-  console.log(`📊 DEBUG: Using stored industry: ${industry}, platform: ${selectedPlatform}`);
+
+  console.log(
+    `📊 DEBUG: Using stored industry: ${industry}, platform: ${selectedPlatform}`
+  );
 
   if (!selectedTopic) {
     showToast("error", "Please select a topic");
@@ -2183,7 +2222,7 @@ function generateBlogFromDashboard() {
   );
   const tone = document.getElementById("blogToneSelect").value;
   const audience = document.getElementById("blogAudienceSelect").value;
-  
+
   // Use the stored industry from previous step
   const industry = selectedBlogIndustry || "IT & Dev";
   console.log(`📊 DEBUG: Using stored industry: ${industry}`);
@@ -2735,7 +2774,6 @@ function copyVideoPromptToClipboard() {
 
 console.log("✅ YouTube video prompt generation functions loaded");
 
-
 // ========================================
 // Blog Trend Slider Functions
 // ========================================
@@ -2840,7 +2878,9 @@ function fetchBlogTrends() {
         console.error(`❌ DEBUG: Error fetching trends: ${data.error}`);
         // Show error in loading modal
         showLoadingError(
-          `Failed to fetch trends: ${data.error || "Unknown error"}. Please try again.`
+          `Failed to fetch trends: ${
+            data.error || "Unknown error"
+          }. Please try again.`
         );
       }
     })
@@ -2866,8 +2906,9 @@ function showBlogTrendSlider() {
 
   // Add event listener to update display
   slider.addEventListener("input", function () {
-    document.getElementById("sliderValueDisplay").textContent =
-      `Value: ${this.value}`;
+    document.getElementById(
+      "sliderValueDisplay"
+    ).textContent = `Value: ${this.value}`;
     console.log(`🎚️ DEBUG: Slider value changed to: ${this.value}`);
   });
 
@@ -2957,7 +2998,9 @@ function displayBlogTopicsWithBadges(topics) {
     const relevanceScore = topic.relevance_score || 0;
     const topicType = topic.type || "trend_follower";
 
-    console.log(`📝 DEBUG: Topic ${index}: ${topic.title} | Type: ${topicType}`);
+    console.log(
+      `📝 DEBUG: Topic ${index}: ${topic.title} | Type: ${topicType}`
+    );
 
     // Determine badge based on type
     let badgeHTML = "";
@@ -3003,11 +3046,12 @@ function displayBlogTopicsWithBadges(topics) {
 
   // Show content and hide loading
   document.getElementById("blogTopicLoading").classList.add("d-none");
-  document.getElementById("blogTopicSelectionContent").classList.remove("d-none");
+  document
+    .getElementById("blogTopicSelectionContent")
+    .classList.remove("d-none");
 }
 
 console.log("✅ Blog trend slider functions loaded");
-
 
 // ========================================
 // Social Media Trend Slider Functions
@@ -3035,12 +3079,16 @@ function showSocialIndustryPlatformSelection() {
 function fetchSocialTrends() {
   const industry = document.getElementById("socialTargetIndustrySelect").value;
   const platform = document.getElementById("socialTargetPlatformSelect").value;
-  console.log(`🔍 DEBUG: Fetching trends for industry: ${industry}, platform: ${platform}`);
+  console.log(
+    `🔍 DEBUG: Fetching trends for industry: ${industry}, platform: ${platform}`
+  );
 
   // Store selected industry and platform globally
   selectedSocialIndustry = industry;
   selectedSocialPlatform = platform;
-  console.log(`💾 DEBUG: Stored selected industry: ${selectedSocialIndustry}, platform: ${selectedSocialPlatform}`);
+  console.log(
+    `💾 DEBUG: Stored selected industry: ${selectedSocialIndustry}, platform: ${selectedSocialPlatform}`
+  );
 
   // Hide industry/platform modal
   const industryModal = bootstrap.Modal.getInstance(
@@ -3080,7 +3128,9 @@ function fetchSocialTrends() {
         console.error(`❌ DEBUG: Error fetching trends: ${data.error}`);
         // Show error in loading modal
         showLoadingError(
-          `Failed to fetch trends: ${data.error || "Unknown error"}. Please try again.`
+          `Failed to fetch trends: ${
+            data.error || "Unknown error"
+          }. Please try again.`
         );
       }
     })
@@ -3106,8 +3156,9 @@ function showSocialTrendSlider() {
 
   // Add event listener to update display
   slider.addEventListener("input", function () {
-    document.getElementById("socialSliderValueDisplay").textContent =
-      `Value: ${this.value}`;
+    document.getElementById(
+      "socialSliderValueDisplay"
+    ).textContent = `Value: ${this.value}`;
     console.log(`🎚️ DEBUG: Social slider value changed to: ${this.value}`);
   });
 
@@ -3127,7 +3178,9 @@ function generateSocialTopicsWithSlider() {
   const industry = selectedSocialIndustry;
   const platform = selectedSocialPlatform;
 
-  console.log(`📝 DEBUG: Generating social topics with slider value: ${sliderValue}`);
+  console.log(
+    `📝 DEBUG: Generating social topics with slider value: ${sliderValue}`
+  );
   console.log(`📊 DEBUG: Industry: ${industry}, Platform: ${platform}`);
   console.log(`📊 DEBUG: Trends count: ${fetchedSocialTrends.length}`);
 
@@ -3199,7 +3252,9 @@ function displaySocialTopicsWithBadges(topics) {
     const relevanceScore = topic.relevance_score || 0;
     const topicType = topic.type || "trend_follower";
 
-    console.log(`📝 DEBUG: Topic ${index}: ${topic.title} | Type: ${topicType} | Platform: ${selectedSocialPlatform}`);
+    console.log(
+      `📝 DEBUG: Topic ${index}: ${topic.title} | Type: ${topicType} | Platform: ${selectedSocialPlatform}`
+    );
 
     // Determine badge based on type
     let badgeHTML = "";
@@ -3219,9 +3274,11 @@ function displaySocialTopicsWithBadges(topics) {
       .split(" ")
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(" ");
-    
+
     const platformBadgeHTML = `<span class="badge bg-info me-2" style="font-size: 0.75rem;">
-      <i class="${getPlatformIcon(selectedSocialPlatform)} me-1"></i>${platformDisplay}
+      <i class="${getPlatformIcon(
+        selectedSocialPlatform
+      )} me-1"></i>${platformDisplay}
     </span>`;
 
     topicList.innerHTML += `
@@ -3261,3 +3318,161 @@ function displaySocialTopicsWithBadges(topics) {
 }
 
 console.log("✅ Social media trend slider functions loaded");
+
+// Pexels Image Fetching Functions
+async function fetchImageForContent(query, platform = "blog") {
+  try {
+    console.log(`🖼️ Fetching image for: "${query}" (${platform})`);
+
+    const response = await fetch("/api/fetch_image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: query,
+        platform: platform,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.success && data.image) {
+      console.log("✅ Image fetched successfully:", data.image.url);
+      return data.image;
+    } else {
+      console.error("❌ Failed to fetch image:", data.error);
+      return null;
+    }
+  } catch (error) {
+    console.error("❌ Error fetching image:", error);
+    return null;
+  }
+}
+
+function displayImageInModal(image) {
+  if (!image) return;
+
+  const modalHtml = `
+    <div class="modal fade" id="imageModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Featured Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body text-center">
+            <img src="${image.url}" alt="${image.alt}" class="img-fluid mb-3" style="max-height: 500px;">
+            <p class="text-muted">
+              Photo by <a href="${image.photographer_url}" target="_blank">${image.photographer}</a> on 
+              <a href="${image.pexels_url}" target="_blank">Pexels</a>
+            </p>
+            <div class="btn-group" role="group">
+              <button class="btn btn-sm btn-outline-primary" onclick="copyImageUrl('${image.url}')">
+                <i class="fas fa-copy me-1"></i>Copy URL
+              </button>
+              <a href="${image.url}" download class="btn btn-sm btn-outline-success">
+                <i class="fas fa-download me-1"></i>Download
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Remove existing modal if any
+  const existingModal = document.getElementById("imageModal");
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+  // Add new modal
+  document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById("imageModal"));
+  modal.show();
+}
+
+function copyImageUrl(url) {
+  navigator.clipboard
+    .writeText(url)
+    .then(() => {
+      showToast("Image URL copied to clipboard!", "success");
+    })
+    .catch((err) => {
+      console.error("Failed to copy:", err);
+      showToast("Failed to copy URL", "error");
+    });
+}
+
+function showToast(message, type = "info") {
+  const toastHtml = `
+    <div class="toast align-items-center text-white bg-${
+      type === "success" ? "success" : "danger"
+    } border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  `;
+
+  let toastContainer = document.getElementById("toastContainer");
+  if (!toastContainer) {
+    toastContainer = document.createElement("div");
+    toastContainer.id = "toastContainer";
+    toastContainer.className =
+      "toast-container position-fixed bottom-0 end-0 p-3";
+    document.body.appendChild(toastContainer);
+  }
+
+  toastContainer.insertAdjacentHTML("beforeend", toastHtml);
+  const toastElement = toastContainer.lastElementChild;
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+
+  // Remove toast after it's hidden
+  toastElement.addEventListener("hidden.bs.toast", () => {
+    toastElement.remove();
+  });
+}
+
+// Add image button to content cards
+function addImageButtonToCard(cardElement, query, platform) {
+  const cardBody = cardElement.querySelector(".card-body");
+  if (!cardBody) return;
+
+  const imageButton = document.createElement("button");
+  imageButton.className = "btn btn-sm btn-outline-secondary mt-2";
+  imageButton.innerHTML = '<i class="fas fa-image me-1"></i>Get Image';
+  imageButton.onclick = async () => {
+    imageButton.disabled = true;
+    imageButton.innerHTML =
+      '<span class="spinner-border spinner-border-sm me-1"></span>Loading...';
+
+    const image = await fetchImageForContent(query, platform);
+
+    imageButton.disabled = false;
+    imageButton.innerHTML = '<i class="fas fa-image me-1"></i>Get Image';
+
+    if (image) {
+      displayImageInModal(image);
+    }
+  };
+
+  cardBody.appendChild(imageButton);
+}
+
+// Helper function to fetch and show image
+async function fetchAndShowImage(query, platform) {
+  const image = await fetchImageForContent(query, platform);
+  if (image) {
+    displayImageInModal(image);
+  } else {
+    showToast("No image found for this topic", "error");
+  }
+}

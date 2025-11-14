@@ -1572,6 +1572,44 @@ def generate_social_topics():
             'error': f'Failed to generate topics: {str(e)}'
         }), 500
 
+@app.route('/api/fetch_image', methods=['POST'])
+def fetch_image():
+    """Fetch image from Pexels API based on content"""
+    try:
+        data = request.get_json()
+        query = data.get('query', '')
+        platform = data.get('platform', 'blog')
+        content_snippet = data.get('content_snippet', None)
+        
+        print(f"🖼️ Fetching image for: '{query}' (platform: {platform})")
+        
+        from pexels_helper import PexelsHelper
+        pexels = PexelsHelper()
+        
+        if platform == 'blog':
+            image = pexels.get_image_for_blog(query, content_snippet, quality="high")
+        else:
+            image = pexels.get_image_for_social(query, content_snippet, platform, quality="high")
+        
+        if image:
+            print(f"✅ Image fetched: {image['url']}")
+            return jsonify({
+                'success': True,
+                'image': image,
+                'message': 'Image fetched successfully'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'No image found'
+            }), 404
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"❌ Error fetching image: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/generate_image_prompt', methods=['POST'])
 def generate_image_prompt():
     """Generate optimized image prompt for blog, LinkedIn, or X (Twitter) content, or video prompt for YouTube"""

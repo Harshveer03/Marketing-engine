@@ -40,6 +40,15 @@ class BlogGenerator:
         self.embedding_model = embedding_model
         self.niche_embedding = None
         
+        # Load Engine KB for MIMIR rules
+        try:
+            from engine_kb_helper import EngineKBHelper
+            self.engine_kb = EngineKBHelper()
+            print("✅ Engine KB (MIMIR) loaded for blog generation")
+        except Exception as e:
+            print(f"⚠️ Engine KB not available: {e}")
+            self.engine_kb = None
+        
         # Load niche embedding for quality checking
         self._load_niche_embedding()
         
@@ -533,8 +542,46 @@ class BlogGenerator:
 
         print(f"📝 Blog: Generating content for topic: '{topic}' in {target_industry} industry")
 
+        # Query MIMIR rules for blog generation
+        mimir_rules = ""
+        if self.engine_kb and self.engine_kb.vectordb:
+            try:
+                print(f"\n🧠 Fetching MIMIR rules for Blog generation...")
+                mimir_rules = self.engine_kb.get_blog_rules(
+                    topic=topic,
+                    audience=audience,
+                    tone=tone
+                )
+                print(f"✅ MIMIR rules loaded: {len(mimir_rules)} chars\n")
+            except Exception as e:
+                print(f"⚠️ Could not load MIMIR rules: {e}")
+                mimir_rules = ""
+
+        # Build prompt with MIMIR integration
+        mimir_section = ""
+        if mimir_rules:
+            mimir_section = f"""
+
+{'='*60}
+MIMIR CONTENT GENERATION RULES (FOLLOW STRICTLY):
+{'='*60}
+{mimir_rules}
+
+Apply MIMIR framework for blog generation:
+- Intent & Grounding (Part 1): Clear message intent and audience focus
+- Phrasing Foundations (Part 2): Strong sentence construction
+- Structure Architecture (Part 3): Logical content hierarchy
+- Tone Decision (Part 4): Maintain {tone} tone throughout
+- Tailoring Principles (Part 7): Adapt to {audience} in {target_industry}
+- Narrative Physics (Part 12): Story logic, rhythm, and pacing
+- Integrity & Grounding (Part 13): Factual accuracy, no hallucination
+- Logic-Emotion Balance (Part 15): Persuasive yet authentic
+{'='*60}
+"""
+
         prompt = f"""
         You are an expert B2B SaaS content strategist.
+        {mimir_section}
 
         Write a comprehensive blog on the topic: "{topic}"
 

@@ -140,6 +140,72 @@ class EngineKBHelper:
         """Get the Control Tower execution sequence"""
         query = "Control Tower execution sequence - 16 part order and validation"
         return self.query(query, k=1)
+    
+    def get_linkedin_content_structure(self, content_type, tone, persona, industry, topic, challenge=None):
+        """
+        Query LinkedIn Content Guide for specific structure and template
+        
+        Args:
+            content_type: "post" or "article"
+            tone: "sharp", "reflective", "teaching", "contrarian", "neutral", etc.
+            persona: "SDR", "AE", "CRO", "Founder", "CXO", etc.
+            industry: "SaaS", "B2B SaaS", "Travel", "Retail", "Fintech", etc.
+            topic: The main topic/subject of the content
+            challenge: Optional specific challenge/problem
+        
+        Returns:
+            str: LinkedIn Content Guide structure with post types, skeletons, templates, and sections
+        """
+        if not self.vectordb:
+            return ""
+        
+        # Build comprehensive query for fuzzy matching
+        query_parts = [
+            f"LinkedIn Content Guide for {content_type}:",
+            f"- Topic: {topic}",
+            f"- Tone: {tone}" if tone else "",
+            f"- Target Persona: {persona}" if persona else "",
+            f"- Industry: {industry}" if industry else "",
+            f"- Challenge: {challenge}" if challenge else "",
+            "",
+            "Include:",
+            "- Post type selection (narrative, jolt, insight, contrarian, teaching)",
+            "- Skeleton selection from 50 skeletons",
+            "- Template with section prompts (hook, context, insight, story, consequence, shift, close)",
+            "- Section-specific guidance for each part",
+            "- Voice and formatting rules"
+        ]
+        
+        query = "\n".join([p for p in query_parts if p])
+        
+        print(f"\n🔍 LinkedIn Content Guide Query:")
+        print(f"   Content Type: {content_type}")
+        print(f"   Tone: {tone or 'default'}")
+        print(f"   Persona: {persona or 'general'}")
+        print(f"   Industry: {industry or 'universal'}")
+        print(f"   Topic: {topic[:50]}...")
+        print(f"   Fetching structure...")
+        
+        # Query with higher k for better fuzzy matching
+        docs = self.vectordb.similarity_search(query, k=8)
+        
+        print(f"\n📚 Retrieved {len(docs)} LinkedIn Guide chunks")
+        
+        # Combine results with source attribution
+        results = []
+        for i, doc in enumerate(docs, 1):
+            source = doc.metadata.get('source_file', 'Unknown')
+            content = doc.page_content.strip()
+            
+            print(f"   {i}. {source}")
+            print(f"      Preview: {content[:100]}...")
+            
+            results.append(content)
+        
+        combined = "\n\n---\n\n".join(results)
+        print(f"\n✅ LinkedIn Content Guide structure: {len(combined)} characters\n")
+        
+        return combined
 
 
 # Example usage

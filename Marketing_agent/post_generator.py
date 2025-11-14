@@ -140,6 +140,7 @@ class ContentPipeline:
         self.save_json(path, existing)
 
     def clean_response(self, response):
+        """Enhanced JSON parser with better error handling and markdown cleanup"""
         try:
             return json.loads(response)
         except json.JSONDecodeError:
@@ -170,10 +171,21 @@ class ContentPipeline:
             if match:
                 try:
                     json_str = match.group()
+                    
                     # Fix common JSON issues
                     json_str = json_str.replace("'", '"')  # Replace single quotes with double quotes
                     json_str = re.sub(r',\s*}', '}', json_str)  # Remove trailing commas before }
                     json_str = re.sub(r',\s*]', ']', json_str)  # Remove trailing commas before ]
+                    
+                    # Fix markdown bold/italic inside JSON strings
+                    # Replace **text** with text (remove markdown bold)
+                    json_str = re.sub(r'\*\*([^*]+)\*\*', r'\1', json_str)
+                    # Replace *text* with text (remove markdown italic)
+                    json_str = re.sub(r'(?<!\*)\*(?!\*)([^*]+)\*(?!\*)', r'\1', json_str)
+                    
+                    # Fix unescaped newlines in strings
+                    # This is tricky - we need to escape \n that appear inside string values
+                    # but not break the JSON structure
                     
                     # Try to fix incomplete JSON by finding the last complete object
                     # Count braces to find where JSON might be incomplete
@@ -187,15 +199,75 @@ class ContentPipeline:
                             if brace_count == 0:
                                 last_complete_pos = i + 1
                     
-                    if last_complete_pos > 0:
+                    if last_complete_pos > 0 and last_complete_pos < len(json_str):
                         json_str = json_str[:last_complete_pos]
                     
+                    # Try parsing
                     return json.loads(json_str)
+                    
                 except json.JSONDecodeError as e:
                     print(f"⚠️ JSON parsing error: {e}")
-                    print(f"Response snippet: {response[:500]}")
-                    print(f"Response end: ...{response[-200:]}")
+                    print(f"Response snippet: ```json{response[:500]}```")
+                    print(f"Response end: ...{response[-200:]}```")
+                    
+                    # Last resort: try to manually extract key fields
+                    try:
+                        result = {}
+                        
+                        # Extract caption
+                        caption_match = re.search(r'"caption"\s*:\s*"((?:[^"\\]|\\.)*)"', response, re.S)
+                        if caption_match:
+                            result["caption"] = caption_match.group(1).replace('\\n', '\n').replace('\\"', '"')
+                        
+                        # Extract hashtags
+                        hashtags_match = re.search(r'"hashtags"\s*:\s*\[(.*?)\]', response, re.S)
+                        if hashtags_match:
+                            hashtags_str = hashtags_match.group(1)
+                            hashtags = re.findall(r'"([^"]+)"', hashtags_str)
+                            result["hashtags"] = hashtags
+                        
+                        # Extract title if present
+                        title_match = re.search(r'"title"\s*:\s*"((?:[^"\\]|\\.)*)"', response)
+                        if title_match:
+                            result["title"] = title_match.group(1).replace('\\n', '\n').replace('\\"', '"')
+                        
+                        # Extract content if present (for articles)
+                        content_match = re.search(r'"content"\s*:\s*"((?:[^"\\]|\\.)*)"', response, re.S)
+                        if content_match:
+                            result["content"] = content_match.group(1).replace('\\n', '\n').replace('\\"', '"')
+                        
+                        # Extract tweet if present
+                        tweet_match = re.search(r'"tweet"\s*:\s*"((?:[^"\\]|\\.)*)"', response)
+                        if tweet_match:
+                            result["tweet"] = tweet_match.group(1).replace('\\n', '\n').replace('\\"', '"')
+                        
+                        # Extract script_intro if present
+                        script_match = re.search(r'"script_intro"\s*:\s*"((?:[^"\\]|\\.)*)"', response, re.S)
+                        if script_match:
+                            result["script_intro"] = script_match.group(1).replace('\\n', '\n').replace('\\"', '"')
+                        
+                        # Extract description if present
+                        desc_match = re.search(r'"description"\s*:\s*"((?:[^"\\]|\\.)*)"', response)
+                        if desc_match:
+                            result["description"] = desc_match.group(1).replace('\\n', '\n').replace('\\"', '"')
+                        
+                        # Extract tags if present
+                        tags_match = re.search(r'"tags"\s*:\s*\[(.*?)\]', response, re.S)
+                        if tags_match:
+                            tags_str = tags_match.group(1)
+                            tags = re.findall(r'"([^"]+)"', tags_str)
+                            result["tags"] = tags
+                        
+                        if result:
+                            print(f"✅ Manual extraction successful: {list(result.keys())}")
+                            return result
+                        
+                    except Exception as manual_error:
+                        print(f"❌ Manual extraction also failed: {manual_error}")
+                    
                     return {}
+            
+            return {}
             return {}
 
     # ---------- Topic Generation ----------
@@ -498,22 +570,63 @@ class ContentPipeline:
             topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
             print(f"📝 LinkedIn Post: Generating content for topic: '{topic_title}'")
             
-            # Get MIMIR rules
+            # Get LinkedIn Content Guide structure (Deep Integration)
+            linkedin_structure = ""
             mimir_rules = ""
+            
             if self.engine_kb and self.engine_kb.vectordb:
-                print(f"\n🧠 Fetching MIMIR rules for LinkedIn Post...")
+                print(f"\n{'='*60}")
+                print(f"🎯 DEEP LINKEDIN INTEGRATION")
+                print(f"{'='*60}")
+                
+                # Get LinkedIn-specific structure from Content Guide
+                linkedin_structure = self.engine_kb.get_linkedin_content_structure(
+                    content_type="post",
+                    tone=tone,
+                    persona=audience,
+                    industry=target_industry,
+                    topic=topic_title,
+                    challenge=None  # Can be extracted from niche pain points if needed
+                )
+                
+                # Also get general MIMIR quality rules
                 mimir_rules = self.engine_kb.get_social_rules("LinkedIn Post", topic_title, audience, tone)
-                print(f"✅ MIMIR rules loaded: {len(mimir_rules)} chars\n")
+                
+                print(f"{'='*60}\n")
             
             prompt = f"""
-        You are an AI assistant specialized in crafting high-impact LinkedIn posts for CXO and industry audiences.
+        You are an AI assistant specialized in crafting high-impact LinkedIn posts following the LinkedIn Content Guide structure.
 
         CRITICAL: Your LinkedIn post MUST be specifically about this topic: "{topic_title}"
         
         The topic "{topic_title}" is your PRIMARY focus. Everything else below is background context to help you understand the audience and tone, but your post content MUST directly address "{topic_title}".
 
-        The MUST FOLLOW MIMIR CONTENT GENERATION RULES:
-        {mimir_rules if mimir_rules else "Use professional LinkedIn post best practices"}
+        {'='*60}
+        LINKEDIN CONTENT GUIDE STRUCTURE (FOLLOW THIS EXACTLY):
+        {'='*60}
+        {linkedin_structure if linkedin_structure else "Use standard LinkedIn post structure with hook, context, insight, and close."}
+        {'='*60}
+
+        EXECUTION INSTRUCTIONS:
+        1. SELECT appropriate post type (narrative, jolt, insight, contrarian, or teaching) based on topic and tone
+        2. SELECT appropriate skeleton from the 50 available skeletons that best fits the topic
+        3. FOLLOW the template section prompts for your selected post type:
+           - Hook: Attention-grabbing opening line
+           - Context: Set the scene (2-4 short lines)
+           - Insight: Core lesson or truth
+           - Story: Specific example or moment
+           - Consequence: What happens if ignored
+           - Shift: One actionable change
+           - Close: Reflective question or line that COMPLETES the story arc
+        4. ADAPT for persona ({audience}) and industry ({target_industry})
+        5. MAINTAIN {tone} tone throughout
+        6. ENSURE the storyline closes fully: the ending must resolve the hook, connect back to the opening tension, and complete the narrative loop.
+
+        {'='*60}
+        MIMIR QUALITY RULES:
+        {'='*60}
+        {mimir_rules if mimir_rules else "Use professional LinkedIn post best practices with focus on: Intent & Grounding, Tone Decision, Tailoring Principles, Structural Tailling, and Logic-Emotion Balance."}
+        {'='*60}
 
         Background Context (for tone and style only):
         -Target Industry: {target_industry}
@@ -534,28 +647,41 @@ class ContentPipeline:
             3. Ensure the content is engaging, authoritative, and strategically valuable for {target_industry} decision-makers.
             4. Connect "{topic_title}" to {target_industry}-specific pain points, emerging needs, or opportunities with clarity.
             5. Incorporate storytelling or thought-leadership hooks related to "{topic_title}" to maximize engagement.
-            6. Add 5–7 relevant, high-impact hashtags that relate to both "{topic_title}" and {target_industry}.
-            7. Maintain a credible, CXO-level voice (avoid fluff, generic advice, or overselling).
-            8. You can reference {target_industry} trends, but only as they relate to "{topic_title}".
-            9. The post generated should include:
+            6. The storyline MUST close the loop: the ending must tie back to the hook, resolve the narrative tension, and complete the story.
+            7. Add 5–7 relevant, high-impact hashtags that relate to both "{topic_title}" and {target_industry}.
+            8. Maintain a credible, CXO-level voice (avoid fluff, generic advice, or overselling).
+            9. You can reference {target_industry} trends, but only as they relate to "{topic_title}".
+            10. The post generated should include:
                     - Hooks (attention-grabbing first line)
                     - Storytelling
                     - Educational content
                     - Call-to-action
+                    - A COMPLETE narrative closure that loops back to the introduction
 
         Goal:
         - The post should educate about "{topic_title}", provoke thought, and position the brand/author as a trusted authority.
+        - The story MUST feel complete, not open-ended, and must close the entire narrative arc from hook → insight → resolution.
 
         REMINDER: Your post must be about "{topic_title}" - do not drift to other topics even if they seem related.
 
-        Output in JSON:
+        CRITICAL JSON FORMATTING RULES:
+        1. Return ONLY valid JSON - no markdown code blocks, no ```json``` wrapper
+        2. Do NOT use markdown formatting inside JSON strings (no **, no *, no #)
+        3. Use plain text only inside JSON string values
+        4. Properly escape quotes and newlines
+        5. Use \\n for line breaks inside strings
+        6. Do NOT include numbered lists with markdown inside JSON strings
+        7. Keep formatting simple and clean
+
+        Output in JSON (no markdown, no code blocks):
         {{
           "linkedin": {{
-            "caption": "...",
-            "hashtags": ["#", "#"]
+            "caption": "Plain text caption here with \\n for line breaks",
+            "hashtags": ["#Tag1", "#Tag2"]
           }}
         }}
             """
+
             
             response = self.llm.invoke(prompt).content
             result = self.clean_response(response).get("linkedin", {})
@@ -581,17 +707,31 @@ class ContentPipeline:
             topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
             print(f"📝 LinkedIn Article: Generating content for topic: '{topic_title}'")
             
-            # Get MIMIR rules from Engine KB
+            # Get LinkedIn Content Guide structure (Deep Integration)
+            linkedin_structure = ""
             mimir_rules = ""
+            
             if self.engine_kb and self.engine_kb.vectordb:
                 print(f"\n{'='*60}")
-                print(f"🧠 FETCHING MIMIR RULES FOR LINKEDIN ARTICLE")
+                print(f"🎯 DEEP LINKEDIN ARTICLE INTEGRATION")
                 print(f"{'='*60}")
                 print(f"   Topic: {topic_title}")
                 print(f"   Audience: {audience}")
                 print(f"   Tone: {tone}")
                 print(f"   Platform: LinkedIn Article")
                 
+                # Get LinkedIn-specific structure from Content Guide
+                # Articles use same guide but with longer content
+                linkedin_structure = self.engine_kb.get_linkedin_content_structure(
+                    content_type="article",
+                    tone=tone,
+                    persona=audience,
+                    industry=target_industry,
+                    topic=topic_title,
+                    challenge=None
+                )
+                
+                # Also get general MIMIR quality rules
                 mimir_rules = self.engine_kb.get_social_rules(
                     platform="LinkedIn Article",
                     topic=topic_title,
@@ -600,18 +740,43 @@ class ContentPipeline:
                 )
                 
                 print(f"{'='*60}")
-                print(f"✅ MIMIR RULES LOADED: {len(mimir_rules)} characters")
+                print(f"✅ LinkedIn Guide: {len(linkedin_structure)} chars")
+                print(f"✅ MIMIR Rules: {len(mimir_rules)} chars")
                 print(f"{'='*60}\n")
             
             prompt = f"""
-        You are an AI assistant specialized in crafting comprehensive LinkedIn articles for CXO and industry audiences.
+        You are an AI assistant specialized in crafting comprehensive LinkedIn articles following the LinkedIn Content Guide structure.
 
         CRITICAL: Your LinkedIn article MUST be specifically about this topic: "{topic_title}"
         
         The topic "{topic_title}" is your PRIMARY focus. Everything else below is background context to help you understand the audience and tone, but your article content MUST directly address "{topic_title}".
 
-        MIMIR CONTENT GENERATION RULES (Follow these strictly):
-        {mimir_rules if mimir_rules else "Use professional LinkedIn article best practices"}
+        {'='*60}
+        LINKEDIN CONTENT GUIDE STRUCTURE (FOLLOW THIS EXACTLY):
+        {'='*60}
+        {linkedin_structure if linkedin_structure else "Use standard LinkedIn article structure with comprehensive sections."}
+        {'='*60}
+
+        EXECUTION INSTRUCTIONS FOR ARTICLE (500-600 words):
+        1. SELECT appropriate post type (narrative, jolt, insight, contrarian, or teaching) based on topic and tone
+        2. SELECT appropriate skeleton from the 50 available skeletons that best fits the topic
+        3. EXPAND each section for article length while following template prompts:
+           - Hook: Strong opening paragraph (2-3 sentences)
+           - Context: Detailed scene setting (3-4 paragraphs)
+           - Insight: Deep explanation of the core truth (2-3 paragraphs)
+           - Story: Extended example or case study (2-3 paragraphs)
+           - Consequence: Comprehensive impact analysis (2 paragraphs)
+           - Shift: Detailed actionable framework (2-3 paragraphs)
+           - Close: Thoughtful conclusion with reflection (1-2 paragraphs)
+        4. ADAPT for persona ({audience}) and industry ({target_industry})
+        5. MAINTAIN {tone} tone throughout
+        6. USE clear section breaks and formatting for readability
+
+        {'='*60}
+        MIMIR QUALITY RULES:
+        {'='*60}
+        {mimir_rules if mimir_rules else "Use professional LinkedIn article best practices with focus on: Structure Architecture, Narrative Physics, Integrity & Grounding Law, Anti-Patterns Removal, and Logic-Emotion Balance."}
+        {'='*60}
 
         Background Context (for tone and style only):
         -Target Industry: {target_industry}
@@ -648,7 +813,14 @@ class ContentPipeline:
 
         REMINDER: Your article must be about "{topic_title}" - do not drift to other topics even if they seem related.
 
-        IMPORTANT: Return ONLY valid JSON. Do not use markdown code blocks. Escape all special characters properly.
+        CRITICAL JSON FORMATTING RULES:
+        1. Return ONLY valid JSON - no markdown code blocks, no ```json``` wrapper
+        2. Do NOT use markdown formatting inside JSON strings (no **, no *, no #)
+        3. Use plain text only inside JSON string values
+        4. Properly escape quotes and newlines
+        5. Use \\n for line breaks inside strings
+        6. Do NOT include numbered lists with markdown inside JSON strings
+        7. Keep formatting simple and clean
         
         Output in JSON (no markdown, no code blocks):
         {{
@@ -772,8 +944,11 @@ class ContentPipeline:
             prompt = f"""
         You are an AI assistant specialized in writing high-impact Twitter (X) posts for industry leaders.
 
-        MIMIR CONTENT GENERATION RULES:
-        {mimir_rules if mimir_rules else "Use Twitter/X best practices"}
+        {'='*60}
+        MIMIR CONTENT GENERATION RULES (FOLLOW STRICTLY):
+        {'='*60}
+        {mimir_rules if mimir_rules else "Use Twitter/X best practices with focus on: Intent & Grounding, Structural Tailoring for Twitter, Phrasing Foundations (concise), and Logic-Emotion Balance."}
+        {'='*60}
 
         CRITICAL: Your tweet MUST be specifically about this topic: "{topic_title}"
         
@@ -804,7 +979,14 @@ class ContentPipeline:
 
         REMINDER: Your tweet must be about "{topic_title}" - do not drift to other topics even if they seem related.
 
-        Output in JSON:
+        CRITICAL JSON FORMATTING RULES:
+        1. Return ONLY valid JSON - no markdown code blocks, no ```json``` wrapper
+        2. Do NOT use markdown formatting inside JSON strings (no **, no *, no #)
+        3. Use plain text only inside JSON string values
+        4. Properly escape quotes and newlines
+        5. Use \\n for line breaks inside strings
+
+        Output in JSON (no markdown, no code blocks):
         {{
           "twitter": {{
             "tweet": "...",
@@ -851,8 +1033,11 @@ class ContentPipeline:
             prompt = f"""
         You are an AI assistant specialized in creating YouTube video scripts and descriptions.
 
-        MIMIR CONTENT GENERATION RULES:
-        {mimir_rules if mimir_rules else "Use YouTube best practices"}
+        {'='*60}
+        MIMIR CONTENT GENERATION RULES (FOLLOW STRICTLY):
+        {'='*60}
+        {mimir_rules if mimir_rules else "Use YouTube best practices with focus on: Narrative Physics (story logic, pacing), Structure Architecture (clear flow), Logic-Emotion Balance (engaging storytelling), and Visual Orchestration (consider visual elements)."}
+        {'='*60}
 
         CRITICAL: Your YouTube video MUST be specifically about this topic: "{topic_title}"
         
@@ -886,7 +1071,14 @@ class ContentPipeline:
         Goal:
             Produce an engaging, professional intro and description that not only retains {target_industry} viewers but also boosts discoverability on YouTube search for {target_industry} content.
         
-        Output in JSON:
+        CRITICAL JSON FORMATTING RULES:
+        1. Return ONLY valid JSON - no markdown code blocks, no ```json``` wrapper
+        2. Do NOT use markdown formatting inside JSON strings (no **, no *, no #)
+        3. Use plain text only inside JSON string values
+        4. Properly escape quotes and newlines
+        5. Use \\n for line breaks inside strings
+
+        Output in JSON (no markdown, no code blocks):
         {{
           "youtube": {{
             "script_intro": "...",

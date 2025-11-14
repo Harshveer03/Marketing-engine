@@ -36,6 +36,15 @@ class ContentPipeline:
         self.embedding_model = embedding_model
         self.niche_embedding = None
         
+        # Load Engine KB for MIMIR rules
+        try:
+            from engine_kb_helper import EngineKBHelper
+            self.engine_kb = EngineKBHelper()
+            print("✅ Engine KB (MIMIR) loaded for content generation")
+        except Exception as e:
+            print(f"⚠️ Engine KB not available: {e}")
+            self.engine_kb = None
+        
         # Load niche embedding for quality checking
         self._load_niche_embedding()
         
@@ -489,12 +498,22 @@ class ContentPipeline:
             topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
             print(f"📝 LinkedIn Post: Generating content for topic: '{topic_title}'")
             
+            # Get MIMIR rules
+            mimir_rules = ""
+            if self.engine_kb and self.engine_kb.vectordb:
+                print(f"\n🧠 Fetching MIMIR rules for LinkedIn Post...")
+                mimir_rules = self.engine_kb.get_social_rules("LinkedIn Post", topic_title, audience, tone)
+                print(f"✅ MIMIR rules loaded: {len(mimir_rules)} chars\n")
+            
             prompt = f"""
         You are an AI assistant specialized in crafting high-impact LinkedIn posts for CXO and industry audiences.
 
         CRITICAL: Your LinkedIn post MUST be specifically about this topic: "{topic_title}"
         
         The topic "{topic_title}" is your PRIMARY focus. Everything else below is background context to help you understand the audience and tone, but your post content MUST directly address "{topic_title}".
+
+        The MUST FOLLOW MIMIR CONTENT GENERATION RULES:
+        {mimir_rules if mimir_rules else "Use professional LinkedIn post best practices"}
 
         Background Context (for tone and style only):
         -Target Industry: {target_industry}
@@ -518,6 +537,11 @@ class ContentPipeline:
             6. Add 5–7 relevant, high-impact hashtags that relate to both "{topic_title}" and {target_industry}.
             7. Maintain a credible, CXO-level voice (avoid fluff, generic advice, or overselling).
             8. You can reference {target_industry} trends, but only as they relate to "{topic_title}".
+            9. The post generated should include:
+                    - Hooks (attention-grabbing first line)
+                    - Storytelling
+                    - Educational content
+                    - Call-to-action
 
         Goal:
         - The post should educate about "{topic_title}", provoke thought, and position the brand/author as a trusted authority.
@@ -557,12 +581,37 @@ class ContentPipeline:
             topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
             print(f"📝 LinkedIn Article: Generating content for topic: '{topic_title}'")
             
+            # Get MIMIR rules from Engine KB
+            mimir_rules = ""
+            if self.engine_kb and self.engine_kb.vectordb:
+                print(f"\n{'='*60}")
+                print(f"🧠 FETCHING MIMIR RULES FOR LINKEDIN ARTICLE")
+                print(f"{'='*60}")
+                print(f"   Topic: {topic_title}")
+                print(f"   Audience: {audience}")
+                print(f"   Tone: {tone}")
+                print(f"   Platform: LinkedIn Article")
+                
+                mimir_rules = self.engine_kb.get_social_rules(
+                    platform="LinkedIn Article",
+                    topic=topic_title,
+                    audience=audience,
+                    tone=tone
+                )
+                
+                print(f"{'='*60}")
+                print(f"✅ MIMIR RULES LOADED: {len(mimir_rules)} characters")
+                print(f"{'='*60}\n")
+            
             prompt = f"""
         You are an AI assistant specialized in crafting comprehensive LinkedIn articles for CXO and industry audiences.
 
         CRITICAL: Your LinkedIn article MUST be specifically about this topic: "{topic_title}"
         
         The topic "{topic_title}" is your PRIMARY focus. Everything else below is background context to help you understand the audience and tone, but your article content MUST directly address "{topic_title}".
+
+        MIMIR CONTENT GENERATION RULES (Follow these strictly):
+        {mimir_rules if mimir_rules else "Use professional LinkedIn article best practices"}
 
         Background Context (for tone and style only):
         -Target Industry: {target_industry}
@@ -713,8 +762,18 @@ class ContentPipeline:
             topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
             print(f"🐦 X (Twitter): Generating content for topic: '{topic_title}'")
             
+            # Get MIMIR rules
+            mimir_rules = ""
+            if self.engine_kb and self.engine_kb.vectordb:
+                print(f"\n🧠 Fetching MIMIR rules for Twitter/X...")
+                mimir_rules = self.engine_kb.get_social_rules("Twitter/X", topic_title, audience, tone)
+                print(f"✅ MIMIR rules loaded: {len(mimir_rules)} chars\n")
+            
             prompt = f"""
         You are an AI assistant specialized in writing high-impact Twitter (X) posts for industry leaders.
+
+        MIMIR CONTENT GENERATION RULES:
+        {mimir_rules if mimir_rules else "Use Twitter/X best practices"}
 
         CRITICAL: Your tweet MUST be specifically about this topic: "{topic_title}"
         
@@ -771,6 +830,17 @@ class ContentPipeline:
             pain_points = self._format_pain_points(niche)
             needs = self._format_needs(niche)
             
+            # Get topic title
+            topic_title = topic['title'] if isinstance(topic, dict) else str(topic)
+            print(f"📺 YouTube: Generating content for topic: '{topic_title}'")
+            
+            # Get MIMIR rules
+            mimir_rules = ""
+            if self.engine_kb and self.engine_kb.vectordb:
+                print(f"\n🧠 Fetching MIMIR rules for YouTube...")
+                mimir_rules = self.engine_kb.get_social_rules("YouTube", topic_title, audience, tone)
+                print(f"✅ MIMIR rules loaded: {len(mimir_rules)} chars\n")
+            
             # Use provided industry or fall back to niche industry
             target_industry = industry or niche.get("industry", "Technology")
             
@@ -780,6 +850,9 @@ class ContentPipeline:
             
             prompt = f"""
         You are an AI assistant specialized in creating YouTube video scripts and descriptions.
+
+        MIMIR CONTENT GENERATION RULES:
+        {mimir_rules if mimir_rules else "Use YouTube best practices"}
 
         CRITICAL: Your YouTube video MUST be specifically about this topic: "{topic_title}"
         

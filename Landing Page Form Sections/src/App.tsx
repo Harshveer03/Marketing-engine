@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import { LandingPage } from "./components/LandingPage";
 import { AuthPage } from "./components/AuthPage";
 import { Header } from "./components/Header";
-import { TopNav } from "./components/TopNav";
+import { Footer } from "./components/Footer";
 import { Sidebar } from "./components/Sidebar";
 import { WhatUseSection } from "./components/WhatUseSection";
 import { BrandInfoSection } from "./components/BrandInfoSection";
 import { ScoreSection } from "./components/ScoreSection";
+import { PreviewSection } from "./components/PreviewSection";
 import { motion, AnimatePresence } from "motion/react";
 
-export type Section = "brand-info" | "score" | "what-use";
+export type Section = "brand-info" | "score" | "what-use" | "preview";
 
 // Form data types
 interface FormData {
@@ -79,7 +80,7 @@ export default function App() {
   }, [formData, isAuthenticated]);
 
   const handleNext = () => {
-    const sections: Section[] = ["brand-info", "score", "what-use"];
+    const sections: Section[] = ["brand-info", "score", "what-use", "preview"];
     const currentIndex = sections.indexOf(activeSection);
     if (currentIndex < sections.length - 1) {
       setActiveSection(sections[currentIndex + 1]);
@@ -166,17 +167,20 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative">
+    <div className="h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative flex flex-col overflow-hidden">
       <div
         className="absolute inset-0 opacity-30 bg-cover bg-center"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwdXJwbGUlMjBibHVlJTIwZ3JhZGllbnR8ZW58MXx8fHwxNzYzMDA0MzMwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
         }}
       />
-      <div className="relative z-10">
-        <Header onBackToLanding={handleBackToLanding} onLogout={handleLogout} />
-        <TopNav activeSection={activeSection} onClearForm={handleClearForm} />
-        <div className="flex h-[calc(100vh-160px)]">
+      <div className="relative z-10 flex flex-col h-full min-h-0">
+        <Header 
+          onBackToLanding={handleBackToLanding} 
+          onLogout={handleLogout}
+          onClearForm={handleClearForm}
+        />
+        <div className="flex flex-1 overflow-hidden">
           <Sidebar
             activeSection={activeSection}
             onSectionChange={setActiveSection}
@@ -189,6 +193,7 @@ export default function App() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
+                className="h-full"
               >
                 {activeSection === "brand-info" && (
                   <BrandInfoSection
@@ -207,10 +212,17 @@ export default function App() {
                     }
                   />
                 )}
+                {activeSection === "preview" && (
+                  <PreviewSection
+                    formData={formData.brandInfo}
+                    onUpdateData={(data) => updateFormData("brandInfo", data)}
+                  />
+                )}
               </motion.div>
             </AnimatePresence>
           </main>
         </div>
+        <Footer />
       </div>
     </div>
   );

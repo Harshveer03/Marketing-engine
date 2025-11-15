@@ -42,19 +42,35 @@ export function BrandInfoSection({
     });
   };
   return (
-    <div className="max-w-6xl mx-auto px-4">
+    <div className="max-w-6xl mx-auto px-4 h-full flex flex-col">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-6 py-4"
+        className="text-center mb-8 py-6"
       >
-        <h2 className="text-3xl mb-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <motion.h2 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-4xl font-bold mb-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+        >
           Brand Information & Resources
-        </h2>
-        <p className="text-gray-600 text-base">
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-gray-600 text-lg"
+        >
           Tell us about your brand and upload your assets
-        </p>
+        </motion.p>
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto mt-4 rounded-full"
+        />
       </motion.div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -65,12 +81,16 @@ export function BrandInfoSection({
           transition={{ duration: 0.5, delay: 0.2 }}
           className="space-y-6"
         >
-          <div className="bg-white p-6 shadow-lg border border-gray-100 h-full">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-xl text-gray-800">Basic Information</h3>
+          <div className="bg-white p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-indigo-100 h-full">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-indigo-100">
+              <motion.div 
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg"
+              >
+                <Building2 className="w-6 h-6 text-white" />
+              </motion.div>
+              <h3 className="text-2xl font-bold text-gray-800">Basic Information</h3>
             </div>
 
             <div className="space-y-4 flex flex-col h-[calc(100%-3.5rem)]">
@@ -171,12 +191,16 @@ export function BrandInfoSection({
           transition={{ duration: 0.5, delay: 0.2 }}
           className="space-y-6"
         >
-          <div className="bg-white p-6 shadow-lg border border-gray-100 h-full">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                <Upload className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-xl text-gray-800">Resources</h3>
+          <div className="bg-white p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-purple-100 h-full">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-purple-100">
+              <motion.div 
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg"
+              >
+                <FileText className="w-6 h-6 text-white" />
+              </motion.div>
+              <h3 className="text-2xl font-bold text-gray-800">Resources</h3>
             </div>
 
             <div className="space-y-4">
@@ -198,7 +222,7 @@ export function BrandInfoSection({
                     transition={{ type: "spring", stiffness: 300 }}
                     className="w-12 h-12 mx-auto mb-2 bg-white flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow"
                   >
-                    <Upload className="w-6 h-6 text-indigo-500" />
+                    <Image className="w-6 h-6 text-indigo-500" />
                   </motion.div>
                   <p className="text-gray-700 font-medium text-sm mb-1">
                     Upload logos, images, fonts
@@ -232,7 +256,7 @@ export function BrandInfoSection({
                     transition={{ type: "spring", stiffness: 300 }}
                     className="w-12 h-12 mx-auto mb-2 bg-white flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow"
                   >
-                    <FileText className="w-6 h-6 text-purple-500" />
+                    <Upload className="w-6 h-6 text-purple-500" />
                   </motion.div>
                   <p className="text-gray-700 font-medium text-sm mb-1">
                     Upload marketing materials
@@ -284,13 +308,19 @@ export function BrandInfoSection({
         transition={{ delay: 0.8 }}
         className="flex justify-end mt-4"
       >
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <motion.div whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }}>
           <Button
             onClick={onNext}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg border-0 px-6 py-4"
+            className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold"
           >
-            <span className="flex items-center gap-2">
-              Continue <ArrowRight className="w-4 h-4" />
+            <span className="flex items-center gap-3">
+              Continue to Next Step
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+              >
+                <ArrowRight className="w-5 h-5" />
+              </motion.div>
             </span>
           </Button>
         </motion.div>

@@ -8,6 +8,7 @@ import { WhatUseSection } from "./components/WhatUseSection";
 import { BrandInfoSection } from "./components/BrandInfoSection";
 import { ScoreSection } from "./components/ScoreSection";
 import { PreviewSection } from "./components/PreviewSection";
+import { SplashScreen } from "./components/SplashScreen";
 import { motion, AnimatePresence } from "motion/react";
 
 export type Section = "brand-info" | "score" | "what-use" | "preview";
@@ -24,7 +25,8 @@ interface FormData {
 }
 
 export default function App() {
-  const [showLanding, setShowLanding] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+  const [showLanding, setShowLanding] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeSection, setActiveSection] = useState<Section>("brand-info");
@@ -149,6 +151,18 @@ export default function App() {
   // Show landing page
   if (showLanding) {
     return <LandingPage onGetStarted={handleGetStarted} />;
+  }
+
+  // Show splash screen first
+  if (showSplash) {
+    return (
+      <SplashScreen
+        onComplete={() => {
+          setShowSplash(false);
+          setShowLanding(true);
+        }}
+      />
+    );
   }
 
   // Show auth page

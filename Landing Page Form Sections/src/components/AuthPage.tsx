@@ -5,10 +5,10 @@ import { Label } from "./ui/label";
 import {
   ArrowLeft,
   Mail,
-  Lock,
   User,
   AlertCircle,
   CheckCircle2,
+  Lock,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -207,14 +207,18 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 200 }}
-                  className="w-16 h-16 bg-black rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                  className="w-14 h-14 bg-black rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg p-2"
                 >
-                  <Lock className="w-8 h-8 text-white" strokeWidth={2} />
+                  <img 
+                    src="/1syx-logo.jpeg" 
+                    alt="1SYX Logo" 
+                    className="w-full h-full object-contain rounded-lg"
+                  />
                 </motion.div>
-                <h2 className="text-3xl font-bold mb-2 text-gray-900">
+                <h2 className="text-2xl font-bold mb-2 text-gray-900">
                   {isLogin ? "Welcome Back" : "Create Account"}
                 </h2>
-                <p className="text-gray-600 text-base">
+                <p className="text-gray-600 text-sm">
                   {isLogin
                     ? "Sign in to continue to 1SYX"
                     : "Sign up to get started with 1SYX"}
@@ -237,7 +241,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
               </AnimatePresence>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name Field (Sign Up Only) */}
                 <AnimatePresence>
                   {!isLogin && (
@@ -249,7 +253,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     >
                       <Label
                         htmlFor="name"
-                        className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
+                        className="text-gray-900 font-semibold flex items-center gap-2 mb-2 text-sm"
                       >
                         <User className="w-4 h-4" />
                         Full Name
@@ -261,7 +265,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                         onChange={(e) =>
                           handleInputChange("name", e.target.value)
                         }
-                        className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
+                        className={`border-2 rounded-xl transition-all duration-200 h-11 ${
                           errors.name
                             ? "border-red-300 focus:border-red-500"
                             : "border-gray-300 focus:border-black"
@@ -282,7 +286,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                 <div>
                   <Label
                     htmlFor="email"
-                    className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
+                    className="text-gray-900 font-semibold flex items-center gap-2 mb-2 text-sm"
                   >
                     <Mail className="w-4 h-4" />
                     {isLogin ? "Email" : "Work Email"}
@@ -292,7 +296,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
-                    className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
+                    className={`border-2 rounded-xl transition-all duration-200 h-11 ${
                       errors.email
                         ? "border-red-300 focus:border-red-500"
                         : "border-gray-300 focus:border-black"
@@ -319,7 +323,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                 <div>
                   <Label
                     htmlFor="password"
-                    className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
+                    className="text-gray-900 font-semibold flex items-center gap-2 mb-2 text-sm"
                   >
                     <Lock className="w-4 h-4" />
                     Password
@@ -331,7 +335,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     onChange={(e) =>
                       handleInputChange("password", e.target.value)
                     }
-                    className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
+                    className={`border-2 rounded-xl transition-all duration-200 h-11 ${
                       errors.password
                         ? "border-red-300 focus:border-red-500"
                         : "border-gray-300 focus:border-black"
@@ -363,7 +367,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     >
                       <Label
                         htmlFor="confirmPassword"
-                        className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
+                        className="text-gray-900 font-semibold flex items-center gap-2 mb-2 text-sm"
                       >
                         <Lock className="w-4 h-4" />
                         Confirm Password
@@ -375,7 +379,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                         onChange={(e) =>
                           handleInputChange("confirmPassword", e.target.value)
                         }
-                        className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
+                        className={`border-2 rounded-xl transition-all duration-200 h-11 ${
                           errors.confirmPassword
                             ? "border-red-300 focus:border-red-500"
                             : "border-gray-300 focus:border-black"
@@ -396,11 +400,12 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  className="pt-1"
                 >
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full !bg-black hover:!bg-gray-800 !text-white !border-0 shadow-lg rounded-xl h-12 font-semibold transition-all duration-200 disabled:opacity-50"
+                    className="w-full !bg-black hover:!bg-gray-800 !text-white !border-0 shadow-lg rounded-xl h-11 font-semibold text-sm transition-all duration-200 disabled:opacity-50"
                   >
                     <span className="flex items-center justify-center gap-2">
                       {isLoading ? (
@@ -408,7 +413,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                       ) : (
                         <>
                           {isLogin ? "Sign In" : "Create Account"}
-                          <CheckCircle2 className="w-5 h-5" />
+                          <CheckCircle2 className="w-4 h-4" />
                         </>
                       )}
                     </span>
@@ -418,7 +423,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
 
               {/* Toggle Mode */}
               <div className="mt-5 text-center">
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm">
                   {isLogin
                     ? "Don't have an account?"
                     : "Already have an account?"}{" "}

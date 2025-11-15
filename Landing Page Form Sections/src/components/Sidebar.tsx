@@ -9,9 +9,9 @@ interface SidebarProps {
 }
 
 const sections = [
-  { id: "what-use" as Section, label: "What Use?" },
   { id: "brand-info" as Section, label: "Brand Info" },
   { id: "score" as Section, label: "Score" },
+  { id: "what-use" as Section, label: "What Use?" },
 ];
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {

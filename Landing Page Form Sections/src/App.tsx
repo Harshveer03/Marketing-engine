@@ -9,7 +9,7 @@ import { BrandInfoSection } from "./components/BrandInfoSection";
 import { ScoreSection } from "./components/ScoreSection";
 import { motion, AnimatePresence } from "motion/react";
 
-export type Section = "what-use" | "brand-info" | "score";
+export type Section = "brand-info" | "score" | "what-use";
 
 // Form data types
 interface FormData {
@@ -26,7 +26,7 @@ export default function App() {
   const [showLanding, setShowLanding] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeSection, setActiveSection] = useState<Section>("what-use");
+  const [activeSection, setActiveSection] = useState<Section>("brand-info");
 
   // Form data state
   const [formData, setFormData] = useState<FormData>({
@@ -79,7 +79,7 @@ export default function App() {
   }, [formData, isAuthenticated]);
 
   const handleNext = () => {
-    const sections: Section[] = ["what-use", "brand-info", "score"];
+    const sections: Section[] = ["brand-info", "score", "what-use"];
     const currentIndex = sections.indexOf(activeSection);
     if (currentIndex < sections.length - 1) {
       setActiveSection(sections[currentIndex + 1]);
@@ -102,14 +102,14 @@ export default function App() {
     setIsAuthenticated(true);
     setShowAuth(false);
     setShowLanding(false);
-    setActiveSection("what-use");
+    setActiveSection("brand-info");
   };
 
   const handleBackToLanding = () => {
     setShowLanding(true);
     setShowAuth(false);
     setIsAuthenticated(false);
-    setActiveSection("what-use");
+    setActiveSection("brand-info");
   };
 
   const handleLogout = () => {
@@ -120,7 +120,7 @@ export default function App() {
     setIsAuthenticated(false);
     setShowLanding(true);
     setShowAuth(false);
-    setActiveSection("what-use");
+    setActiveSection("brand-info");
   };
 
   const handleClearForm = () => {
@@ -135,7 +135,7 @@ export default function App() {
     };
     setFormData(emptyFormData);
     localStorage.setItem("formData", JSON.stringify(emptyFormData));
-    setActiveSection("what-use");
+    setActiveSection("brand-info");
   };
 
   const updateFormData = (section: keyof FormData, data: any) => {
@@ -190,6 +190,14 @@ export default function App() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
               >
+                {activeSection === "brand-info" && (
+                  <BrandInfoSection
+                    onNext={handleNext}
+                    formData={formData.brandInfo}
+                    onUpdateData={(data) => updateFormData("brandInfo", data)}
+                  />
+                )}
+                {activeSection === "score" && <ScoreSection />}
                 {activeSection === "what-use" && (
                   <WhatUseSection
                     onNext={handleNext}
@@ -199,14 +207,6 @@ export default function App() {
                     }
                   />
                 )}
-                {activeSection === "brand-info" && (
-                  <BrandInfoSection
-                    onNext={handleNext}
-                    formData={formData.brandInfo}
-                    onUpdateData={(data) => updateFormData("brandInfo", data)}
-                  />
-                )}
-                {activeSection === "score" && <ScoreSection />}
               </motion.div>
             </AnimatePresence>
           </main>

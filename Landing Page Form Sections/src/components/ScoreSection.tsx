@@ -36,43 +36,41 @@ export function ScoreSection() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-12"
+        className="text-center mb-6 py-0 px-12"
       >
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-100 to-purple-100 px-6 py-3 mb-4">
-          <Award className="w-5 h-5 text-indigo-600" />
-          <span className="text-indigo-700 font-semibold">Review & Score</span>
-        </div>
-        <h2 className="text-4xl mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <h2 className="text-5xl mb-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent font-bold">
           Your Brand Assessment
         </h2>
-        <p className="text-gray-600 text-lg">
+        <p className="text-gray-600 text-xl">
           Here's how your brand is shaping up
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-2 gap-4 mb-3">
         {/* Left Column - Completion Status */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white p-8 shadow-lg border border-gray-100"
+          className="bg-white p-6 shadow-lg border border-gray-100"
         >
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5 text-white" />
             </div>
-            <h3 className="text-xl text-gray-800">Completion Status</h3>
+            <h3 className="text-2xl text-gray-800 font-semibold">
+              Completion Status
+            </h3>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {sections.map((section, index) => (
               <motion.div
                 key={section.name}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                className={`flex items-center gap-4 p-4 transition-all duration-200 ${
+                className={`flex items-center gap-3 p-3 transition-all duration-200 ${
                   section.completed
                     ? "bg-green-50 border-2 border-green-200"
                     : "bg-gray-50 border-2 border-gray-200"
@@ -95,7 +93,7 @@ export function ScoreSection() {
                   <Circle className="w-6 h-6 text-gray-400 flex-shrink-0" />
                 )}
                 <span
-                  className={`font-medium ${
+                  className={`font-medium text-base ${
                     section.completed ? "text-green-700" : "text-gray-600"
                   }`}
                 >
@@ -106,12 +104,16 @@ export function ScoreSection() {
           </div>
 
           {/* Progress Bar */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="mt-4 pt-4 border-t border-gray-200">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-gray-600">Overall Progress</span>
-              <span className="text-sm font-semibold text-indigo-600">67%</span>
+              <span className="text-base text-gray-600 font-medium">
+                Overall Progress
+              </span>
+              <span className="text-base font-semibold text-indigo-600">
+                67%
+              </span>
             </div>
-            <div className="h-3 bg-gray-200 overflow-hidden">
+            <div className="h-4 bg-gray-200 overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: "67%" }}
@@ -127,17 +129,17 @@ export function ScoreSection() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-8 shadow-lg border border-indigo-100"
+          className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 shadow-lg border border-indigo-100"
         >
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-white" />
             </div>
-            <h3 className="text-xl text-gray-800">Your Score</h3>
+            <h3 className="text-2xl text-gray-800 font-semibold">Your Score</h3>
           </div>
 
-          {/* Main Score */}
-          <div className="text-center py-8 mb-6 flex flex-col items-center justify-center">
+          {/* Main Score - Square */}
+          <div className="text-center py-4 mb-4 flex flex-col items-center justify-center">
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -149,13 +151,13 @@ export function ScoreSection() {
               }}
               className="relative inline-block"
             >
-              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-2xl">
-                <div className="w-40 h-40 rounded-full bg-white flex flex-col items-center justify-center">
+              <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-2xl">
+                <div className="w-28 h-28 bg-white flex flex-col items-center justify-center">
                   <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="text-6xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
+                    className="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
                   >
                     85
                   </motion.span>
@@ -168,9 +170,9 @@ export function ScoreSection() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 1, type: "spring" }}
-                className="absolute -top-2 -right-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg"
+                className="absolute -top-1 -right-1 w-8 h-8 bg-yellow-400 flex items-center justify-center shadow-lg"
               >
-                <Sparkles className="w-6 h-6 text-white" />
+                <Sparkles className="w-4 h-4 text-white" />
               </motion.div>
             </motion.div>
 
@@ -178,15 +180,15 @@ export function ScoreSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className="text-gray-700 mt-6 font-medium"
+              className="text-gray-700 mt-3 font-medium text-base"
             >
               Great progress! You're on the right track.
             </motion.p>
           </div>
 
           {/* Score Breakdown */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-semibold text-gray-700 mb-3">
+          <div className="space-y-3">
+            <h4 className="text-base font-semibold text-gray-700 mb-2">
               Score Breakdown
             </h4>
             {scoreBreakdown.map((item, index) => (
@@ -195,15 +197,17 @@ export function ScoreSection() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1 + index * 0.1 }}
-                className="bg-white p-4 shadow-sm"
+                className="bg-white p-3 shadow-sm"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-700">{item.label}</span>
-                  <span className="text-sm font-bold text-indigo-600">
+                  <span className="text-base text-gray-700 font-medium">
+                    {item.label}
+                  </span>
+                  <span className="text-base font-bold text-indigo-600">
                     {item.score}%
                   </span>
                 </div>
-                <div className="h-2 bg-gray-200 overflow-hidden">
+                <div className="h-3 bg-gray-200 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${item.score}%` }}
@@ -222,20 +226,20 @@ export function ScoreSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5 }}
-        className="flex justify-between items-center bg-white p-6 shadow-lg border border-gray-100"
+        className="flex justify-between items-center bg-white p-5 shadow-lg border border-gray-100"
       >
         <div>
-          <h4 className="text-lg font-semibold text-gray-800 mb-1">
+          <h4 className="text-base font-semibold text-gray-800 mb-0.5">
             Ready to generate your brand?
           </h4>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 text-xs">
             Complete all sections to unlock full potential
           </p>
         </div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg border-0 px-8 py-6">
+          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg border-0 px-6 py-3">
             <span className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5" />
+              <Sparkles className="w-3 h-4" />
               Let's Generate
             </span>
           </Button>

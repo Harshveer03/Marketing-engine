@@ -8,69 +8,95 @@ import {
   BarChart,
   Users,
   Clock,
+  Plus,
+  Minus,
+  HelpCircle,
+  Shield,
+  DollarSign,
+  Settings,
+  ThumbsUp,
+  ThumbsDown,
+  MessageCircle,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useState } from "react";
 
 interface LandingPageProps {
   onGetStarted: () => void;
 }
 
 export function LandingPage({ onGetStarted }: LandingPageProps) {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [helpfulVotes, setHelpfulVotes] = useState<{
+    [key: number]: "yes" | "no" | null;
+  }>({});
   const features = [
     {
       icon: Zap,
       title: "AI-Powered Insights",
       description:
         "Get intelligent brand recommendations powered by advanced AI technology.",
+      bgImage:
+        "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
     },
     {
       icon: Target,
       title: "Targeted Strategy",
       description:
         "Create brand strategies that resonate with your specific audience.",
+      bgImage:
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
     },
     {
       icon: Sparkles,
       title: "Creative Excellence",
       description:
         "Generate stunning brand materials that stand out from the competition.",
+      bgImage:
+        "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=600&fit=crop",
     },
     {
       icon: BarChart,
       title: "Performance Analytics",
       description:
         "Track and measure your brand performance with detailed analytics.",
+      bgImage:
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
     },
     {
       icon: Users,
       title: "Team Collaboration",
       description:
         "Work seamlessly with your team on brand development projects.",
+      bgImage:
+        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop",
     },
     {
       icon: Clock,
       title: "Fast Turnaround",
       description: "Get your brand materials ready in minutes, not weeks.",
+      bgImage:
+        "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=800&h=600&fit=crop",
     },
   ];
 
   const steps = [
     {
       number: "01",
-      title: "Define Your Goals",
-      description: "Tell us what you want to achieve with your brand.",
-    },
-    {
-      number: "02",
       title: "Share Your Info",
       description: "Provide details about your brand, industry, and audience.",
     },
     {
-      number: "03",
+      number: "02",
       title: "Get Your Score",
       description:
         "Receive a comprehensive brand analysis and recommendations.",
+    },
+    {
+      number: "03",
+      title: "Define Your Goals",
+      description: "Tell us what you want to achieve with your brand.",
     },
     {
       number: "04",
@@ -108,34 +134,57 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
 
   const faqs = [
     {
+      icon: HelpCircle,
       question: "How does 1SYX work?",
       answer:
-        "1SYX uses advanced AI to analyze your brand inputs and generate customized recommendations, strategies, and materials tailored to your specific needs.",
+        "1SYX uses advanced AI to analyze your brand inputs and generate customized recommendations, strategies, and materials tailored to your specific needs. Simply share your brand information, and our AI will provide comprehensive insights and assets.",
+      category: "Getting Started",
     },
     {
+      icon: Clock,
+      question: "How long does it take to get results?",
+      answer:
+        "You'll receive your brand score and initial recommendations within minutes. Complete brand materials and assets are typically ready within 24 hours, depending on the complexity of your requirements.",
+      category: "Getting Started",
+    },
+    {
+      icon: Target,
       question: "What kind of results can I expect?",
       answer:
-        "You'll receive a comprehensive brand score, strategic recommendations, and ready-to-use brand materials including logos, color palettes, and marketing content.",
+        "You'll receive a comprehensive brand score, strategic recommendations, and ready-to-use brand materials including logos, color palettes, typography guidelines, and marketing content tailored to your industry and audience.",
+      category: "Features",
     },
     {
-      question: "Is my data secure?",
-      answer:
-        "Absolutely. We use industry-standard encryption and security measures to protect your brand information and intellectual property.",
-    },
-    {
+      icon: Users,
       question: "Can I collaborate with my team?",
       answer:
-        "Yes! 1SYX supports team collaboration features, allowing multiple stakeholders to contribute and review brand development.",
+        "Yes! 1SYX supports team collaboration features, allowing multiple stakeholders to contribute and review brand development. You can invite team members, share feedback, and work together seamlessly.",
+      category: "Features",
+    },
+    {
+      icon: DollarSign,
+      question: "What are the pricing options?",
+      answer:
+        "We offer flexible pricing plans to suit businesses of all sizes. Start with our free trial to explore the platform, then choose from monthly or annual subscriptions. Enterprise plans are available for larger organizations with custom needs.",
+      category: "Pricing",
+    },
+    {
+      icon: Shield,
+      question: "Is my data secure?",
+      answer:
+        "Absolutely. We use industry-standard encryption and security measures to protect your brand information and intellectual property. Your data is stored securely and never shared with third parties without your explicit consent.",
+      category: "Security",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 relative overflow-hidden">
-      {/* Background Pattern */}
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* Grid pattern background */}
       <div
-        className="absolute inset-0 opacity-10 bg-cover bg-center"
+        className="absolute inset-0 opacity-[0.15]"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwdXJwbGUlMjBibHVlJTIwZ3JhZGllbnR8ZW58MXx8fHwxNzYzMDA0MzMwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
+          backgroundImage: `linear-gradient(to right, #d1d5db 1px, transparent 1px), linear-gradient(to bottom, #d1d5db 1px, transparent 1px)`,
+          backgroundSize: "40px 40px",
         }}
       />
 
@@ -186,7 +235,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 <Button
                   onClick={onGetStarted}
                   variant="outline"
-                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-100"
+                  className="!border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100 !bg-white font-semibold"
                 >
                   Login
                 </Button>
@@ -197,7 +246,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               >
                 <Button
                   onClick={onGetStarted}
-                  className="bg-black hover:bg-gray-800 text-white border-0 shadow-md"
+                  className="!bg-black hover:!bg-gray-800 !text-white !border-0 shadow-md"
                 >
                   Get Started
                 </Button>
@@ -237,7 +286,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 >
                   <Button
                     onClick={onGetStarted}
-                    className="bg-black hover:bg-gray-800 text-white border-0 shadow-xl rounded-xl px-8 py-6 text-lg"
+                    className="!bg-black hover:!bg-gray-800 !text-white !border-0 shadow-xl rounded-xl px-8 py-6 text-lg font-semibold"
                   >
                     <span className="flex items-center gap-2">
                       Start Building Your Brand
@@ -251,7 +300,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 >
                   <Button
                     variant="outline"
-                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-xl px-8 py-6 text-lg"
+                    className="!border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100 !bg-white rounded-xl px-8 py-6 text-lg font-semibold"
                   >
                     Watch Demo
                   </Button>
@@ -302,19 +351,19 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* Trusted By Section */}
-        <section className="bg-white/80 backdrop-blur-sm py-12 border-y border-gray-200">
+        <section className="bg-gray-900 py-12 border-y border-gray-200">
           <div className="max-w-7xl mx-auto px-8">
-            <p className="text-center text-gray-600 mb-8">
+            <p className="text-center text-gray-600 mb-8 font-medium text-xl">
               Trusted by leading brands worldwide
             </p>
-            <div className="flex justify-center items-center gap-12 opacity-60">
-              <div className="text-2xl font-bold text-gray-700">ACME Corp</div>
-              <div className="text-2xl font-bold text-gray-700">TechVision</div>
-              <div className="text-2xl font-bold text-gray-700">Innovate</div>
-              <div className="text-2xl font-bold text-gray-700">
+            <div className="flex justify-center items-center gap-12">
+              <div className="text-2xl font-bold text-gray-400">ACME Corp</div>
+              <div className="text-2xl font-bold text-gray-400">TechVision</div>
+              <div className="text-2xl font-bold text-gray-400">Innovate</div>
+              <div className="text-2xl font-bold text-gray-400">
                 BrightFuture
               </div>
-              <div className="text-2xl font-bold text-gray-700">NextGen</div>
+              <div className="text-2xl font-bold text-gray-400">NextGen</div>
             </div>
           </div>
         </section>
@@ -345,13 +394,28 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200"
+                className="bg-white p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 relative overflow-hidden group"
               >
-                <div className="w-14 h-14 bg-black rounded-xl flex items-center justify-center mb-6">
-                  <feature.icon className="w-7 h-7 text-white" />
+                {/* Background Image - Very Subtle */}
+                <div
+                  className="absolute inset-0 opacity-[0.15] group-hover:opacity-[0.12] transition-opacity duration-500 bg-cover bg-center"
+                  style={{ backgroundImage: `url('${feature.bgImage}')` }}
+                />
+
+                {/* White overlay for text readability */}
+                <div className="absolute inset-0 bg-white/50" />
+
+                <div className="relative z-10">
+                  <div className="w-14 h-14 bg-black flex items-center justify-center mb-6">
+                    <feature.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl mb-3 text-gray-900 font-bold">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-800 font-medium leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="text-xl mb-3 text-gray-800">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -362,6 +426,17 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           id="how-it-works"
           className="bg-gray-900 py-20 relative overflow-hidden"
         >
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 opacity-10 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop')`,
+            }}
+          />
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/80 to-gray-900/90" />
+
           <div className="max-w-7xl mx-auto px-8 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -384,20 +459,17 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="relative"
+                  className="relative flex"
                 >
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300 flex flex-col h-full w-full">
                     <div className="text-5xl font-bold text-white/30 mb-4">
                       {step.number}
                     </div>
                     <h3 className="text-xl mb-3 text-white">{step.title}</h3>
-                    <p className="text-gray-300">{step.description}</p>
+                    <p className="text-gray-300 flex-grow">
+                      {step.description}
+                    </p>
                   </div>
-                  {index < steps.length - 1 && (
-                    <div className="hidden xl:block absolute top-1/2 -right-4 transform -translate-y-1/2">
-                      <ArrowRight className="w-8 h-8 text-white/40" />
-                    </div>
-                  )}
                 </motion.div>
               ))}
             </div>
@@ -479,10 +551,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* FAQ Section */}
-        <section
-          id="faq"
-          className="bg-white/80 backdrop-blur-sm py-20 border-y border-gray-200"
-        >
+        <section id="faq" className="bg-white py-20 border-y border-gray-200">
           <div className="max-w-4xl mx-auto px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -497,7 +566,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </p>
             </motion.div>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {faqs.map((faq, index) => (
                 <motion.div
                   key={index}
@@ -505,16 +574,154 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
+                  className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300"
                 >
-                  <h3 className="text-xl mb-3 text-gray-800 flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-black" />
-                    {faq.question}
-                  </h3>
-                  <p className="text-gray-600 ml-9">{faq.answer}</p>
+                  <button
+                    onClick={() =>
+                      setOpenFaqIndex(openFaqIndex === index ? null : index)
+                    }
+                    className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <div className="flex items-center gap-4 flex-1">
+                      {/* Question Number */}
+                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-bold text-gray-700">
+                          {index + 1}
+                        </span>
+                      </div>
+
+                      {/* Icon */}
+                      <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+                        <faq.icon className="w-6 h-6 text-white" />
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            {faq.category}
+                          </span>
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900">
+                          {faq.question}
+                        </h3>
+                      </div>
+                    </div>
+                    <motion.div
+                      animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex-shrink-0 ml-4"
+                    >
+                      {openFaqIndex === index ? (
+                        <Minus className="w-6 h-6 text-gray-900" />
+                      ) : (
+                        <Plus className="w-6 h-6 text-gray-900" />
+                      )}
+                    </motion.div>
+                  </button>
+
+                  <AnimatePresence>
+                    {openFaqIndex === index && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 pb-6 pt-2 border-t border-gray-100">
+                          <div className="pl-20 pr-10">
+                            <p className="text-gray-700 leading-relaxed mb-6">
+                              {faq.answer}
+                            </p>
+
+                            {/* Was this helpful section */}
+                            <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                              <span className="text-sm text-gray-600 font-medium">
+                                Was this helpful?
+                              </span>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setHelpfulVotes({
+                                      ...helpfulVotes,
+                                      [index]: "yes",
+                                    });
+                                  }}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
+                                    helpfulVotes[index] === "yes"
+                                      ? "bg-green-50 border-green-500 text-green-700"
+                                      : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                  }`}
+                                >
+                                  <ThumbsUp className="w-4 h-4" />
+                                  <span className="text-sm font-medium">
+                                    Yes
+                                  </span>
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setHelpfulVotes({
+                                      ...helpfulVotes,
+                                      [index]: "no",
+                                    });
+                                  }}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
+                                    helpfulVotes[index] === "no"
+                                      ? "bg-red-50 border-red-500 text-red-700"
+                                      : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                  }`}
+                                >
+                                  <ThumbsDown className="w-4 h-4" />
+                                  <span className="text-sm font-medium">
+                                    No
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               ))}
             </div>
+
+            {/* Still have questions CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="mt-12 text-center"
+            >
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8 border-2 border-gray-200">
+                <MessageCircle className="w-12 h-12 text-gray-900 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Still have questions?
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Can't find the answer you're looking for? Our support team is
+                  here to help.
+                </p>
+                <div className="flex gap-4 justify-center">
+                  <Button
+                    onClick={onGetStarted}
+                    className="!bg-black hover:!bg-gray-800 !text-white !border-0 shadow-lg"
+                  >
+                    Contact Support
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="!border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100 !bg-white"
+                  >
+                    View Documentation
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
@@ -525,31 +732,116 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-black rounded-3xl p-16 text-center relative overflow-hidden shadow-2xl"
+            className="rounded-3xl p-16 text-center relative overflow-hidden shadow-2xl border-2 border-gray-300"
           >
+            {/* Background Image */}
+            <div
+              className="absolute inset-0 rounded-3xl"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1920&h=1080&fit=crop')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+
+            {/* Dark overlay for text readability */}
+            <div
+              className="absolute inset-0 rounded-3xl"
+              style={{
+                background:
+                  "linear-gradient(to bottom right, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85))",
+              }}
+            />
+
             <div className="relative z-10">
-              <h2 className="text-5xl mb-6 text-white">
+              {/* Badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 mb-6"
+              >
+                <Sparkles className="w-5 h-5" style={{ color: "#fde047" }} />
+                <span
+                  className="font-semibold text-sm"
+                  style={{ color: "#ffffff" }}
+                >
+                  Limited Time Offer
+                </span>
+              </motion.div>
+
+              <h2
+                className="text-5xl md:text-6xl mb-6 font-bold leading-tight"
+                style={{ color: "#ffffff" }}
+              >
                 Ready to Transform Your Brand?
               </h2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <p
+                className="text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
+                style={{ color: "#e5e7eb" }}
+              >
                 Join thousands of businesses using 1SYX to create powerful,
                 memorable brands that drive results.
               </p>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  onClick={onGetStarted}
-                  className="bg-white text-black hover:bg-gray-100 border-0 shadow-xl rounded-xl px-10 py-6 text-lg"
+
+              {/* CTA Buttons */}
+              <div className="flex gap-4 justify-center mb-6">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  Get Started for Free
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </motion.div>
-              <p className="text-gray-300 mt-4">
-                No credit card required • 14-day free trial
-              </p>
+                  <Button
+                    onClick={onGetStarted}
+                    className="bg-white text-black hover:bg-gray-100 border-0 shadow-xl rounded-xl px-10 py-6 text-lg font-semibold"
+                  >
+                    Get Started for Free
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="outline"
+                    className="!border-2 !border-white !text-white hover:!bg-white/10 !bg-transparent rounded-xl px-10 py-6 text-lg font-semibold"
+                  >
+                    Schedule a Demo
+                  </Button>
+                </motion.div>
+              </div>
+
+              {/* Trust indicators */}
+              <div className="flex items-center justify-center gap-8 text-sm">
+                <div className="flex items-center gap-2">
+                  <CheckCircle
+                    className="w-5 h-5"
+                    style={{ color: "#4ade80" }}
+                  />
+                  <span className="font-medium" style={{ color: "#e5e7eb" }}>
+                    No credit card required
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle
+                    className="w-5 h-5"
+                    style={{ color: "#4ade80" }}
+                  />
+                  <span className="font-medium" style={{ color: "#e5e7eb" }}>
+                    14-day free trial
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle
+                    className="w-5 h-5"
+                    style={{ color: "#4ade80" }}
+                  />
+                  <span className="font-medium" style={{ color: "#e5e7eb" }}>
+                    Cancel anytime
+                  </span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </section>

@@ -1,7 +1,15 @@
 import { Section } from "../App";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "./ui/button";
-import { HelpCircle, FileText, Eye, BarChart3, Target } from "lucide-react";
+import {
+  HelpCircle,
+  FileText,
+  Eye,
+  BarChart3,
+  Target,
+  Menu,
+} from "lucide-react";
+import { useState } from "react";
 
 interface SidebarProps {
   activeSection: Section;
@@ -13,38 +21,50 @@ const sections = [
     id: "brand-info" as Section,
     label: "Brand Info",
     icon: FileText,
-    color: "from-blue-500 to-cyan-500",
+    description: "Enter details",
   },
   {
     id: "preview" as Section,
     label: "Preview",
     icon: Eye,
-    color: "from-purple-500 to-pink-500",
+    description: "Review info",
   },
   {
     id: "score" as Section,
     label: "Score",
     icon: BarChart3,
-    color: "from-green-500 to-emerald-500",
+    description: "View results",
   },
   {
     id: "what-use" as Section,
     label: "What Use?",
     icon: Target,
-    color: "from-orange-500 to-red-500",
+    description: "Select option",
   },
 ];
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   return (
-    <aside className="w-72 border-r border-gray-200 bg-gradient-to-b from-white to-gray-50 flex flex-col shadow-xl min-h-full">
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">
-          Navigation
-        </h3>
+    <motion.aside
+      animate={{ width: isCollapsed ? 80 : 288 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="border-r border-gray-200 bg-white flex flex-col shadow-xl min-h-full"
+    >
+      <div className="p-6 border-b border-gray-200 flex items-center justify-center">
+        <motion.button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          <Menu className="w-6 h-6 text-gray-900" />
+        </motion.button>
       </div>
 
-      {sections.map((section, index) => {
+      {sections.map((section) => {
         const Icon = section.icon;
         const isActive = activeSection === section.id;
 
@@ -52,11 +72,12 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           <motion.button
             key={section.id}
             onClick={() => onSectionChange(section.id)}
-            whileHover={{ x: 4 }}
+            whileHover={{ x: isCollapsed ? 0 : 4 }}
             whileTap={{ scale: 0.98 }}
             className={`border-b border-gray-200 p-6 text-left transition-all duration-300 relative group ${
               isActive ? "bg-gray-100" : "hover:bg-gray-50"
             }`}
+            title={isCollapsed ? section.label : ""}
           >
             {isActive && (
               <motion.div
@@ -66,45 +87,49 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
               />
             )}
 
-            <div className="relative flex items-center gap-4">
+            <div
+              className={`relative flex items-center ${
+                isCollapsed ? "justify-center" : "gap-4"
+              }`}
+            >
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                   isActive
-                    ? `bg-gradient-to-br ${section.color} shadow-lg`
-                    : "bg-gray-100 group-hover:bg-gradient-to-br group-hover:" +
-                      section.color
+                    ? "bg-gray-100 shadow-lg"
+                    : "bg-gray-100 group-hover:bg-gray-200"
                 }`}
               >
-                <Icon
-                  className={`w-5 h-5 ${
-                    isActive
-                      ? "text-white"
-                      : "text-gray-600 group-hover:text-white"
-                  }`}
-                />
+                <Icon className="w-5 h-5 text-black" />
               </motion.div>
 
-              <div className="flex-1">
-                <div
-                  className={`font-semibold transition-colors ${
-                    isActive
-                      ? "text-black"
-                      : "text-gray-700 group-hover:text-black"
-                  }`}
-                >
-                  {section.label}
-                </div>
-                <div className="text-xs text-gray-500 mt-0.5">
-                  {index === 0 && "Enter details"}
-                  {index === 1 && "Review info"}
-                  {index === 2 && "View results"}
-                  {index === 3 && "Select option"}
-                </div>
-              </div>
+              <AnimatePresence>
+                {!isCollapsed && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex-1 overflow-hidden"
+                  >
+                    <div
+                      className={`font-semibold transition-colors whitespace-nowrap ${
+                        isActive
+                          ? "text-black"
+                          : "text-gray-700 group-hover:text-black"
+                      }`}
+                    >
+                      {section.label}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-0.5 whitespace-nowrap">
+                      {section.description}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              {isActive && (
+              {isActive && !isCollapsed && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -122,15 +147,42 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           whileHover={{ scale: 1.03, y: -2 }}
           whileTap={{ scale: 0.97 }}
         >
-          <Button className="w-full bg-black hover:bg-gray-800 text-white border-0 shadow-lg hover:shadow-xl gap-2 py-6 rounded-xl transition-all duration-300">
+          <Button
+            className={`w-full bg-black hover:bg-gray-800 text-white border-0 shadow-lg hover:shadow-xl py-6 rounded-xl transition-all duration-300 ${
+              isCollapsed ? "px-0 justify-center" : "gap-2"
+            }`}
+            title={isCollapsed ? "Need Help?" : ""}
+          >
             <HelpCircle className="w-5 h-5" />
-            <span className="font-semibold">Need Help?</span>
+            <AnimatePresence>
+              {!isCollapsed && (
+                <motion.span
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="font-semibold whitespace-nowrap overflow-hidden"
+                >
+                  Need Help?
+                </motion.span>
+              )}
+            </AnimatePresence>
           </Button>
         </motion.div>
-        <p className="text-xs text-center text-gray-500 mt-3">
-          We're here to assist you 24/7
-        </p>
+        <AnimatePresence>
+          {!isCollapsed && (
+            <motion.p
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="text-xs text-center text-gray-500 mt-3 overflow-hidden"
+            >
+              We're here to assist you 24/7
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

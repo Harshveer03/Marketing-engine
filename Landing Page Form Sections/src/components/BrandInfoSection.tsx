@@ -53,7 +53,8 @@ export function BrandInfoSection({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-4xl font-bold mb-3 text-gray-900"
+          className="text-5xl font-bold mb-4 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+          style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.9)" }}
         >
           Brand Information & Resources
         </motion.h2>
@@ -61,7 +62,8 @@ export function BrandInfoSection({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-gray-600 text-lg"
+          className="text-white text-xl font-semibold drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]"
+          style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.9)" }}
         >
           Tell us about your brand and upload your assets
         </motion.p>
@@ -75,16 +77,16 @@ export function BrandInfoSection({
           transition={{ duration: 0.5, delay: 0.2 }}
           className="space-y-6"
         >
-          <div className="bg-white p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-indigo-100 h-full">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-indigo-100">
+          <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-200 h-full">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
-                className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg"
+                className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg"
               >
                 <Building2 className="w-6 h-6 text-white" />
               </motion.div>
-              <h3 className="text-2xl font-bold text-gray-800">
+              <h3 className="text-2xl font-bold text-gray-900">
                 Basic Information
               </h3>
             </div>
@@ -187,16 +189,16 @@ export function BrandInfoSection({
           transition={{ duration: 0.5, delay: 0.2 }}
           className="space-y-6"
         >
-          <div className="bg-white p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-purple-100 h-full">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-purple-100">
+          <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-200 h-full">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
-                className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg"
+                className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg"
               >
                 <FileText className="w-6 h-6 text-white" />
               </motion.div>
-              <h3 className="text-2xl font-bold text-gray-800">Resources</h3>
+              <h3 className="text-2xl font-bold text-gray-900">Resources</h3>
             </div>
 
             <div className="space-y-4">
@@ -302,7 +304,7 @@ export function BrandInfoSection({
         >
           <Button
             onClick={onNext}
-            className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold"
+            className="bg-black hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold"
           >
             <span className="flex items-center gap-3">
               Continue to Next Step

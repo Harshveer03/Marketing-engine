@@ -13,6 +13,18 @@ import { motion, AnimatePresence } from "motion/react";
 
 export type Section = "brand-info" | "score" | "what-use" | "preview";
 
+// Background images for each section
+const sectionBackgrounds: Record<Section, string> = {
+  "brand-info":
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop", // Office workspace
+  preview:
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&h=1080&fit=crop", // Business planning/documents
+  score:
+    "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1920&h=1080&fit=crop", // Success/achievement
+  "what-use":
+    "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1920&h=1080&fit=crop", // Creative/design workspace
+};
+
 // Form data types
 interface FormData {
   whatUse: string | null;
@@ -82,7 +94,7 @@ export default function App() {
   }, [formData, isAuthenticated]);
 
   const handleNext = () => {
-    const sections: Section[] = ["brand-info", "score", "what-use", "preview"];
+    const sections: Section[] = ["brand-info", "preview", "score", "what-use"];
     const currentIndex = sections.indexOf(activeSection);
     if (currentIndex < sections.length - 1) {
       setActiveSection(sections[currentIndex + 1]);
@@ -181,16 +193,25 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative flex flex-col overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-30 bg-cover bg-center"
+    <div className="h-screen bg-white relative flex flex-col overflow-hidden">
+      {/* Background Image with transition */}
+      <motion.div
+        key={activeSection}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwdXJwbGUlMjBibHVlJTIwZ3JhZGllbnR8ZW58MXx8fHwxNzYzMDA0MzMwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
+          backgroundImage: `url('${sectionBackgrounds[activeSection]}')`,
         }}
       />
+
+      {/* White overlay for readability */}
+      <div className="absolute inset-0 bg-white/90" />
+
       <div className="relative z-10 flex flex-col h-full min-h-0">
-        <Header 
-          onBackToLanding={handleBackToLanding} 
+        <Header
+          onBackToLanding={handleBackToLanding}
           onLogout={handleLogout}
           onClearForm={handleClearForm}
         />
@@ -230,6 +251,7 @@ export default function App() {
                   <PreviewSection
                     formData={formData.brandInfo}
                     onUpdateData={(data) => updateFormData("brandInfo", data)}
+                    onNext={handleNext}
                   />
                 )}
               </motion.div>

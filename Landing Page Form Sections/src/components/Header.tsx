@@ -29,45 +29,45 @@ export function Header({
 
   return (
     <header
-      className={`border-b border-gray-200 bg-white/95 backdrop-blur-md px-8 py-4 flex items-center justify-between sticky top-0 z-50 transition-all duration-300 ${
+      className={`border-b border-gray-200 bg-white/95 backdrop-blur-md px-6 py-3 flex items-center justify-between sticky top-0 z-50 transition-all duration-300 ${
         scrolled ? "shadow-lg" : "shadow-sm"
       }`}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
         {onBackToLanding && (
           <motion.button
             onClick={onBackToLanding}
             whileHover={{ scale: 1.1, x: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 mr-1"
+            className="p-1.5 hover:bg-gray-100 rounded-xl transition-all duration-200 mr-0.5"
             title="Back to landing page"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <ArrowLeft className="w-4 h-4 text-gray-600" />
           </motion.button>
         )}
         <motion.div whileHover={{ scale: 1.05 }}>
-          <img src="/1syx-logo.jpeg" alt="1SYX Logo" className="h-10 w-auto" />
+          <img src="/1syx-logo.jpeg" alt="1SYX Logo" className="h-8 w-auto" />
         </motion.div>
         <div className="flex flex-col">
-          <span className="font-bold text-gray-900 text-lg tracking-wider">
+          <span className="font-bold text-gray-900 text-base tracking-wider">
             1SYX
           </span>
-          <span className="text-xs text-gray-600 uppercase tracking-wide">
+          <span className="text-[10px] text-gray-600 uppercase tracking-wide">
             1-System For Your 'X' Factor
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {onClearForm && (
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               onClick={onClearForm}
               variant="outline"
-              className="border-2 border-gray-300 hover:border-red-400 hover:bg-red-50 text-gray-700 hover:text-red-600 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+              className="border-2 border-gray-300 hover:border-red-400 hover:bg-red-50 text-gray-700 hover:text-red-600 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md text-sm py-2 px-3"
             >
-              <span className="flex items-center gap-2">
-                <RotateCcw className="w-4 h-4" />
+              <span className="flex items-center gap-1.5">
+                <RotateCcw className="w-3.5 h-3.5" />
                 Clear Form
               </span>
             </Button>
@@ -77,13 +77,13 @@ export function Header({
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          className="p-2.5 hover:bg-gray-100 rounded-xl transition-all duration-200 relative group"
+          className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 relative group"
         >
-          <Bell className="w-5 h-5 text-gray-600 group-hover:text-black transition-colors" />
+          <Bell className="w-4 h-4 text-gray-600 group-hover:text-black transition-colors" />
           <motion.span
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full shadow-lg"
+            className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full shadow-lg"
           />
         </motion.button>
 
@@ -92,9 +92,9 @@ export function Header({
             onClick={() => setShowUserMenu(!showUserMenu)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ring-2 ring-white"
+            className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ring-2 ring-white"
           >
-            <User className="w-5 h-5" />
+            <User className="w-4 h-4" />
           </motion.button>
 
           <AnimatePresence>

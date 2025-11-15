@@ -209,9 +209,9 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                   transition={{ type: "spring", stiffness: 200 }}
                   className="w-14 h-14 bg-black rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg p-2"
                 >
-                  <img 
-                    src="/1syx-logo.jpeg" 
-                    alt="1SYX Logo" 
+                  <img
+                    src="/1syx-logo.jpeg"
+                    alt="1SYX Logo"
                     className="w-full h-full object-contain rounded-lg"
                   />
                 </motion.div>

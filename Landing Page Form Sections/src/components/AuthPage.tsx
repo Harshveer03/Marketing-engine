@@ -153,64 +153,71 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
-      {/* Background Pattern */}
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* Subtle background pattern */}
       <div
-        className="absolute inset-0 opacity-20 bg-cover bg-center"
+        className="absolute inset-0 opacity-[0.4]"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwdXJwbGUlMjBibHVlJTIwZ3JhZGllbnR8ZW58MXx8fHwxNzYzMDA0MzMwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239ca3af' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v6h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
       />
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="bg-white/95 backdrop-blur-md border-b border-indigo-100 shadow-sm">
-          <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={onBackToLanding}
-                className="p-2 hover:bg-indigo-50 rounded-lg transition-all duration-200 mr-2"
-                title="Back to landing page"
-              >
-                <ArrowLeft className="w-5 h-5 text-gray-600" />
-              </button>
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">BG</span>
+        <header className="bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-sm">
+          <div
+            className="max-w-7xl mx-auto px-8"
+            style={{ paddingTop: "1.375rem", paddingBottom: "1.375rem" }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={onBackToLanding}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-200 mr-1"
+                  title="Back to landing page"
+                >
+                  <ArrowLeft className="w-5 h-5 text-gray-700" />
+                </button>
+                <img
+                  src="/1syx-logo.jpeg"
+                  alt="1SYX Logo"
+                  className="h-10 w-auto"
+                />
+                <span className="text-2xl font-bold text-gray-900 tracking-tight">
+                  1SYX
+                </span>
               </div>
-              <span className="text-xl font-semibold text-gray-800">
-                BrandGen
-              </span>
             </div>
           </div>
         </header>
 
         {/* Auth Form */}
-        <div className="flex items-center justify-center min-h-[calc(100vh-80px)] p-8">
+        <div className="flex items-center justify-center min-h-[calc(100vh-88px)] py-12 px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="w-full"
-            style={{ maxWidth: "420px" }}
+            style={{ maxWidth: "440px" }}
           >
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-indigo-100">
+            <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
               {/* Header */}
               <div className="text-center mb-6">
                 <motion.div
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 200 }}
-                  className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3"
+                  className="w-16 h-16 bg-black rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg"
                 >
-                  <Lock className="w-7 h-7 text-white" />
+                  <Lock className="w-8 h-8 text-white" strokeWidth={2} />
                 </motion.div>
-                <h2 className="text-2xl mb-1">
+                <h2 className="text-3xl font-bold mb-2 text-gray-900">
                   {isLogin ? "Welcome Back" : "Create Account"}
                 </h2>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-base">
                   {isLogin
-                    ? "Sign in to continue to BrandGen"
-                    : "Sign up to get started with BrandGen"}
+                    ? "Sign in to continue to 1SYX"
+                    : "Sign up to get started with 1SYX"}
                 </p>
               </div>
 
@@ -221,7 +228,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 flex items-center gap-3"
+                    className="bg-red-50 border border-red-200 rounded-xl p-3 mb-5 flex items-center gap-3"
                   >
                     <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                     <p className="text-red-700 text-sm">{errors.general}</p>
@@ -230,7 +237,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
               </AnimatePresence>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Name Field (Sign Up Only) */}
                 <AnimatePresence>
                   {!isLogin && (
@@ -242,7 +249,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     >
                       <Label
                         htmlFor="name"
-                        className="text-gray-700 flex items-center gap-2"
+                        className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
                       >
                         <User className="w-4 h-4" />
                         Full Name
@@ -254,10 +261,10 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                         onChange={(e) =>
                           handleInputChange("name", e.target.value)
                         }
-                        className={`mt-2 border-2 rounded-xl transition-all duration-200 ${
+                        className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
                           errors.name
-                            ? "border-red-300 focus:border-red-400"
-                            : "border-indigo-200 focus:border-indigo-400"
+                            ? "border-red-300 focus:border-red-500"
+                            : "border-gray-300 focus:border-black"
                         }`}
                         placeholder="John Doe"
                       />
@@ -275,7 +282,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                 <div>
                   <Label
                     htmlFor="email"
-                    className="text-gray-700 flex items-center gap-2"
+                    className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
                   >
                     <Mail className="w-4 h-4" />
                     {isLogin ? "Email" : "Work Email"}
@@ -285,10 +292,10 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
-                    className={`mt-2 border-2 rounded-xl transition-all duration-200 ${
+                    className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
                       errors.email
-                        ? "border-red-300 focus:border-red-400"
-                        : "border-indigo-200 focus:border-indigo-400"
+                        ? "border-red-300 focus:border-red-500"
+                        : "border-gray-300 focus:border-black"
                     }`}
                     placeholder={
                       isLogin ? "your@email.com" : "your@company.com"
@@ -312,7 +319,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                 <div>
                   <Label
                     htmlFor="password"
-                    className="text-gray-700 flex items-center gap-2"
+                    className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
                   >
                     <Lock className="w-4 h-4" />
                     Password
@@ -324,10 +331,10 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     onChange={(e) =>
                       handleInputChange("password", e.target.value)
                     }
-                    className={`mt-2 border-2 rounded-xl transition-all duration-200 ${
+                    className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
                       errors.password
-                        ? "border-red-300 focus:border-red-400"
-                        : "border-indigo-200 focus:border-indigo-400"
+                        ? "border-red-300 focus:border-red-500"
+                        : "border-gray-300 focus:border-black"
                     }`}
                     placeholder="••••••••"
                   />
@@ -356,7 +363,7 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                     >
                       <Label
                         htmlFor="confirmPassword"
-                        className="text-gray-700 flex items-center gap-2"
+                        className="text-gray-900 font-semibold flex items-center gap-2 mb-2"
                       >
                         <Lock className="w-4 h-4" />
                         Confirm Password
@@ -368,10 +375,10 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                         onChange={(e) =>
                           handleInputChange("confirmPassword", e.target.value)
                         }
-                        className={`mt-2 border-2 rounded-xl transition-all duration-200 ${
+                        className={`mt-2 border-2 rounded-xl transition-all duration-200 h-12 ${
                           errors.confirmPassword
-                            ? "border-red-300 focus:border-red-400"
-                            : "border-indigo-200 focus:border-indigo-400"
+                            ? "border-red-300 focus:border-red-500"
+                            : "border-gray-300 focus:border-black"
                         }`}
                         placeholder="••••••••"
                       />
@@ -393,15 +400,9 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white border-0 shadow-lg rounded-xl py-3 relative overflow-hidden"
+                    className="w-full !bg-black hover:!bg-gray-800 !text-white !border-0 shadow-lg rounded-xl h-12 font-semibold transition-all duration-200 disabled:opacity-50"
                   >
-                    <div
-                      className="absolute inset-0 opacity-20 bg-cover bg-center"
-                      style={{
-                        backgroundImage: `url('https://images.unsplash.com/photo-1646038572891-86b08ccd6719?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGdyYWRpZW50JTIwd2F2ZXN8ZW58MXx8fHwxNzYzMDExMDc0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`,
-                      }}
-                    />
-                    <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="flex items-center justify-center gap-2">
                       {isLoading ? (
                         "Processing..."
                       ) : (
@@ -416,15 +417,15 @@ export function AuthPage({ onAuthSuccess, onBackToLanding }: AuthPageProps) {
               </form>
 
               {/* Toggle Mode */}
-              <div className="mt-4 text-center">
-                <p className="text-gray-600 text-sm">
+              <div className="mt-5 text-center">
+                <p className="text-gray-600">
                   {isLogin
                     ? "Don't have an account?"
                     : "Already have an account?"}{" "}
                   <button
                     type="button"
                     onClick={toggleMode}
-                    className="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors"
+                    className="text-black hover:text-gray-700 font-semibold transition-colors underline decoration-2 underline-offset-2"
                   >
                     {isLogin ? "Sign Up" : "Sign In"}
                   </button>

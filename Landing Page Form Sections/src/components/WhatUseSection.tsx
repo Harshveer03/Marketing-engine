@@ -51,30 +51,24 @@ export function WhatUseSection({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-16 py-8 px-12"
+        className="text-center mb-12 py-6 px-12"
       >
-        <motion.h2 
-          initial={{ opacity: 0, scale: 0.9 }}
+        <motion.h2
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-5xl font-bold mb-5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+          transition={{ delay: 0.1 }}
+          className="text-5xl font-bold mb-4 text-gray-900"
         >
           What do you want to use us for?
         </motion.h2>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
           className="text-gray-600 text-xl"
         >
           Choose the option that best fits your needs
         </motion.p>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="w-32 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 mx-auto mt-5 rounded-full"
-        />
       </motion.div>
 
       <div className="grid grid-cols-2 gap-8 flex-1">
@@ -88,25 +82,31 @@ export function WhatUseSection({
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => onSelectOption(option.id)}
-              className={`group relative p-16 transition-all duration-300 flex flex-col items-center justify-center text-center rounded-none ${
+              className={`group relative p-16 transition-all duration-300 flex flex-col items-center justify-center text-center rounded-2xl ${
                 selectedOption === option.id
-                  ? "bg-gradient-to-br from-white to-indigo-50 border-4 border-indigo-500 shadow-2xl ring-4 ring-indigo-100"
-                  : "bg-white border-4 border-gray-200 hover:border-indigo-300 shadow-lg hover:shadow-2xl"
+                  ? "bg-black border-4 border-black shadow-2xl"
+                  : "bg-white border-4 border-gray-300 hover:border-gray-400 shadow-lg hover:shadow-xl"
               }`}
             >
               {/* Label */}
               <h3
                 className={`text-3xl font-bold mb-3 transition-colors ${
-                  selectedOption === option.id
-                    ? "text-indigo-700"
-                    : "text-gray-800"
+                  selectedOption === option.id ? "text-white" : "text-gray-900"
                 }`}
               >
                 {option.label}
               </h3>
 
               {/* Description */}
-              <p className="text-gray-600 text-base">{option.description}</p>
+              <p
+                className={`text-base ${
+                  selectedOption === option.id
+                    ? "text-gray-300"
+                    : "text-gray-600"
+                }`}
+              >
+                {option.description}
+              </p>
 
               {/* Selected indicator */}
               {selectedOption === option.id && (
@@ -114,10 +114,10 @@ export function WhatUseSection({
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", stiffness: 200 }}
-                  className="absolute top-6 right-6 w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg"
+                  className="absolute top-6 right-6 w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg"
                 >
                   <svg
-                    className="w-7 h-7 text-white"
+                    className="w-7 h-7 text-black"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -147,7 +147,13 @@ export function WhatUseSection({
             ? "✓ Selection made"
             : "Please select an option to continue"}
         </p>
-        <motion.div whileHover={{ scale: selectedOption ? 1.05 : 1, x: selectedOption ? 5 : 0 }} whileTap={{ scale: 0.95 }}>
+        <motion.div
+          whileHover={{
+            scale: selectedOption ? 1.05 : 1,
+            x: selectedOption ? 5 : 0,
+          }}
+          whileTap={{ scale: 0.95 }}
+        >
           <Button
             onClick={onNext}
             disabled={!selectedOption}

@@ -19,7 +19,7 @@ const tabs = ["Summary", "Previews", "Report"];
 
 export function TopNav({ activeSection, onClearForm }: TopNavProps) {
   return (
-    <div className="bg-white/95 backdrop-blur-md border-b border-indigo-100 shadow-sm sticky top-[57px] z-40">
+    <div className="bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-[57px] z-40">
       <div className="px-8 py-4 flex items-center justify-between">
         <div className="flex items-center gap-8">
           {tabs.map((tab, index) => (
@@ -28,7 +28,7 @@ export function TopNav({ activeSection, onClearForm }: TopNavProps) {
               whileHover={{ y: -2 }}
               className={`px-1 py-3 border-b-2 transition-all duration-200 relative ${
                 index === 0
-                  ? "border-indigo-600 text-indigo-600"
+                  ? "border-black text-black"
                   : "border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300"
               }`}
             >
@@ -36,7 +36,7 @@ export function TopNav({ activeSection, onClearForm }: TopNavProps) {
               {index === 0 && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute -bottom-[2px] left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-600 to-purple-600"
+                  className="absolute -bottom-[2px] left-0 right-0 h-0.5 bg-black"
                 />
               )}
             </motion.button>

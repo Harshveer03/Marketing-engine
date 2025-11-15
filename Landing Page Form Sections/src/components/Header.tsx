@@ -9,7 +9,11 @@ interface HeaderProps {
   onClearForm?: () => void;
 }
 
-export function Header({ onBackToLanding, onLogout, onClearForm }: HeaderProps) {
+export function Header({
+  onBackToLanding,
+  onLogout,
+  onClearForm,
+}: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const userName = localStorage.getItem("userName") || "User";
@@ -24,30 +28,33 @@ export function Header({ onBackToLanding, onLogout, onClearForm }: HeaderProps) 
   });
 
   return (
-    <header className={`border-b border-indigo-200 bg-white/95 backdrop-blur-md px-8 py-4 flex items-center justify-between sticky top-0 z-50 transition-all duration-300 ${
-      scrolled ? "shadow-lg" : "shadow-sm"
-    }`}>
+    <header
+      className={`border-b border-gray-200 bg-white/95 backdrop-blur-md px-8 py-4 flex items-center justify-between sticky top-0 z-50 transition-all duration-300 ${
+        scrolled ? "shadow-lg" : "shadow-sm"
+      }`}
+    >
       <div className="flex items-center gap-3">
         {onBackToLanding && (
           <motion.button
             onClick={onBackToLanding}
             whileHover={{ scale: 1.1, x: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 hover:bg-indigo-50 rounded-xl transition-all duration-200 mr-1"
+            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 mr-1"
             title="Back to landing page"
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </motion.button>
         )}
-        <motion.div 
-          whileHover={{ scale: 1.05, rotate: 5 }}
-          className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg"
-        >
-          <span className="text-white font-bold text-base">BG</span>
+        <motion.div whileHover={{ scale: 1.05 }}>
+          <img src="/1syx-logo.jpeg" alt="1SYX Logo" className="h-10 w-auto" />
         </motion.div>
         <div className="flex flex-col">
-          <span className="font-bold text-gray-800 text-lg">BrandGen</span>
-          <span className="text-xs text-gray-500">AI-Powered Branding</span>
+          <span className="font-bold text-gray-900 text-lg tracking-wider">
+            1SYX
+          </span>
+          <span className="text-xs text-gray-600 uppercase tracking-wide">
+            1-System For Your 'X' Factor
+          </span>
         </div>
       </div>
 
@@ -66,14 +73,14 @@ export function Header({ onBackToLanding, onLogout, onClearForm }: HeaderProps) 
             </Button>
           </motion.div>
         )}
-        
-        <motion.button 
+
+        <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          className="p-2.5 hover:bg-indigo-50 rounded-xl transition-all duration-200 relative group"
+          className="p-2.5 hover:bg-gray-100 rounded-xl transition-all duration-200 relative group"
         >
-          <Bell className="w-5 h-5 text-gray-600 group-hover:text-indigo-600 transition-colors" />
-          <motion.span 
+          <Bell className="w-5 h-5 text-gray-600 group-hover:text-black transition-colors" />
+          <motion.span
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
             className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full shadow-lg"
@@ -85,7 +92,7 @@ export function Header({ onBackToLanding, onLogout, onClearForm }: HeaderProps) 
             onClick={() => setShowUserMenu(!showUserMenu)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ring-2 ring-white"
+            className="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ring-2 ring-white"
           >
             <User className="w-5 h-5" />
           </motion.button>
@@ -97,11 +104,11 @@ export function Header({ onBackToLanding, onLogout, onClearForm }: HeaderProps) 
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
                 transition={{ duration: 0.2, type: "spring" }}
-                className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-indigo-100 overflow-hidden"
+                className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
               >
-                <div className="p-5 border-b border-indigo-100 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+                <div className="p-5 border-b border-gray-200 bg-gray-50">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-md">
+                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center text-white shadow-md">
                       <User className="w-6 h-6" />
                     </div>
                     <div>
@@ -116,7 +123,7 @@ export function Header({ onBackToLanding, onLogout, onClearForm }: HeaderProps) 
                       setShowUserMenu(false);
                       onLogout();
                     }}
-                    whileHover={{ backgroundColor: "rgb(238 242 255)" }}
+                    whileHover={{ backgroundColor: "rgb(243 244 246)" }}
                     className="w-full p-4 flex items-center gap-3 transition-colors text-left text-gray-700"
                   >
                     <LogOut className="w-5 h-5 text-gray-600" />

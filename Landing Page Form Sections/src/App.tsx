@@ -207,55 +207,135 @@ export default function App() {
       />
 
       {/* White overlay for readability */}
-      <div className="absolute inset-0 bg-white/90" />
+      <div className="absolute inset-0 bg-white/90 z-0" />
 
-      <div className="relative z-10 flex flex-col h-full min-h-0">
+      <div className="relative z-20 flex flex-col h-full min-h-0">
         <Header
           onBackToLanding={handleBackToLanding}
           onLogout={handleLogout}
           onClearForm={handleClearForm}
         />
+
         <div className="flex flex-1 overflow-hidden">
           <Sidebar
             activeSection={activeSection}
             onSectionChange={setActiveSection}
           />
-          <main className="flex-1 p-12 overflow-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSection}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="h-full"
-              >
-                {activeSection === "brand-info" && (
-                  <BrandInfoSection
-                    onNext={handleNext}
-                    formData={formData.brandInfo}
-                    onUpdateData={(data) => updateFormData("brandInfo", data)}
+          <main className="flex-1 overflow-auto">
+            {/* Progress Bar */}
+            <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40 px-12 py-3">
+              <div className="max-w-6xl mx-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-semibold text-gray-900">
+                    Step{" "}
+                    {["brand-info", "preview", "score", "what-use"].indexOf(
+                      activeSection
+                    ) + 1}{" "}
+                    of 4
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {(["brand-info", "preview", "score", "what-use"].indexOf(
+                      activeSection
+                    ) +
+                      1) *
+                      25}
+                    % Complete
+                  </span>
+                </div>
+                <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{
+                      width: `${
+                        (["brand-info", "preview", "score", "what-use"].indexOf(
+                          activeSection
+                        ) +
+                          1) *
+                        25
+                      }%`,
+                    }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                    className="absolute top-0 left-0 h-full bg-black rounded-full"
                   />
-                )}
-                {activeSection === "score" && <ScoreSection />}
-                {activeSection === "what-use" && (
-                  <WhatUseSection
-                    onNext={handleNext}
-                    selectedOption={formData.whatUse}
-                    onSelectOption={(option) =>
-                      updateFormData("whatUse", option)
-                    }
-                  />
-                )}
-                {activeSection === "preview" && (
-                  <PreviewSection
-                    formData={formData.brandInfo}
-                    onUpdateData={(data) => updateFormData("brandInfo", data)}
-                    onNext={handleNext}
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
+                </div>
+                <div className="flex justify-between mt-3">
+                  {[
+                    { id: "brand-info", label: "Brand Info" },
+                    { id: "preview", label: "Preview" },
+                    { id: "score", label: "Score" },
+                    { id: "what-use", label: "Usage" },
+                  ].map((step, index) => {
+                    const currentIndex = [
+                      "brand-info",
+                      "preview",
+                      "score",
+                      "what-use",
+                    ].indexOf(activeSection);
+                    const isCompleted = index < currentIndex;
+                    const isCurrent = index === currentIndex;
+
+                    return (
+                      <div key={step.id} className="flex items-center gap-2">
+                        <div
+                          className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                            isCompleted || isCurrent
+                              ? "bg-black"
+                              : "bg-gray-300"
+                          }`}
+                        />
+                        <span
+                          className={`text-xs transition-colors duration-300 ${
+                            isCurrent
+                              ? "text-gray-900 font-semibold"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {step.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-12">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSection}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="h-full"
+                >
+                  {activeSection === "brand-info" && (
+                    <BrandInfoSection
+                      onNext={handleNext}
+                      formData={formData.brandInfo}
+                      onUpdateData={(data) => updateFormData("brandInfo", data)}
+                    />
+                  )}
+                  {activeSection === "score" && <ScoreSection />}
+                  {activeSection === "what-use" && (
+                    <WhatUseSection
+                      onNext={handleNext}
+                      selectedOption={formData.whatUse}
+                      onSelectOption={(option) =>
+                        updateFormData("whatUse", option)
+                      }
+                    />
+                  )}
+                  {activeSection === "preview" && (
+                    <PreviewSection
+                      formData={formData.brandInfo}
+                      onUpdateData={(data) => updateFormData("brandInfo", data)}
+                      onNext={handleNext}
+                    />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </main>
         </div>
         <Footer />

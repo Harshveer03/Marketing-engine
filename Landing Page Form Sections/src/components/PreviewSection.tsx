@@ -62,14 +62,13 @@ export function PreviewSection({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-8 py-4"
+        className="text-center mb-8 py-5"
       >
         <motion.h2
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-5xl font-bold mb-4 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
-          style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.9)" }}
+          className="text-5xl font-bold mb-4 text-gray-900"
         >
           Brand Information Preview
         </motion.h2>
@@ -77,8 +76,7 @@ export function PreviewSection({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-white text-xl font-semibold drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]"
-          style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.9)" }}
+          className="text-gray-700 text-xl font-semibold"
         >
           Review and edit your brand information
         </motion.p>
@@ -88,16 +86,16 @@ export function PreviewSection({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-white p-10 rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-gray-200"
+        className="bg-white p-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-gray-200"
       >
         <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
           <div className="flex items-center gap-4">
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.5 }}
-              className="w-14 h-14 bg-black rounded-xl flex items-center justify-center shadow-xl"
+              className="w-14 h-14 !bg-black rounded-xl flex items-center justify-center shadow-xl"
             >
-              <Eye className="w-7 h-7 text-white" />
+              <Eye className="w-7 h-7 text-black" />
             </motion.div>
             <h3 className="text-3xl text-gray-900 font-bold">
               Your Brand Details
@@ -108,7 +106,7 @@ export function PreviewSection({
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={() => setIsEditing(true)}
-                className="bg-black hover:bg-gray-800 text-white border-0 shadow-xl hover:shadow-2xl rounded-xl px-6 py-3 font-semibold"
+                className="!bg-black hover:!bg-gray-800 text-white border-0 shadow-xl hover:shadow-2xl rounded-xl px-6 py-3 font-semibold"
               >
                 <Edit2 className="w-5 h-5 mr-2" />
                 Edit Information
@@ -134,7 +132,7 @@ export function PreviewSection({
               >
                 <Button
                   onClick={handleSave}
-                  className="bg-black hover:bg-gray-800 text-white border-0 shadow-xl hover:shadow-2xl rounded-xl px-6 py-3 font-semibold"
+                  className="!bg-black hover:!bg-gray-800 text-white border-0 shadow-xl hover:shadow-2xl rounded-xl px-6 py-3 font-semibold"
                 >
                   <Save className="w-5 h-5 mr-2" />
                   Save Changes
@@ -153,9 +151,9 @@ export function PreviewSection({
           >
             <Label
               htmlFor="preview-brand-name"
-              className="text-gray-700 font-medium flex items-center gap-2 text-base mb-2"
+              className="text-black font-semibold flex items-center gap-2 text-base mb-2"
             >
-              <Building2 className="w-4 h-4 text-indigo-500" />
+              <Building2 className="w-4 h-4 text-black" />
               Brand Name
             </Label>
             {isEditing ? (
@@ -185,9 +183,9 @@ export function PreviewSection({
           >
             <Label
               htmlFor="preview-industry"
-              className="text-gray-700 font-medium flex items-center gap-2 text-base mb-2"
+              className="text-black font-semibold flex items-center gap-2 text-base mb-2"
             >
-              <Palette className="w-4 h-4 text-purple-500" />
+              <Palette className="w-4 h-4 text-black" />
               Industry
             </Label>
             {isEditing ? (
@@ -217,9 +215,9 @@ export function PreviewSection({
           >
             <Label
               htmlFor="preview-description"
-              className="text-gray-700 font-medium flex items-center gap-2 text-base mb-2"
+              className="text-black font-semibold flex items-center gap-2 text-base mb-2"
             >
-              <FileText className="w-4 h-4 text-indigo-500" />
+              <FileText className="w-4 h-4 text-black" />
               Brand Description
             </Label>
             {isEditing ? (
@@ -249,9 +247,9 @@ export function PreviewSection({
           >
             <Label
               htmlFor="preview-target-audience"
-              className="text-gray-700 font-medium flex items-center gap-2 text-base mb-2"
+              className="text-black font-semibold flex items-center gap-2 text-base mb-2"
             >
-              <Users className="w-4 h-4 text-purple-500" />
+              <Users className="w-4 h-4 text-black" />
               Target Audience
             </Label>
             {isEditing ? (
@@ -280,7 +278,7 @@ export function PreviewSection({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="mt-8 p-5 bg-gray-50 border-2 border-gray-200 rounded-2xl"
+            className="mt-8 p-6 bg-gray-50 border-2 border-gray-200 rounded-2xl"
           >
             <p className="text-gray-700 text-sm flex items-start gap-3">
               <span className="text-2xl">💡</span>
@@ -301,7 +299,7 @@ export function PreviewSection({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="flex justify-end mt-6"
+          className="flex justify-end mt-8"
         >
           <motion.div
             whileHover={{ scale: 1.05, x: 5 }}
@@ -309,7 +307,7 @@ export function PreviewSection({
           >
             <Button
               onClick={onNext}
-              className="bg-black hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold"
+              className="!bg-black hover:!bg-gray-800 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold"
             >
               <span className="flex items-center gap-3">
                 Continue to Next Step

@@ -42,7 +42,7 @@ export function ScoreSection() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-5xl mb-3 text-gray-900 font-bold"
+          className="text-5xl mb-3 text-white font-bold"
         >
           Your Brand Assessment
         </motion.h2>
@@ -50,7 +50,7 @@ export function ScoreSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-gray-600 text-xl"
+          className="text-white text-xl"
         >
           Here's how your brand is shaping up
         </motion.p>
@@ -62,21 +62,21 @@ export function ScoreSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-8 shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-indigo-100 rounded-3xl"
+          className="bg-white p-8 shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-black rounded-3xl"
         >
-          <div className="flex items-center gap-4 mb-6 pb-4 border-b border-indigo-200">
+          <div className="flex items-center gap-4 mb-6 pb-4 border-b border-white">
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.5 }}
-              className="w-14 h-14 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl"
+              className="bg-black w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl"
             >
-              <TrendingUp className="w-7 h-7 text-white" />
+              <TrendingUp className="w-7 h-7 text-black" />
             </motion.div>
             <h3 className="text-3xl text-gray-800 font-bold">Your Score</h3>
           </div>
 
           {/* Main Score - Square */}
-          <div className="text-center py-4 mb-4 flex flex-col items-center justify-center">
+          <div className="text-center py-3 mb-3 flex flex-col items-center justify-center">
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -103,29 +103,22 @@ export function ScoreSection() {
                   </span>
                 </div>
               </div>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 1, type: "spring" }}
-                className="absolute -top-1 -right-1 w-8 h-8 bg-black rounded-lg flex items-center justify-center shadow-lg"
-              >
-                <Sparkles className="w-4 h-4 text-white" />
-              </motion.div>
+              
             </motion.div>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className="text-gray-700 mt-3 font-medium text-base"
+              className="text-gray-700 mt-4 font-medium text-base"
             >
               Great progress! You're on the right track.
             </motion.p>
           </div>
 
           {/* Score Breakdown */}
-          <div className="space-y-3">
-            <h4 className="text-base font-semibold text-gray-700 mb-2">
+          <div className="space-y-2">
+            <h4 className="text-lg font-bold text-gray-700 mb-2">
               Score Breakdown
             </h4>
             {scoreBreakdown.map((item, index) => (
@@ -134,7 +127,7 @@ export function ScoreSection() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1 + index * 0.1 }}
-                className="bg-gray-50 p-4 rounded-xl border border-gray-200"
+                className="bg-gray-50 p-5 rounded-xl"
               >
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-base text-gray-900 font-semibold">
@@ -174,7 +167,7 @@ export function ScoreSection() {
           </p>
         </div>
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Button className="bg-black hover:bg-gray-800 text-white shadow-lg hover:shadow-xl border-0 px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200">
+          <Button className="!bg-black hover:!bg-gray-800 text-white shadow-lg hover:shadow-xl border-0 px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200">
             <span className="flex items-center gap-3">
               <Sparkles className="w-5 h-5" />
               Let's Generate Your Brand

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
@@ -11,8 +12,11 @@ import {
   Link as LinkIcon,
   Image,
   Palette,
+  Mic,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+
+type TabType = "text" | "documents" | "links" | "audio";
 
 interface BrandInfoSectionProps {
   onNext: () => void;
@@ -35,14 +39,24 @@ export function BrandInfoSection({
   formData,
   onUpdateData,
 }: BrandInfoSectionProps) {
+  const [activeTab, setActiveTab] = useState<TabType>("text");
+
   const handleChange = (field: string, value: string) => {
     onUpdateData({
       ...formData,
       [field]: value,
     });
   };
+
+  const tabs = [
+    { id: "text" as TabType, label: "Text", icon: FileText },
+    { id: "documents" as TabType, label: "Documents", icon: Upload },
+    { id: "links" as TabType, label: "Reference Links", icon: LinkIcon },
+    { id: "audio" as TabType, label: "Audio", icon: Mic },
+  ];
+
   return (
-    <div className="max-w-6xl mx-auto px-4 h-full flex flex-col">
+    <div className="max-w-6xl mx-auto px-4 flex flex-col">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,234 +83,267 @@ export function BrandInfoSection({
         </motion.p>
       </motion.div>
 
-      <div className="grid grid-cols-2 gap-3">
-        {/* Left Column - Brand Info */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-6"
-        >
-          <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-200 h-full">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-                className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg"
-              >
-                <Building2 className="w-6 h-6 text-white" />
-              </motion.div>
-              <h3 className="text-2xl font-bold text-gray-900">
-                Basic Information
-              </h3>
-            </div>
-
-            <div className="space-y-4 flex flex-col h-[calc(100%-3.5rem)]">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-              >
-                <Label
-                  htmlFor="brand-name"
-                  className="text-gray-900 font-semibold flex items-center gap-2 text-base"
+      {/* Single Unified Card with Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 h-[600px] flex flex-col"
+      >
+        {/* Tab Navigation */}
+        <div className="border-b border-gray-200 shrink-0">
+          <div className="flex">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 px-6 py-4 flex items-center justify-center gap-2 font-semibold transition-all duration-200 relative ${
+                    isActive
+                      ? "text-black bg-gray-50"
+                      : "text-gray-600 hover:text-black hover:bg-gray-50"
+                  }`}
                 >
-                  <Building2 className="w-4 h-4 text-gray-700" />
-                  Brand Name
-                </Label>
-                <Input
-                  id="brand-name"
-                  value={formData.brandName}
-                  onChange={(e) => handleChange("brandName", e.target.value)}
-                  className="border-2 border-gray-300 mt-2 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 h-12 text-base px-4 rounded-xl"
-                  placeholder="Enter your brand name"
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.4 }}
-              >
-                <Label
-                  htmlFor="industry"
-                  className="text-gray-900 font-semibold flex items-center gap-2 text-base"
-                >
-                  <Palette className="w-4 h-4 text-gray-700" />
-                  Industry
-                </Label>
-                <Input
-                  id="industry"
-                  value={formData.industry}
-                  onChange={(e) => handleChange("industry", e.target.value)}
-                  className="border-2 border-gray-300 mt-2 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 h-12 text-base px-4 rounded-xl"
-                  placeholder="e.g., Technology, Fashion, Food"
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.5 }}
-                className="flex-1"
-              >
-                <Label
-                  htmlFor="description"
-                  className="text-gray-900 font-semibold flex items-center gap-2 text-base"
-                >
-                  <FileText className="w-4 h-4 text-gray-700" />
-                  Brand Description
-                </Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleChange("description", e.target.value)}
-                  className="border-2 border-gray-300 mt-2 h-full min-h-[100px] focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 resize-none text-base px-4 py-3 rounded-xl"
-                  placeholder="Tell us about your brand, its mission, and values..."
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.6 }}
-              >
-                <Label
-                  htmlFor="target-audience"
-                  className="text-gray-900 font-semibold flex items-center gap-2 text-base"
-                >
-                  <Users className="w-4 h-4 text-gray-700" />
-                  Target Audience
-                </Label>
-                <Input
-                  id="target-audience"
-                  value={formData.targetAudience}
-                  onChange={(e) =>
-                    handleChange("targetAudience", e.target.value)
-                  }
-                  className="border-2 border-gray-300 mt-2 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 h-12 text-base px-4 rounded-xl"
-                  placeholder="Who is your target audience?"
-                />
-              </motion.div>
-            </div>
+                  <Icon className="w-5 h-5" />
+                  <span>{tab.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Right Column - Resources */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-6"
-        >
-          <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-200 h-full">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+        {/* Tab Content */}
+        <div className="p-8 flex-1 overflow-auto">
+          <AnimatePresence mode="wait">
+            {activeTab === "text" && (
               <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-                className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg"
+                key="text"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
               >
-                <FileText className="w-6 h-6 text-white" />
-              </motion.div>
-              <h3 className="text-2xl font-bold text-gray-900">Resources</h3>
-            </div>
 
-            <div className="space-y-4">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.3 }}
-              >
-                <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-2 text-base">
-                  <Image className="w-4 h-4 text-gray-700" />
-                  Brand Assets
-                </Label>
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  className="group relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl p-5 text-center hover:border-black hover:bg-gray-100 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center"
-                >
-                  <div className="w-12 h-12 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow border border-gray-200">
-                    <Image className="w-6 h-6 text-gray-700" />
-                  </div>
-                  <p className="text-gray-900 font-semibold text-sm mb-1">
-                    Upload logos, images, fonts
-                  </p>
-                  <p className="text-gray-600 text-sm">
-                    PNG, JPG, SVG up to 10MB
-                  </p>
-                  <input
-                    type="file"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    multiple
+                <div>
+                  <Label
+                    htmlFor="brand-name"
+                    className="text-gray-900 font-semibold flex items-center gap-2 text-base mb-2"
+                  >
+                    <Building2 className="w-4 h-4 text-gray-700" />
+                    Brand Name
+                  </Label>
+                  <Input
+                    id="brand-name"
+                    value={formData.brandName}
+                    onChange={(e) => handleChange("brandName", e.target.value)}
+                    className="border-2 border-gray-300 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 h-11 text-base px-4 rounded-lg"
+                    placeholder="Enter your brand name"
                   />
-                </motion.div>
-              </motion.div>
+                </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
-              >
-                <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-2 text-base">
-                  <FileText className="w-4 h-4 text-gray-700" />
-                  Existing Materials
-                </Label>
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  className="group relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl p-5 text-center hover:border-black hover:bg-gray-100 transition-all duration-300 cursor-pointer flex flex-col items-center justify-center"
-                >
-                  <div className="w-12 h-12 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow border border-gray-200">
-                    <Upload className="w-6 h-6 text-gray-700" />
-                  </div>
-                  <p className="text-gray-900 font-semibold text-sm mb-1">
-                    Upload marketing materials
-                  </p>
-                  <p className="text-gray-600 text-sm">
-                    PDF, DOC, PPT up to 20MB
-                  </p>
-                  <input
-                    type="file"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    multiple
+                <div>
+                  <Label
+                    htmlFor="industry"
+                    className="text-gray-900 font-semibold flex items-center gap-2 text-base mb-2"
+                  >
+                    <Palette className="w-4 h-4 text-gray-700" />
+                    Industry
+                  </Label>
+                  <Input
+                    id="industry"
+                    value={formData.industry}
+                    onChange={(e) => handleChange("industry", e.target.value)}
+                    className="border-2 border-gray-300 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 h-11 text-base px-4 rounded-lg"
+                    placeholder="e.g., Technology, Fashion, Food"
                   />
-                </motion.div>
-              </motion.div>
+                </div>
 
+                <div>
+                  <Label
+                    htmlFor="description"
+                    className="text-gray-900 font-semibold flex items-center gap-2 text-base mb-2"
+                  >
+                    <FileText className="w-4 h-4 text-gray-700" />
+                    Brand Description
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => handleChange("description", e.target.value)}
+                    className="border-2 border-gray-300 min-h-[120px] focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 resize-none text-base px-4 py-3 rounded-lg"
+                    placeholder="Tell us about your brand, its mission, and values..."
+                  />
+                </div>
+
+                <div>
+                  <Label
+                    htmlFor="target-audience"
+                    className="text-gray-900 font-semibold flex items-center gap-2 text-base mb-2"
+                  >
+                    <Users className="w-4 h-4 text-gray-700" />
+                    Target Audience
+                  </Label>
+                  <Input
+                    id="target-audience"
+                    value={formData.targetAudience}
+                    onChange={(e) =>
+                      handleChange("targetAudience", e.target.value)
+                    }
+                    className="border-2 border-gray-300 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 h-11 text-base px-4 rounded-lg"
+                    placeholder="Who is your target audience?"
+                  />
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === "documents" && (
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
+                key="documents"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
               >
-                <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-2 text-base">
+                <div>
+                  <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-3 text-base">
+                    <Image className="w-4 h-4 text-gray-700" />
+                    Brand Assets
+                  </Label>
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="group relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-black hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                  >
+                    <div className="w-14 h-14 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow border border-gray-200">
+                      <Image className="w-7 h-7 text-gray-700" />
+                    </div>
+                    <p className="text-gray-900 font-semibold text-sm mb-1">
+                      Upload logos, images, fonts
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      PNG, JPG, SVG up to 10MB
+                    </p>
+                    <input
+                      type="file"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      multiple
+                      accept="image/*,.svg"
+                    />
+                  </motion.div>
+                </div>
+
+                <div>
+                  <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-3 text-base">
+                    <FileText className="w-4 h-4 text-gray-700" />
+                    Existing Materials
+                  </Label>
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="group relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-black hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                  >
+                    <div className="w-14 h-14 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow border border-gray-200">
+                      <Upload className="w-7 h-7 text-gray-700" />
+                    </div>
+                    <p className="text-gray-900 font-semibold text-sm mb-1">
+                      Upload marketing materials
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      PDF, DOC, PPT up to 20MB
+                    </p>
+                    <input
+                      type="file"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      multiple
+                      accept=".pdf,.doc,.docx,.ppt,.pptx"
+                    />
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === "links" && (
+              <motion.div
+                key="links"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-3 text-base">
                   <LinkIcon className="w-4 h-4 text-gray-700" />
                   Reference Links
                 </Label>
-                <div className="p-4">
+                <div className="space-y-4">
                   <div className="flex gap-3">
                     <Input
                       type="url"
                       placeholder="https://example.com"
-                      className="flex-1 border-2 border-gray-300 h-12 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 text-base px-4 rounded-xl"
+                      className="flex-1 border-2 border-gray-300 h-11 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 text-base px-4 rounded-lg"
                     />
-                    <Button className="bg-black hover:bg-gray-800 text-white px-8 border-0 shadow-md text-base h-12 font-semibold rounded-xl">
+                    <Button className="bg-black hover:bg-gray-800 text-white px-6 border-0 shadow-md text-sm h-11 font-semibold rounded-lg">
                       Add
                     </Button>
                   </div>
-                  <p className="text-gray-600 text-sm mt-2">
-                    Add your website link
+                  <p className="text-gray-600 text-sm">
+                    Add your website link or any reference URLs
                   </p>
                 </div>
               </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+            )}
+
+            {activeTab === "audio" && (
+              <motion.div
+                key="audio"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-3 text-base">
+                  <Mic className="w-4 h-4 text-gray-700" />
+                  Audio Files
+                </Label>
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  className="group relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-black hover:bg-gray-100 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow border border-gray-200">
+                    <Mic className="w-8 h-8 text-gray-700" />
+                  </div>
+                  <p className="text-gray-900 font-semibold text-base mb-2">
+                    Upload audio files
+                  </p>
+                  <p className="text-gray-600 text-sm">
+                    MP3, WAV, M4A up to 50MB
+                  </p>
+                  <input
+                    type="file"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    multiple
+                    accept="audio/*"
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="flex justify-end mt-4"
+        className="flex justify-end mt-6 h-20 items-center shrink-0"
       >
         <motion.div
           whileHover={{ scale: 1.05, x: 5 }}

@@ -223,17 +223,39 @@ export default function App() {
           />
           <main className="flex-1 overflow-auto">
             {/* Progress Bar */}
-            <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40 px-12 py-3">
-              <div className="max-w-6xl mx-auto">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold text-gray-900">
+            <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40 px-12 py-4">
+              <div className="max-w-6xl mx-auto relative">
+                <div className="flex items-center gap-4 mb-3">
+                  <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
                     Step{" "}
                     {["brand-info", "preview", "score", "what-use"].indexOf(
                       activeSection
                     ) + 1}{" "}
                     of 4
                   </span>
-                  <span className="text-sm font-semibold text-gray-900">
+
+                  <div className="flex-1 h-2 bg-gray-300 rounded-full">
+                    <div
+                      style={{
+                        width: `${
+                          ([
+                            "brand-info",
+                            "preview",
+                            "score",
+                            "what-use",
+                          ].indexOf(activeSection) +
+                            1) *
+                          25
+                        }%`,
+                        backgroundColor: "#000000",
+                        height: "100%",
+                        borderRadius: "9999px",
+                        transition: "width 0.6s ease-in-out",
+                      }}
+                    />
+                  </div>
+
+                  <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
                     {(["brand-info", "preview", "score", "what-use"].indexOf(
                       activeSection
                     ) +
@@ -242,22 +264,7 @@ export default function App() {
                     % Complete
                   </span>
                 </div>
-                <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{
-                      width: `${
-                        (["brand-info", "preview", "score", "what-use"].indexOf(
-                          activeSection
-                        ) +
-                          1) *
-                        25
-                      }%`,
-                    }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                    className="absolute top-0 left-0 h-full bg-black rounded-full"
-                  />
-                </div>
+
                 <div className="flex justify-between mt-3">
                   {[
                     { id: "brand-info", label: "Brand Info" },

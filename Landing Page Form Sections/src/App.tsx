@@ -195,7 +195,7 @@ export default function App() {
 
   // Show dashboard
   if (showDashboard) {
-    return <Dashboard />;
+    return <Dashboard onBackToLanding={handleBackToLanding} />;
   }
 
   // Show form sections (authenticated)

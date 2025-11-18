@@ -2753,3 +2753,47 @@ html {
   inherits: false;
   initial-value: 1;
 }
+
+/* React Calendar Widget Styling */
+.calendar-widget .react-calendar {
+  border: none !important;
+  font-family: inherit;
+  width: 100%;
+}
+
+.calendar-widget .react-calendar__tile {
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.calendar-widget .react-calendar__tile:hover {
+  background-color: #f3f4f6;
+}
+
+.calendar-widget .react-calendar__tile--active {
+  background-color: #000000 !important;
+  color: white !important;
+}
+
+.calendar-widget .react-calendar__tile--now {
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
+
+.calendar-widget .react-calendar__navigation button {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.calendar-widget .react-calendar__navigation button:hover {
+  background-color: #f3f4f6;
+}
+
+.calendar-widget .react-calendar__month-view__weekdays {
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #6b7280;
+}

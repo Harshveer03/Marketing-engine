@@ -9,6 +9,7 @@ import { BrandInfoSection } from "./components/BrandInfoSection";
 import { ScoreSection } from "./components/ScoreSection";
 import { PreviewSection } from "./components/PreviewSection";
 import { SplashScreen } from "./components/SplashScreen";
+import { Dashboard } from "./components/Dashboard";
 import { motion, AnimatePresence } from "motion/react";
 
 export type Section = "brand-info" | "score" | "what-use" | "preview";
@@ -41,6 +42,7 @@ export default function App() {
   const [showLanding, setShowLanding] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
   const [activeSection, setActiveSection] = useState<Section>("brand-info");
 
   // Form data state
@@ -99,6 +101,10 @@ export default function App() {
     if (currentIndex < sections.length - 1) {
       setActiveSection(sections[currentIndex + 1]);
     }
+  };
+
+  const handleOpenDashboard = () => {
+    setShowDashboard(true);
   };
 
   const handleGetStarted = () => {
@@ -187,6 +193,11 @@ export default function App() {
     );
   }
 
+  // Show dashboard
+  if (showDashboard) {
+    return <Dashboard />;
+  }
+
   // Show form sections (authenticated)
   if (!isAuthenticated) {
     return <LandingPage onGetStarted={handleGetStarted} />;
@@ -219,9 +230,9 @@ export default function App() {
         />
 
         {/* Progress Bar - Full Width */}
-        <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 z-40 px-12 py-6">
+        <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 z-40 px-12 py-2">
           <div className="max-w-full mx-auto relative">
-            <div className="flex items-center gap-4 mb-3">
+            <div className="flex items-center gap-4 mb-2">
               <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
                 Step{" "}
                 {["brand-info", "preview", "score", "what-use"].indexOf(
@@ -258,7 +269,7 @@ export default function App() {
               </span>
             </div>
 
-            <div className="flex justify-between mt-3">
+            <div className="flex justify-between mt-2">
               {[
                 { id: "brand-info", label: "Brand Info" },
                 { id: "preview", label: "Preview" },
@@ -326,7 +337,7 @@ export default function App() {
                   )}
                   {activeSection === "what-use" && (
                     <WhatUseSection
-                      onNext={handleNext}
+                      onNext={handleOpenDashboard}
                       selectedOption={formData.whatUse}
                       onSelectOption={(option) =>
                         updateFormData("whatUse", option)

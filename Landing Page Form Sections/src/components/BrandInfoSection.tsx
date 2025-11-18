@@ -295,7 +295,7 @@ export function BrandInfoSection({
                       placeholder="https://example.com"
                       className="flex-1 border-2 border-gray-300 h-11 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 text-base px-4 rounded-lg"
                     />
-                    <Button className="bg-black hover:bg-gray-800 text-white px-6 border-0 shadow-md text-sm h-11 font-semibold rounded-lg">
+                    <Button className="!bg-black hover:bg-gray-800 text-white px-6 border-0 shadow-md text-sm h-11 font-semibold rounded-lg">
                       Add
                     </Button>
                   </div>
@@ -348,7 +348,7 @@ export function BrandInfoSection({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="flex justify-end mt-6 h-20 items-center shrink-0"
+        className="flex justify-end mt-12 h-20 items-center shrink-0"
       >
         <motion.div
           whileHover={{ scale: 1.05, x: 5 }}
@@ -356,7 +356,7 @@ export function BrandInfoSection({
         >
           <Button
             onClick={onNext}
-            className="bg-black hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold"
+            className="!bg-black hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold"
           >
             <span className="flex items-center gap-3">
               Continue to Next Step

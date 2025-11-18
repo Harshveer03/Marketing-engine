@@ -218,96 +218,93 @@ export default function App() {
           onClearForm={handleClearForm}
         />
 
+        {/* Progress Bar - Full Width */}
+        <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 z-40 px-12 py-6">
+          <div className="max-w-full mx-auto relative">
+            <div className="flex items-center gap-4 mb-3">
+              <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                Step{" "}
+                {["brand-info", "preview", "score", "what-use"].indexOf(
+                  activeSection
+                ) + 1}{" "}
+                of 4
+              </span>
+
+              <div className="flex-1 h-2 bg-gray-300 rounded-full">
+                <div
+                  style={{
+                    width: `${
+                      (["brand-info", "preview", "score", "what-use"].indexOf(
+                        activeSection
+                      ) +
+                        1) *
+                      25
+                    }%`,
+                    backgroundColor: "#000000",
+                    height: "100%",
+                    borderRadius: "9999px",
+                    transition: "width 0.6s ease-in-out",
+                  }}
+                />
+              </div>
+
+              <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                {(["brand-info", "preview", "score", "what-use"].indexOf(
+                  activeSection
+                ) +
+                  1) *
+                  25}
+                % Complete
+              </span>
+            </div>
+
+            <div className="flex justify-between mt-3">
+              {[
+                { id: "brand-info", label: "Brand Info" },
+                { id: "preview", label: "Preview" },
+                { id: "score", label: "Score" },
+                { id: "what-use", label: "Usage" },
+              ].map((step, index) => {
+                const currentIndex = [
+                  "brand-info",
+                  "preview",
+                  "score",
+                  "what-use",
+                ].indexOf(activeSection);
+                const isCompleted = index < currentIndex;
+                const isCurrent = index === currentIndex;
+
+                return (
+                  <div key={step.id} className="flex items-center gap-2">
+                    <div
+                      className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                        isCompleted || isCurrent ? "bg-black" : "bg-gray-300"
+                      }`}
+                    />
+                    <span
+                      style={{
+                        backgroundColor: isCurrent ? "#000000" : "transparent",
+                        color: isCurrent ? "#ffffff" : undefined,
+                      }}
+                      className={`text-xs transition-all duration-300 px-3 py-1 rounded-full ${
+                        isCurrent ? "font-semibold" : "text-gray-500"
+                      }`}
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-1 overflow-hidden min-h-0">
           <Sidebar
             activeSection={activeSection}
             onSectionChange={setActiveSection}
           />
           <main className="flex-1 overflow-auto min-h-screen">
-            {/* Progress Bar */}
-            <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40 px-12 py-4">
-              <div className="max-w-6xl mx-auto relative">
-                <div className="flex items-center gap-4 mb-3">
-                  <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
-                    Step{" "}
-                    {["brand-info", "preview", "score", "what-use"].indexOf(
-                      activeSection
-                    ) + 1}{" "}
-                    of 4
-                  </span>
-
-                  <div className="flex-1 h-2 bg-gray-300 rounded-full">
-                    <div
-                      style={{
-                        width: `${
-                          ([
-                            "brand-info",
-                            "preview",
-                            "score",
-                            "what-use",
-                          ].indexOf(activeSection) +
-                            1) *
-                          25
-                        }%`,
-                        backgroundColor: "#000000",
-                        height: "100%",
-                        borderRadius: "9999px",
-                        transition: "width 0.6s ease-in-out",
-                      }}
-                    />
-                  </div>
-
-                  <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
-                    {(["brand-info", "preview", "score", "what-use"].indexOf(
-                      activeSection
-                    ) +
-                      1) *
-                      25}
-                    % Complete
-                  </span>
-                </div>
-
-                <div className="flex justify-between mt-3">
-                  {[
-                    { id: "brand-info", label: "Brand Info" },
-                    { id: "preview", label: "Preview" },
-                    { id: "score", label: "Score" },
-                    { id: "what-use", label: "Usage" },
-                  ].map((step, index) => {
-                    const currentIndex = [
-                      "brand-info",
-                      "preview",
-                      "score",
-                      "what-use",
-                    ].indexOf(activeSection);
-                    const isCompleted = index < currentIndex;
-                    const isCurrent = index === currentIndex;
-
-                    return (
-                      <div key={step.id} className="flex items-center gap-2">
-                        <div
-                          className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                            isCompleted || isCurrent
-                              ? "bg-black"
-                              : "bg-gray-300"
-                          }`}
-                        />
-                        <span
-                          className={`text-xs transition-colors duration-300 ${
-                            isCurrent
-                              ? "text-gray-900 font-semibold"
-                              : "text-gray-500"
-                          }`}
-                        >
-                          {step.label}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
             <div className="p-12 min-h-full">
               <AnimatePresence mode="wait">
                 <motion.div

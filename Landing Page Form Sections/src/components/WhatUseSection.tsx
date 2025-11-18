@@ -57,7 +57,7 @@ export function WhatUseSection({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-5xl font-bold mb-4 text-gray-900"
+          className="text-5xl font-bold mb-4 text-white"
         >
           What do you want to use us for?
         </motion.h2>
@@ -65,7 +65,7 @@ export function WhatUseSection({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-gray-600 text-xl"
+          className="text-white text-xl"
         >
           Choose the option that best fits your needs
         </motion.p>
@@ -82,10 +82,14 @@ export function WhatUseSection({
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => onSelectOption(option.id)}
-              className={`group relative p-16 transition-all duration-300 flex flex-col items-center justify-center text-center rounded-2xl ${
+              style={{
+                backgroundColor:
+                  selectedOption === option.id ? "#000000" : "#ffffff",
+              }}
+              className={`group relative p-16 transition-all duration-300 flex flex-col items-center justify-center text-center ${
                 selectedOption === option.id
-                  ? "bg-black border-4 border-black shadow-2xl"
-                  : "bg-white border-4 border-gray-300 hover:border-gray-400 shadow-lg hover:shadow-xl"
+                  ? "border-4 border-black shadow-2xl"
+                  : "border-4 border-gray-300 hover:border-gray-400 shadow-lg hover:shadow-xl"
               }`}
             >
               {/* Label */}
@@ -115,21 +119,7 @@ export function WhatUseSection({
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", stiffness: 200 }}
                   className="absolute top-6 right-6 w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg"
-                >
-                  <svg
-                    className="w-7 h-7 text-black"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={3}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </motion.div>
+                ></motion.div>
               )}
             </motion.button>
           );
@@ -140,7 +130,7 @@ export function WhatUseSection({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="flex justify-between items-center mt-8"
+        className="flex flex-col items-center mt-8 gap-4"
       >
         <p className="text-gray-500 text-sm">
           {selectedOption
@@ -157,10 +147,14 @@ export function WhatUseSection({
           <Button
             onClick={onNext}
             disabled={!selectedOption}
-            className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            style={{
+              backgroundColor: selectedOption ? "#000000" : "#000000",
+              color: "#ffffff",
+            }}
+            className="hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl border-0 px-10 py-6 rounded-xl text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             <span className="flex items-center gap-3">
-              Continue to Next Step
+              Open Dashboard!!
               {selectedOption && (
                 <motion.div
                   animate={{ x: [0, 5, 0] }}

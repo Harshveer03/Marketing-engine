@@ -9,7 +9,11 @@ import {
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
 
-export function ScoreSection() {
+interface ScoreSectionProps {
+  onNext?: () => void;
+}
+
+export function ScoreSection({ onNext }: ScoreSectionProps) {
   const sections = [
     { name: "What Use?", completed: true },
     { name: "Brand Info & Resources", completed: true },
@@ -62,7 +66,7 @@ export function ScoreSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white p-8 shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-black rounded-3xl"
+          className="bg-white p-8 shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-black"
         >
           <div className="flex items-center gap-4 mb-6 pb-4 border-b border-white">
             <motion.div
@@ -88,7 +92,7 @@ export function ScoreSection() {
               }}
               className="relative inline-block"
             >
-              <div className="w-32 h-32 bg-black flex items-center justify-center shadow-xl rounded-2xl">
+              <div className="w-32 h-32 bg-black flex items-center justify-center shadow-xl">
                 <div className="w-28 h-28 bg-white rounded-xl flex flex-col items-center justify-center">
                   <motion.span
                     initial={{ opacity: 0 }}
@@ -103,7 +107,6 @@ export function ScoreSection() {
                   </span>
                 </div>
               </div>
-              
             </motion.div>
 
             <motion.p
@@ -156,7 +159,7 @@ export function ScoreSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5 }}
-        className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200"
+        className="flex justify-between items-center bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200"
       >
         <div>
           <h4 className="text-lg font-bold text-gray-900 mb-1">
@@ -167,10 +170,13 @@ export function ScoreSection() {
           </p>
         </div>
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Button className="!bg-black hover:!bg-gray-800 text-white shadow-lg hover:shadow-xl border-0 px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200">
+          <Button
+            onClick={onNext}
+            className="!bg-black hover:!bg-gray-800 text-white shadow-lg hover:shadow-xl border-0 px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200"
+          >
             <span className="flex items-center gap-3">
               <Sparkles className="w-5 h-5" />
-              Let's Generate Your Brand
+              Continue to Next step
             </span>
           </Button>
         </motion.div>

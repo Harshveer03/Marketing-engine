@@ -203,8 +203,8 @@ export default function App() {
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url('${sectionBackgrounds[activeSection]}')`,
-          backgroundAttachment: 'fixed',
-          backgroundPosition: 'center center',
+          backgroundAttachment: "fixed",
+          backgroundPosition: "center center",
         }}
       />
 
@@ -225,8 +225,8 @@ export default function App() {
           />
           <main className="flex-1 overflow-auto min-h-screen">
             {/* Progress Bar */}
-              <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40 px-12 py-4">
-                <div className="max-w-6xl mx-auto relative">
+            <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40 px-12 py-4">
+              <div className="max-w-6xl mx-auto relative">
                 <div className="flex items-center gap-4 mb-3">
                   <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
                     Step{" "}
@@ -324,7 +324,9 @@ export default function App() {
                       onUpdateData={(data) => updateFormData("brandInfo", data)}
                     />
                   )}
-                  {activeSection === "score" && <ScoreSection />}
+                  {activeSection === "score" && (
+                    <ScoreSection onNext={handleNext} />
+                  )}
                   {activeSection === "what-use" && (
                     <WhatUseSection
                       onNext={handleNext}

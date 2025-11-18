@@ -88,7 +88,7 @@ export function BrandInfoSection({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 h-[600px] flex flex-col"
+        className="bg-white shadow-xl border-2 border-gray-200 h-[600px] flex flex-col"
       >
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 shrink-0">
@@ -112,7 +112,11 @@ export function BrandInfoSection({
                     <motion.div
                       layoutId="activeTab"
                       className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 30,
+                      }}
                     />
                   )}
                 </button>
@@ -133,7 +137,6 @@ export function BrandInfoSection({
                 transition={{ duration: 0.3 }}
                 className="space-y-6"
               >
-
                 <div>
                   <Label
                     htmlFor="brand-name"
@@ -179,7 +182,9 @@ export function BrandInfoSection({
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => handleChange("description", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("description", e.target.value)
+                    }
                     className="border-2 border-gray-300 min-h-[120px] focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 resize-none text-base px-4 py-3 rounded-lg"
                     placeholder="Tell us about your brand, its mission, and values..."
                   />

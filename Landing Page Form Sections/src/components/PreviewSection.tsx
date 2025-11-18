@@ -86,7 +86,7 @@ export function PreviewSection({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-white p-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-gray-200"
+        className="bg-white p-8 shadow-2xl hover:shadow-3xl transition-shadow duration-300 border-2 border-gray-200"
       >
         <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
           <div className="flex items-center gap-4">

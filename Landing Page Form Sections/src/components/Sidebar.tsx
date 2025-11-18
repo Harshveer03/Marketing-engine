@@ -148,7 +148,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           whileTap={{ scale: 0.97 }}
         >
           <Button
-            className={`w-full bg-black hover:bg-gray-800 text-white border-0 shadow-lg hover:shadow-xl py-6 rounded-xl transition-all duration-300 ${
+            className={`w-full !bg-black hover:bg-gray-800 text-white border-0 shadow-lg hover:shadow-xl py-6 rounded-xl transition-all duration-300 ${
               isCollapsed ? "px-0 justify-center" : "gap-2"
             }`}
             title={isCollapsed ? "Need Help?" : ""}

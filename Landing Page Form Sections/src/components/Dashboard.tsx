@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DashboardSidebar } from "./DashboardSidebar.tsx";
 import { DashboardHeader } from "./DashboardHeader.tsx";
+import { Footer } from "./Footer";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
@@ -37,17 +38,50 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
         {/* Main Content */}
         <main className="flex-1 overflow-auto">
           <div className="p-8">
-            {/* Greeting */}
-            <motion.h1
+            {/* Enhanced Greeting Card - Full Width */}
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-gray-900 mb-8"
+              className="relative px-8 py-12 rounded-xl shadow-sm border border-gray-200 mb-6 overflow-hidden"
             >
-              Good morning, User
-            </motion.h1>
+              {/* Background Image */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=400&fit=crop')",
+                }}
+              />
+              {/* Overlay for readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-purple-900/85 to-pink-900/90" />
+              
+              {/* Content */}
+              <div className="relative z-10 flex items-center gap-5">
+                {/* Left: Avatar */}
+                <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 border border-white/30">
+                  <span className="text-2xl">👤</span>
+                </div>
+                
+                {/* Center: Greeting & Welcome Message */}
+                <div className="flex-1">
+                  <h1 className="text-2xl font-semibold text-white mb-0.5">
+                    Good morning, User 👋
+                  </h1>
+                  <p className="text-white/80 text-sm">
+                    Welcome back! Ready to create something amazing today?
+                  </p>
+                </div>
+
+                {/* Right: Decorative Element */}
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                    <span className="text-xl">✨</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-2 gap-8 mb-8">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -55,7 +89,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
               >
                 <Button
                   style={{ backgroundColor: "#000000" }}
-                  className="w-full h-32 text-2xl font-semibold hover:bg-gray-800 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all"
+                  className="w-full h-16 text-2xl font-semibold hover:bg-gray-800 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all"
                 >
                   <FileText className="w-8 h-8 mr-3" />
                   New Post
@@ -68,7 +102,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
               >
                 <Button
                   style={{ backgroundColor: "#000000" }}
-                  className="w-full h-32 text-2xl font-semibold hover:bg-gray-800 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all"
+                  className="w-full h-16 text-2xl font-semibold hover:bg-gray-800 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all"
                 >
                   <Zap className="w-8 h-8 mr-3" />
                   New Campaign
@@ -77,11 +111,12 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
             </div>
 
             {/* Brand Diagnostics & Credits */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
+            <div className="flex gap-8 mb-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
+                style={{ width: '70%' }}
                 className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="flex items-center justify-between mb-4">
@@ -96,7 +131,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
                   </div>
                   <div>
                     <p className="text-3xl font-bold text-gray-900">85/100</p>
-                    <p className="text-sm text-gray-500">Health Score</p>
+                    <p className="text-sm text-gray-500">Score</p>
                   </div>
                 </div>
               </motion.div>
@@ -105,6 +140,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
+                style={{ width: '30%' }}
                 className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="flex items-center justify-between mb-4">
@@ -128,7 +164,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
             </div>
 
             {/* Engagement & Trends */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-2 gap-8 mb-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -254,6 +290,9 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
           </div>
         </aside>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

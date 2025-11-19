@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { LandingPage } from "./components/LandingPage";
-import { AuthPage } from "./components/AuthPage";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
-import { Sidebar } from "./components/Sidebar";
-import { WhatUseSection } from "./components/WhatUseSection";
-import { BrandInfoSection } from "./components/BrandInfoSection";
-import { ScoreSection } from "./components/ScoreSection";
-import { PreviewSection } from "./components/PreviewSection";
-import { SplashScreen } from "./components/SplashScreen";
-import { Dashboard } from "./components/Dashboard";
+import { LandingPage } from "./components/landing/LandingPage";
+import { AuthPage } from "./components/auth/AuthPage";
+import { Header } from "./components/form/Header";
+import { Footer } from "./components/shared/Footer";
+import { Sidebar } from "./components/form/Sidebar";
+import { WhatUseSection } from "./components/form/WhatUseSection";
+import { BrandInfoSection } from "./components/form/BrandInfoSection";
+import { ScoreSection } from "./components/form/ScoreSection";
+import { PreviewSection } from "./components/form/PreviewSection";
+import { SplashScreen } from "./components/landing/SplashScreen";
+import { Dashboard } from "./components/dashboard/Dashboard";
 import { motion, AnimatePresence } from "motion/react";
 
 export type Section = "brand-info" | "score" | "what-use" | "preview";

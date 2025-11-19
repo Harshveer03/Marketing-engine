@@ -6,7 +6,7 @@ import {
   Award,
   Target,
 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { motion } from "motion/react";
 
 interface ScoreSectionProps {

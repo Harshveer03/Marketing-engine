@@ -1,6 +1,6 @@
-import { Section } from "../App";
+import { Section } from "../../App";
 import { motion } from "motion/react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { HelpCircle, FileText, Eye, BarChart3, Target } from "lucide-react";
 
 interface SidebarProps {

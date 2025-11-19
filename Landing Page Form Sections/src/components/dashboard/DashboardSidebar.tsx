@@ -10,7 +10,7 @@ import {
   Settings,
   Crown,
 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 interface DashboardSidebarProps {
   activeSection: string;
@@ -18,7 +18,7 @@ interface DashboardSidebarProps {
 }
 
 const menuItems = [
-  { id: "new", label: "+ New", icon: Plus },
+  { id: "new", label: "New", icon: Plus },
   { id: "home", label: "Home", icon: Home },
   { id: "diagnostics", label: "Diagnostics", icon: Activity },
   { id: "campaigns", label: "Campaigns", icon: Megaphone },

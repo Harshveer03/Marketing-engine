@@ -1,5 +1,5 @@
-import { Section } from "../App";
-import { Button } from "./ui/button";
+import { Section } from "../../App";
+import { Button } from "../ui/button";
 import { ChevronDown, HelpCircle, Edit2, RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 

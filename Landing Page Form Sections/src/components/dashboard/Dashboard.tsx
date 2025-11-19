@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { DashboardSidebar } from "./DashboardSidebar.tsx";
-import { DashboardHeader } from "./DashboardHeader.tsx";
-import { Footer } from "./Footer";
+import { DashboardSidebar } from "./DashboardSidebar";
+import { DashboardHeader } from "./DashboardHeader";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
@@ -12,7 +11,7 @@ import {
   FileText,
   Zap,
 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { motion } from "motion/react";
 
 interface DashboardProps {
@@ -45,22 +44,23 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
               className="relative px-8 py-12 rounded-xl shadow-sm border border-gray-200 mb-6 overflow-hidden"
             >
               {/* Background Image */}
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  backgroundImage: "url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=400&fit=crop')",
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=400&fit=crop')",
                 }}
               />
               {/* Overlay for readability */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-purple-900/85 to-pink-900/90" />
-              
+
               {/* Content */}
               <div className="relative z-10 flex items-center gap-5">
                 {/* Left: Avatar */}
                 <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 border border-white/30">
                   <span className="text-2xl">👤</span>
                 </div>
-                
+
                 {/* Center: Greeting & Welcome Message */}
                 <div className="flex-1">
                   <h1 className="text-2xl font-semibold text-white mb-0.5">
@@ -116,7 +116,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                style={{ width: '70%' }}
+                style={{ width: "70%" }}
                 className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="flex items-center justify-between mb-4">
@@ -140,7 +140,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                style={{ width: '30%' }}
+                style={{ width: "30%" }}
                 className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="flex items-center justify-between mb-4">
@@ -290,9 +290,6 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
           </div>
         </aside>
       </div>
-      
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

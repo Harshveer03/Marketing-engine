@@ -1,4 +1,4 @@
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   ArrowRight,
   CheckCircle,
@@ -19,7 +19,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { useState } from "react";
 
 interface LandingPageProps {

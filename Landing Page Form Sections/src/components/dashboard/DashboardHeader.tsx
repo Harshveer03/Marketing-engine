@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { User, ArrowLeft, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 

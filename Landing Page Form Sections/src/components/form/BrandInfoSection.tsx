@@ -41,13 +41,15 @@ export function BrandInfoSection({
   // State for links
   const [websiteLinks, setWebsiteLinks] = useState<string[]>([]);
   const [websiteInput, setWebsiteInput] = useState("");
-  
+
   // Social links - unified structure
-  const [socialLinks, setSocialLinks] = useState<{ platform: string; url: string }[]>([]);
+  const [socialLinks, setSocialLinks] = useState<
+    { platform: string; url: string }[]
+  >([]);
   const [showSocialDropdown, setShowSocialDropdown] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [socialInput, setSocialInput] = useState("");
-  
+
   const [competitorLinks, setCompetitorLinks] = useState<string[]>([]);
   const [competitorInput, setCompetitorInput] = useState("");
   const [showCompetitorInput, setShowCompetitorInput] = useState(false);
@@ -150,7 +152,7 @@ export function BrandInfoSection({
               <LinkIcon className="w-5 h-5" />
               Links & References
             </h3>
-            
+
             {/* Website Section - Full Width */}
             <div className="space-y-3 mb-6">
               <Label className="text-gray-900 font-semibold flex items-center gap-2 text-base">
@@ -166,7 +168,14 @@ export function BrandInfoSection({
                   className="flex-1 border-2 border-gray-300 h-10 focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 text-sm px-3 rounded-lg"
                 />
                 <Button
-                  onClick={() => addLink(websiteInput, setWebsiteInput, websiteLinks, setWebsiteLinks)}
+                  onClick={() =>
+                    addLink(
+                      websiteInput,
+                      setWebsiteInput,
+                      websiteLinks,
+                      setWebsiteLinks
+                    )
+                  }
                   className="!bg-black hover:bg-gray-800 text-white px-4 border-0 text-xs h-10 font-semibold rounded-lg"
                 >
                   Add
@@ -175,10 +184,17 @@ export function BrandInfoSection({
               {websiteLinks.length > 0 && (
                 <div className="space-y-2 mt-3">
                   {websiteLinks.map((link, index) => (
-                    <div key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
-                      <span className="text-xs text-gray-700 flex-1 truncate">{link}</span>
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg"
+                    >
+                      <span className="text-xs text-gray-700 flex-1 truncate">
+                        {link}
+                      </span>
                       <button
-                        onClick={() => removeLink(index, websiteLinks, setWebsiteLinks)}
+                        onClick={() =>
+                          removeLink(index, websiteLinks, setWebsiteLinks)
+                        }
                         className="text-gray-500 hover:text-red-600"
                       >
                         <X className="w-4 h-4" />
@@ -199,24 +215,23 @@ export function BrandInfoSection({
                 >
                   + Add Social
                 </Button>
-                  
-                  {/* Dropdown Menu */}
-                  {showSocialDropdown && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-lg z-10">
-                      {socialPlatforms.map((platform) => (
-                        <button
-                          key={platform.value}
-                          onClick={() => selectPlatform(platform.name)}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg transition-colors"
-                        >
-                          {platform.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
 
-              
+                {/* Dropdown Menu */}
+                {showSocialDropdown && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-lg z-10">
+                    {socialPlatforms.map((platform) => (
+                      <button
+                        key={platform.value}
+                        onClick={() => selectPlatform(platform.name)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg transition-colors"
+                      >
+                        {platform.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Add Competitor Button */}
               <div className="flex-1">
                 <Button
@@ -235,7 +250,9 @@ export function BrandInfoSection({
                 {/* Input field when platform is selected */}
                 {selectedPlatform && (
                   <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
-                    <p className="text-xs font-medium text-gray-600">{selectedPlatform}</p>
+                    <p className="text-xs font-medium text-gray-600">
+                      {selectedPlatform}
+                    </p>
                     <div className="flex gap-2">
                       <Input
                         type="url"
@@ -267,10 +284,17 @@ export function BrandInfoSection({
                 {socialLinks.length > 0 && (
                   <div className="space-y-2">
                     {socialLinks.map((social, index) => (
-                      <div key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg"
+                      >
                         <div className="flex-1">
-                          <p className="text-xs font-medium text-gray-600">{social.platform}</p>
-                          <p className="text-xs text-gray-700 truncate">{social.url}</p>
+                          <p className="text-xs font-medium text-gray-600">
+                            {social.platform}
+                          </p>
+                          <p className="text-xs text-gray-700 truncate">
+                            {social.url}
+                          </p>
                         </div>
                         <button
                           onClick={() => removeSocialLink(index)}
@@ -300,7 +324,10 @@ export function BrandInfoSection({
                       <Button
                         onClick={() => {
                           if (competitorInput.trim()) {
-                            setCompetitorLinks([...competitorLinks, competitorInput.trim()]);
+                            setCompetitorLinks([
+                              ...competitorLinks,
+                              competitorInput.trim(),
+                            ]);
                             setCompetitorInput("");
                             setShowCompetitorInput(false);
                           }
@@ -326,10 +353,21 @@ export function BrandInfoSection({
                 {competitorLinks.length > 0 && (
                   <div className="space-y-2 mt-3">
                     {competitorLinks.map((link, index) => (
-                      <div key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
-                        <span className="text-xs text-gray-700 flex-1 truncate">{link}</span>
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg"
+                      >
+                        <span className="text-xs text-gray-700 flex-1 truncate">
+                          {link}
+                        </span>
                         <button
-                          onClick={() => removeLink(index, competitorLinks, setCompetitorLinks)}
+                          onClick={() =>
+                            removeLink(
+                              index,
+                              competitorLinks,
+                              setCompetitorLinks
+                            )
+                          }
                           className="text-gray-500 hover:text-red-600"
                         >
                           <X className="w-4 h-4" />
@@ -361,9 +399,7 @@ export function BrandInfoSection({
               <p className="text-gray-900 font-semibold text-sm mb-1">
                 Upload logos, images, fonts
               </p>
-              <p className="text-gray-600 text-sm">
-                PNG, JPG, SVG up to 10MB
-              </p>
+              <p className="text-gray-600 text-sm">PNG, JPG, SVG up to 10MB</p>
               <input
                 type="file"
                 className="absolute inset-0 opacity-0 cursor-pointer"
@@ -374,9 +410,9 @@ export function BrandInfoSection({
           </div>
 
           {/* 3. Marketing Materials Section */}
-          <div className="pt-6 border-t border-gray-200">
+          <div className="pt-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Upload className="w-5 h-5" />
+              <Upload className="w-5 h-6" />
               Marketing Materials
             </h3>
             <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-3 text-base">
@@ -392,9 +428,7 @@ export function BrandInfoSection({
               <p className="text-gray-900 font-semibold text-sm mb-1">
                 Upload marketing materials
               </p>
-              <p className="text-gray-600 text-sm">
-                PDF, DOC, PPT up to 20MB
-              </p>
+              <p className="text-gray-600 text-sm">PDF, DOC, PPT up to 20MB</p>
               <input
                 type="file"
                 className="absolute inset-0 opacity-0 cursor-pointer"
@@ -405,9 +439,9 @@ export function BrandInfoSection({
           </div>
 
           {/* 4. Brand Description Section */}
-          <div className="pt-6 border-t border-gray-200">
+          <div className="pt-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5" />
+              <FileText className="w-5 h-6" />
               Brand Description
             </h3>
             <div>
@@ -422,9 +456,7 @@ export function BrandInfoSection({
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) =>
-                    handleChange("description", e.target.value)
-                  }
+                  onChange={(e) => handleChange("description", e.target.value)}
                   className="flex-1 border-2 border-gray-300 min-h-[120px] focus:border-black focus:ring-2 focus:ring-gray-200 transition-all duration-200 resize-none text-base px-4 py-3 rounded-lg"
                   placeholder="Tell us about your brand, its mission, and values..."
                 />

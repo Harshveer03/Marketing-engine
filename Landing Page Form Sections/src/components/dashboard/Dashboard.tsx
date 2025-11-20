@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardHeader } from "./DashboardHeader";
+import { BrandDiagnosticsPage } from "./BrandDiagnosticsPage";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
@@ -36,6 +37,9 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto">
+          {activeSection === "diagnostics" ? (
+            <BrandDiagnosticsPage />
+          ) : (
           <div className="p-8">
             {/* Enhanced Greeting Card - Full Width */}
             <motion.div
@@ -131,7 +135,7 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
                   </div>
                   <div>
                     <p className="text-3xl font-bold text-gray-900">85/100</p>
-                    <p className="text-sm text-gray-500">Score</p>
+                    <p className="text-sm text-gray-500">Health Score</p>
                   </div>
                 </div>
               </motion.div>
@@ -254,41 +258,44 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
               </div>
             </motion.div>
           </div>
+          )}
         </main>
 
-        {/* Right Sidebar */}
-        <aside className="w-64 bg-white border-l border-gray-200 p-6 overflow-auto">
-          {/* Calendar */}
-          <div className="mb-10">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Calendar</h3>
-            <div className="calendar-widget">
-              <Calendar
-                onChange={(value) => setSelectedDate(value as Date)}
-                value={selectedDate}
-                className="border-0 rounded-xl shadow-sm"
-              />
+        {/* Right Sidebar - Hidden on Brand Diagnostics page */}
+        {activeSection !== "diagnostics" && (
+          <aside className="w-64 bg-white border-l border-gray-200 p-6 overflow-auto">
+            {/* Calendar */}
+            <div className="mb-10">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Calendar</h3>
+              <div className="calendar-widget">
+                <Calendar
+                  onChange={(value) => setSelectedDate(value as Date)}
+                  value={selectedDate}
+                  className="border-0 rounded-xl shadow-sm"
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Schedule */}
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4">
-              My Schedule
-            </h3>
-            <div className="space-y-3">
-              {[
-                { time: "10:00 AM", title: "Team Meeting" },
-                { time: "2:00 PM", title: "Content Review" },
-                { time: "4:30 PM", title: "Campaign Launch" },
-              ].map((item, i) => (
-                <div key={i} className="bg-gray-50 p-4 rounded-xl">
-                  <p className="text-xs text-gray-500">{item.time}</p>
-                  <p className="font-semibold text-gray-900">{item.title}</p>
-                </div>
-              ))}
+            {/* Schedule */}
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                My Schedule
+              </h3>
+              <div className="space-y-3">
+                {[
+                  { time: "10:00 AM", title: "Team Meeting" },
+                  { time: "2:00 PM", title: "Content Review" },
+                  { time: "4:30 PM", title: "Campaign Launch" },
+                ].map((item, i) => (
+                  <div key={i} className="bg-gray-50 p-4 rounded-xl">
+                    <p className="text-xs text-gray-500">{item.time}</p>
+                    <p className="font-semibold text-gray-900">{item.title}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        )}
       </div>
     </div>
   );

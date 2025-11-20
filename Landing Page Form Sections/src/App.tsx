@@ -6,13 +6,12 @@ import { Footer } from "./components/shared/Footer";
 import { Sidebar } from "./components/form/Sidebar";
 import { WhatUseSection } from "./components/form/WhatUseSection";
 import { BrandInfoSection } from "./components/form/BrandInfoSection";
-import { ScoreSection } from "./components/form/ScoreSection";
 import { PreviewSection } from "./components/form/PreviewSection";
 import { SplashScreen } from "./components/landing/SplashScreen";
 import { Dashboard } from "./components/dashboard/Dashboard";
 import { motion, AnimatePresence } from "motion/react";
 
-export type Section = "brand-info" | "score" | "what-use" | "preview";
+export type Section = "brand-info" | "what-use" | "preview";
 
 // Background images for each section
 const sectionBackgrounds: Record<Section, string> = {
@@ -20,8 +19,6 @@ const sectionBackgrounds: Record<Section, string> = {
     "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop", // Office workspace
   preview:
     "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&h=1080&fit=crop", // Business planning/documents
-  score:
-    "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1920&h=1080&fit=crop", // Success/achievement
   "what-use":
     "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1920&h=1080&fit=crop", // Creative/design workspace
 };
@@ -96,7 +93,7 @@ export default function App() {
   }, [formData, isAuthenticated]);
 
   const handleNext = () => {
-    const sections: Section[] = ["brand-info", "preview", "score", "what-use"];
+    const sections: Section[] = ["brand-info", "preview", "what-use"];
     const currentIndex = sections.indexOf(activeSection);
     if (currentIndex < sections.length - 1) {
       setActiveSection(sections[currentIndex + 1]);
@@ -235,21 +232,21 @@ export default function App() {
             <div className="flex items-center gap-4 mb-2">
               <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
                 Step{" "}
-                {["brand-info", "preview", "score", "what-use"].indexOf(
+                {["brand-info", "preview", "what-use"].indexOf(
                   activeSection
                 ) + 1}{" "}
-                of 4
+                of 3
               </span>
 
               <div className="flex-1 h-2 bg-gray-300 rounded-full">
                 <div
                   style={{
                     width: `${
-                      (["brand-info", "preview", "score", "what-use"].indexOf(
+                      (["brand-info", "preview", "what-use"].indexOf(
                         activeSection
                       ) +
                         1) *
-                      25
+                      33.33
                     }%`,
                     backgroundColor: "#000000",
                     height: "100%",
@@ -260,11 +257,11 @@ export default function App() {
               </div>
 
               <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
-                {(["brand-info", "preview", "score", "what-use"].indexOf(
+                {Math.round((["brand-info", "preview", "what-use"].indexOf(
                   activeSection
                 ) +
                   1) *
-                  25}
+                  33.33)}
                 % Complete
               </span>
             </div>
@@ -273,13 +270,11 @@ export default function App() {
               {[
                 { id: "brand-info", label: "Brand Info" },
                 { id: "preview", label: "Preview" },
-                { id: "score", label: "Score" },
                 { id: "what-use", label: "Usage" },
               ].map((step, index) => {
                 const currentIndex = [
                   "brand-info",
                   "preview",
-                  "score",
                   "what-use",
                 ].indexOf(activeSection);
                 const isCompleted = index < currentIndex;
@@ -331,9 +326,6 @@ export default function App() {
                       formData={formData.brandInfo}
                       onUpdateData={(data) => updateFormData("brandInfo", data)}
                     />
-                  )}
-                  {activeSection === "score" && (
-                    <ScoreSection onNext={handleNext} />
                   )}
                   {activeSection === "what-use" && (
                     <WhatUseSection

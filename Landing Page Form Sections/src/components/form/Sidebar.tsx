@@ -1,7 +1,7 @@
 import { Section } from "../../App";
 import { motion } from "motion/react";
 import { Button } from "../ui/button";
-import { HelpCircle, FileText, Eye, BarChart3, Target } from "lucide-react";
+import { HelpCircle, FileText, Eye, Target } from "lucide-react";
 
 interface SidebarProps {
   activeSection: Section;
@@ -18,11 +18,6 @@ const sections = [
     id: "preview" as Section,
     label: "Preview",
     icon: Eye,
-  },
-  {
-    id: "score" as Section,
-    label: "Score",
-    icon: BarChart3,
   },
   {
     id: "what-use" as Section,

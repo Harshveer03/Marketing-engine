@@ -92,7 +92,7 @@ export function Header({
             onClick={() => setShowUserMenu(!showUserMenu)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ring-2 ring-white"
+            className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-black shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ring-2 ring-white"
           >
             <User className="w-4 h-4" />
           </motion.button>

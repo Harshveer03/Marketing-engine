@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   BarChart3,
   TrendingUp,
@@ -9,7 +9,24 @@ import {
   MessageSquare,
   Calendar,
   Activity,
+  Download,
+  X,
+  ChevronRight,
+  TrendingDown,
+  Minus,
+  Info,
+  Filter,
+  RefreshCw,
 } from "lucide-react";
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 type MainTab = "industry" | "icp" | "persona" | "geography";
 
@@ -188,72 +205,301 @@ export function BrandDiagnosticsPage() {
         </p>
       </div>
 
-      {/* Main Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
-        <div className="flex gap-2">
+      {/* Performance Snapshot Section */}
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Performance Snapshot</h2>
+        
+        {/* Horizontal Scrollable Cards Container */}
+        <div className="overflow-x-auto pb-4 -mx-2 px-2">
+          <div className="flex gap-4 lg:grid lg:grid-cols-7 lg:gap-4">
+            {diagnosticSections.map((section, index) => {
+              const Icon = section.icon;
+              const colors = getColorClasses(section.color);
+              
+              // Determine trend direction based on score
+              const getTrendIcon = () => {
+                if (section.score >= 80) return <TrendingUp className="w-4 h-4 text-green-500" />;
+                if (section.score >= 65) return <Minus className="w-4 h-4 text-gray-400" />;
+                return <TrendingDown className="w-4 h-4 text-red-500" />;
+              };
+
+              const getTrendText = () => {
+                if (section.score >= 80) return "vs. Avg 75%";
+                if (section.score >= 65) return "vs. Avg 70%";
+                return "vs. Avg 75%";
+              };
+
+              const getTrendColor = () => {
+                if (section.score >= 80) return "text-green-600";
+                if (section.score >= 65) return "text-gray-600";
+                return "text-red-600";
+              };
+
+              return (
+                <motion.div
+                  key={section.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all w-[180px] lg:w-auto flex-shrink-0 flex flex-col h-[200px]"
+                >
+                  {/* Header with Icon and Trend */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className={`w-8 h-8 ${colors.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                      <Icon className={`w-4 h-4 ${colors.text}`} />
+                    </div>
+                    <div className="flex-shrink-0">
+                      {getTrendIcon()}
+                    </div>
+                  </div>
+
+                  {/* Metric Name */}
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2 h-10 line-clamp-2">
+                    {section.title}
+                  </h3>
+
+                  {/* Score */}
+                  <div className="mb-2">
+                    <span className={`text-3xl font-bold ${colors.text}`}>
+                      {section.score}%
+                    </span>
+                  </div>
+
+                  {/* Comparison */}
+                  <div className={`text-xs font-medium mb-2 ${getTrendColor()}`}>
+                    {getTrendText()}
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-xs text-gray-500 line-clamp-2 mt-auto">
+                    {section.description}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Focus Lens Selector Section */}
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Focus Lens Selector</h2>
+        
+        {/* Category Tabs - First Row */}
+        <div className="flex gap-3 flex-wrap mb-4">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+              style={
                 activeTab === tab.id
-                  ? "bg-black text-black shadow-md"
-                  : "text-gray-600 hover:bg-gray-100"
+                  ? { backgroundColor: "#000", color: "#fff" }
+                  : {}
+              }
+              className={`px-6 py-2.5 rounded-full font-medium transition-all ${
+                activeTab === tab.id
+                  ? "shadow-md"
+                  : "bg-white text-gray-700 border border-gray-300 hover:border-gray-400"
               }`}
             >
               {tab.label}
             </button>
           ))}
         </div>
+
+        {/* Filter Options - Second Row */}
+        <div className="flex gap-3 flex-wrap">
+          {filterOptions[activeTab].map((option) => (
+            <button
+              key={option}
+              onClick={() => setSelectedFilter(option)}
+              style={
+                selectedFilter === option
+                  ? { backgroundColor: "#000", color: "#fff" }
+                  : {}
+              }
+              className={`px-6 py-2.5 rounded-full font-medium transition-all whitespace-nowrap ${
+                selectedFilter === option
+                  ? "shadow-md"
+                  : "bg-white text-gray-700 border border-gray-300 hover:border-gray-400"
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Filter Dropdown */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-semibold text-gray-700">
-            Filter by {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}:
-          </label>
-          <select
-            value={selectedFilter}
-            onChange={(e) => setSelectedFilter(e.target.value)}
-            className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+      {/* Three Cards Section - 2 Column Layout */}
+      <div className="grid grid-cols-3 gap-6 mb-8">
+        {/* Left Column: Competitor Comparison Grid - 1/3 width */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="col-span-1 bg-white rounded-xl shadow-md border border-gray-200 p-8"
+        >
+          <h3 className="text-lg font-bold mb-4 text-gray-900">Competitor Comparison Grid</h3>
+          
+          {/* Comparison Table */}
+          <div className="overflow-x-auto">
+            <table className="text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-2 pr-2 font-semibold text-gray-600 text-xs">METRIC</th>
+                  <th className="text-center py-2 px-2 font-semibold text-gray-900 text-xs">YOU</th>
+                  <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR A</th>
+                  <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR B</th>
+                  <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR C</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 pr-2 text-gray-700">Visibility</td>
+                  <td className="text-center py-3 px-2 font-semibold text-gray-900">82%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">78%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">90%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">65%</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 pr-2 text-gray-700">Authority</td>
+                  <td className="text-center py-3 px-2 font-semibold text-gray-900">75%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">80%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">72%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">60%</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 pr-2 text-gray-700">Content Coverage</td>
+                  <td className="text-center py-3 px-2 font-semibold text-gray-900">88%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">85%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">75%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">55%</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 pr-2 text-gray-700">Messaging Strength</td>
+                  <td className="text-center py-3 px-2 font-semibold text-gray-900">70%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">72%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">68%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">50%</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 pr-2 text-gray-700">Keyword Overlap</td>
+                  <td className="text-center py-3 px-2 font-semibold text-gray-900">65%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">70%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">60%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">45%</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 pr-2 text-gray-700">Engagement Footprint</td>
+                  <td className="text-center py-3 px-2 font-semibold text-gray-900">78%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">75%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">85%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">62%</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-3 pr-2 text-gray-700">Webwide Mentions</td>
+                  <td className="text-center py-3 px-2 font-semibold text-gray-900">92%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">89%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">80%</td>
+                  <td className="text-center py-3 px-2 text-gray-600">70%</td>
+                </tr>
+                <tr>
+                  <td className="py-3 pr-2 text-gray-700">Trend Position</td>
+                  <td className="text-center py-3 px-2 font-semibold text-green-600">Leader</td>
+                  <td className="text-center py-3 px-2 text-gray-600">Follower</td>
+                  <td className="text-center py-3 px-2 text-gray-600">Lagging</td>
+                  <td className="text-center py-3 px-2 text-gray-600">Disruptor</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Summary Section */}
+          <div className="mt-6 pt-4 border-t border-gray-200">
+            <h4 className="text-sm font-semibold mb-3 text-gray-700">Summary</h4>
+            <ul className="space-y-2 text-xs text-gray-600">
+              <li>• Strong in brand mentions and content, leading in many areas.</li>
+              <li>• Good visibility, slightly higher authority in key topics.</li>
+              <li>• High visibility but weaker content coverage, focused on niche.</li>
+              <li>• Emerging brand, significant growth potential in specific areas.</li>
+            </ul>
+          </div>
+        </motion.div>
+
+        {/* Right Column: Two Cards Stacked - 2/3 width */}
+        <div className="col-span-2 space-y-6">
+          {/* Card 2: Trend Position Mini Panel */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white rounded-xl shadow-md border border-gray-200 p-8"
           >
-            {filterOptions[activeTab].map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <div className="ml-auto text-sm text-gray-500">
-            Analyzing:{" "}
-            <span className="font-semibold text-gray-900">
-              {selectedFilter}
-            </span>
-          </div>
+            <h3 className="text-xl font-bold mb-6 text-gray-900">Trend Position Mini Panel</h3>
+            
+            {/* 2x2 Quadrant Grid */}
+            <div className="grid grid-cols-2 gap-4 h-80">
+              {/* Top Left - Lagging */}
+              <div className="border border-gray-200 rounded-lg p-4 flex items-start justify-start">
+                <span className="text-sm text-gray-500">Lagging</span>
+              </div>
+              
+              {/* Top Right - You (Leader) */}
+              <div className="border border-gray-200 rounded-lg p-4 flex items-center justify-center relative">
+                <span className="absolute top-4 right-4 text-sm text-gray-500">Follower</span>
+                <div className="bg-blue-600 text-white px-4 py-2 rounded-full font-semibold text-sm">
+                  You
+                </div>
+              </div>
+              
+              {/* Bottom Left - empty */}
+              <div className="border border-gray-200 rounded-lg p-4 flex items-end justify-start">
+                <span className="text-sm text-gray-500">Lagging</span>
+              </div>
+              
+              {/* Bottom Right - Disruptor */}
+              <div className="border border-gray-200 rounded-lg p-4 flex items-end justify-end">
+                <span className="text-sm text-gray-500">Disruptor</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 3: Diagnostic Radar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-xl shadow-md border border-gray-200 p-8"
+          >
+            <h3 className="text-xl font-bold mb-6 text-gray-900">Diagnostic Radar</h3>
+            
+            {/* Radar Chart */}
+            <ResponsiveContainer width="100%" height={500}>
+              <RadarChart data={[
+                { metric: 'Clarity', you: 85, competitorA: 75, competitorB: 80, competitorC: 65 },
+                { metric: 'Specificity', you: 72, competitorA: 78, competitorB: 70, competitorC: 60 },
+                { metric: 'Relevance', you: 88, competitorA: 82, competitorB: 85, competitorC: 70 },
+                { metric: 'GAP', you: 65, competitorA: 70, competitorB: 60, competitorC: 55 },
+                { metric: 'Messaging', you: 90, competitorA: 85, competitorB: 88, competitorC: 75 },
+                { metric: 'Posting', you: 78, competitorA: 80, competitorB: 75, competitorC: 70 },
+                { metric: 'Trend', you: 82, competitorA: 75, competitorB: 78, competitorC: 68 },
+              ]}>
+                <PolarGrid stroke="#E5E7EB" />
+                <PolarAngleAxis dataKey="metric" tick={{ fill: '#6B7280', fontSize: 12 }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#9CA3AF', fontSize: 10 }} />
+                <Radar name="You" dataKey="you" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.5} />
+                <Radar name="Competitor A" dataKey="competitorA" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.3} />
+                <Radar name="Competitor B" dataKey="competitorB" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
+                <Radar name="Competitor C" dataKey="competitorC" stroke="#F59E0B" fill="#F59E0B" fillOpacity={0.3} />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="circle"
+                  formatter={(value) => <span style={{ color: '#374151', fontSize: '12px' }}>{value}</span>}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </motion.div>
         </div>
       </div>
-
-      {/* Overall Score Card */}
-      <motion.div
-        key={`${activeTab}-${selectedFilter}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-gray-900 to-gray-700 rounded-xl shadow-lg p-8 text-white"
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold mb-2">Overall Health Score</h2>
-            <p className="text-gray-300">
-              For {selectedFilter} in{" "}
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} context
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-6xl font-bold mb-2">80%</div>
-            <div className="text-sm text-gray-300">Good Performance</div>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Diagnostic Sections Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -246,7 +246,15 @@ export function BrandDiagnosticsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all w-[180px] lg:w-full lg:max-w-full flex-shrink-0 flex flex-col h-[220px] min-w-0 overflow-hidden"
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex-shrink-0 flex flex-col overflow-hidden"
+                  style={{
+                    width: '175px',
+                    minWidth: '175px',
+                    maxWidth: '175px',
+                    height: '220px',
+                    minHeight: '220px',
+                    maxHeight: '220px'
+                  }}
                 >
                   {/* Header with Icon and Trend - Fixed Height */}
                   <div className="flex items-start justify-between mb-3 h-8 flex-shrink-0">
@@ -258,25 +266,25 @@ export function BrandDiagnosticsPage() {
                     </div>
                   </div>
 
-                  {/* Metric Name - Fixed Height */}
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3 h-10 line-clamp-2 flex-shrink-0 overflow-hidden text-ellipsis">
+                  {/* Metric Name - Fixed Height - Centered */}
+                  <h3 className="text-sm font-semibold text-gray-700 mb-1 h-10 line-clamp-2 flex-shrink-0 text-center">
                     {section.title}
                   </h3>
 
-                  {/* Score - Fixed Height */}
-                  <div className="mb-2 h-10 flex items-center flex-shrink-0">
-                    <span className={`text-3xl font-bold ${colors.text} leading-none truncate`}>
+                  {/* Score - Fixed Height - Centered */}
+                  <div className="mb-2 h-10 flex items-center justify-center flex-shrink-0">
+                    <span className={`text-3xl font-bold ${colors.text} leading-none`}>
                       {section.score}%
                     </span>
                   </div>
 
-                  {/* Comparison - Fixed Height */}
-                  <div className={`text-xs font-medium mb-3 h-5 flex items-center flex-shrink-0 ${getTrendColor()} truncate`}>
+                  {/* Comparison - Fixed Height - Centered */}
+                  <div className={`text-xs font-medium mb-3 h-5 flex items-center justify-center flex-shrink-0 ${getTrendColor()}`}>
                     {getTrendText()}
                   </div>
 
-                  {/* Description - Flexible but constrained */}
-                  <p className="text-xs text-gray-500 line-clamp-2 mt-auto flex-shrink overflow-hidden text-ellipsis">
+                  {/* Description - Fixed Height - Centered */}
+                  <p className="text-gray-500 line-clamp-2 h-8 flex-shrink-0 text-center" style={{ fontSize: '10px' }}>
                     {section.description}
                   </p>
                 </motion.div>

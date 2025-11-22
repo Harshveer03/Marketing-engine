@@ -17,6 +17,9 @@ import {
   Info,
   Filter,
   RefreshCw,
+  Trophy,
+  Wrench,
+  Shield,
 } from "lucide-react";
 import {
   Radar,
@@ -208,10 +211,10 @@ export function BrandDiagnosticsPage() {
       {/* Performance Snapshot Section */}
       <div className="mb-8">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Performance Snapshot</h2>
-        
+
         {/* Horizontal Scrollable Cards Container */}
         <div className="overflow-x-auto pb-4 -mx-2 px-2">
-          <div 
+          <div
             className="flex gap-4 lg:grid lg:gap-4 lg:overflow-visible"
             style={{
               gridTemplateColumns: 'repeat(7, minmax(0, 1fr))'
@@ -220,7 +223,7 @@ export function BrandDiagnosticsPage() {
             {diagnosticSections.map((section, index) => {
               const Icon = section.icon;
               const colors = getColorClasses(section.color);
-              
+
               // Determine trend direction based on score
               const getTrendIcon = () => {
                 if (section.score >= 80) return <TrendingUp className="w-4 h-4 text-green-500" />;
@@ -297,7 +300,7 @@ export function BrandDiagnosticsPage() {
       {/* Focus Lens Selector Section */}
       <div className="mb-8">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Focus Lens Selector</h2>
-        
+
         {/* Category Tabs - First Row */}
         <div className="flex gap-3 flex-wrap mb-4">
           {tabs.map((tab) => (
@@ -309,11 +312,10 @@ export function BrandDiagnosticsPage() {
                   ? { backgroundColor: "#000", color: "#fff" }
                   : {}
               }
-              className={`px-6 py-2.5 rounded-full font-medium transition-all ${
-                activeTab === tab.id
-                  ? "shadow-md"
-                  : "bg-white text-gray-700 border border-gray-300 hover:border-gray-400"
-              }`}
+              className={`px-6 py-2.5 rounded-full font-medium transition-all ${activeTab === tab.id
+                ? "shadow-md"
+                : "bg-white text-gray-700 border border-gray-300 hover:border-gray-400"
+                }`}
             >
               {tab.label}
             </button>
@@ -331,11 +333,10 @@ export function BrandDiagnosticsPage() {
                   ? { backgroundColor: "#000", color: "#fff" }
                   : {}
               }
-              className={`px-6 py-2.5 rounded-full font-medium transition-all whitespace-nowrap ${
-                selectedFilter === option
-                  ? "shadow-md"
-                  : "bg-white text-gray-700 border border-gray-300 hover:border-gray-400"
-              }`}
+              className={`px-6 py-2.5 rounded-full font-medium transition-all whitespace-nowrap ${selectedFilter === option
+                ? "shadow-md"
+                : "bg-white text-gray-700 border border-gray-300 hover:border-gray-400"
+                }`}
             >
               {option}
             </button>
@@ -344,354 +345,991 @@ export function BrandDiagnosticsPage() {
       </div>
 
       {/* Three Cards Section - 2 Column Layout */}
-      <div className="-mx-8 px-2 mb-8">
-        <div className="grid grid-cols-3 gap-3 w-full">
-        {/* Left Column: Competitor Comparison Grid - 1/3 width */}
+      <div className="mb-8">
+        <div className="grid grid-cols-2 gap-4 w-full">
+          {/* Left Column: Competitor Comparison Grid - 50% width */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="col-span-1 bg-white rounded-xl shadow-md border border-gray-200 p-6 h-full flex flex-col"
+          >
+            <h3 className="text-lg font-bold mb-3 text-gray-900">Competitor Comparison Grid</h3>
+
+            {/* Comparison Table */}
+            <div className="overflow-x-auto flex-1">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left py-2 pr-2 font-semibold text-gray-600 text-xs">METRIC</th>
+                    <th className="text-center py-2 px-2 font-semibold text-gray-900 text-xs">YOU</th>
+                    <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR A</th>
+                    <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR B</th>
+                    <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR C</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Visibility</td>
+                    <td className="text-center py-2 px-2 font-semibold text-gray-900">82%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">78%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">90%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">65%</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Authority</td>
+                    <td className="text-center py-2 px-2 font-semibold text-gray-900">75%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">80%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">72%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">60%</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Content Coverage</td>
+                    <td className="text-center py-2 px-2 font-semibold text-gray-900">88%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">85%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">75%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">55%</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Messaging Strength</td>
+                    <td className="text-center py-2 px-2 font-semibold text-gray-900">70%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">72%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">68%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">50%</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Keyword Overlap</td>
+                    <td className="text-center py-2 px-2 font-semibold text-gray-900">65%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">70%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">60%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">45%</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Engagement Footprint</td>
+                    <td className="text-center py-2 px-2 font-semibold text-gray-900">78%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">75%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">85%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">62%</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Webwide Mentions</td>
+                    <td className="text-center py-2 px-2 font-semibold text-gray-900">92%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">89%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">80%</td>
+                    <td className="text-center py-2 px-2 text-gray-600">70%</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 pr-2 text-gray-700 text-sm">Trend Position</td>
+                    <td className="text-center py-2 px-2 font-semibold text-green-600">Leader</td>
+                    <td className="text-center py-2 px-2 text-gray-600">Follower</td>
+                    <td className="text-center py-2 px-2 text-gray-600">Lagging</td>
+                    <td className="text-center py-2 px-2 text-gray-600">Disruptor</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Summary Section */}
+            <div className="mt-4 pt-3 border-t border-gray-200">
+              <h4 className="text-sm font-semibold mb-2 text-gray-700">Summary</h4>
+              <ul className="space-y-1.5 text-xs text-gray-600">
+                <li>• Strong in brand mentions and content, leading in many areas.</li>
+                <li>• Good visibility, slightly higher authority in key topics.</li>
+                <li>• High visibility but weaker content coverage, focused on niche.</li>
+                <li>• Emerging brand, significant growth potential in specific areas.</li>
+              </ul>
+            </div>
+          </motion.div>
+
+          {/* Right Column: Two Cards Stacked - 50% width */}
+          <div className="col-span-1 space-y-4">
+            {/* Card 2: Trend Position Mini Panel */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-xl shadow-md border border-gray-200 p-6"
+            >
+              {/* Header Section */}
+              <div className="mb-6">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-gray-900 mb-0.5">Trend position panel</h3>
+                    <p className="text-sm text-gray-600">
+                      Where each brand sits on category trend dynamics.
+                    </p>
+                  </div>
+                  <span className="bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap ml-4">
+                    DiagnosticResult.trendPanel
+                  </span>
+                </div>
+              </div>
+
+              {/* 2x2 Quadrant Grid */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Leader - Top Left */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                >
+                  <h4 className="text-base font-bold text-gray-900 mb-2">Leader</h4>
+                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                    Sets the narrative and is referenced as a category-defining voice.
+                  </p>
+                  <div className="mt-auto space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                      <span className="text-sm text-gray-700">You</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">•</span>
+                      <span className="text-sm text-gray-700">Comp A</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Disruptor - Top Right */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                >
+                  <h4 className="text-base font-bold text-gray-900 mb-2">Disruptor</h4>
+                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                    Introduces new angles and contrarian takes that reshape demand.
+                  </p>
+                  <div className="mt-auto space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">•</span>
+                      <span className="text-sm text-gray-700">Comp B</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Follower - Bottom Left */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                >
+                  <h4 className="text-base font-bold text-gray-900 mb-2">Follower</h4>
+                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                    Joins trends late and mainly echoes existing narratives.
+                  </p>
+                  <div className="mt-auto space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">•</span>
+                      <span className="text-sm text-gray-700">Comp C</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Lagging - Bottom Right */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                >
+                  <h4 className="text-base font-bold text-gray-900 mb-2">Lagging</h4>
+                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                    Rarely shows up in category conversations or emerging themes.
+                  </p>
+                  <div className="mt-auto space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">•</span>
+                      <span className="text-sm text-gray-700">Long tail</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Card 3: Diagnostic Radar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-xl shadow-md border border-gray-200 p-6"
+            >
+              <h3 className="text-xl font-bold mb-6 text-gray-900">Diagnostic Radar</h3>
+
+              {/* Radar Chart */}
+              <ResponsiveContainer width="100%" height={500}>
+                <RadarChart data={[
+                  { metric: 'Clarity', you: 85, competitorA: 75, competitorB: 80, competitorC: 65 },
+                  { metric: 'Specificity', you: 72, competitorA: 78, competitorB: 70, competitorC: 60 },
+                  { metric: 'Relevance', you: 88, competitorA: 82, competitorB: 85, competitorC: 70 },
+                  { metric: 'GAP', you: 65, competitorA: 70, competitorB: 60, competitorC: 55 },
+                  { metric: 'Messaging', you: 90, competitorA: 85, competitorB: 88, competitorC: 75 },
+                  { metric: 'Posting', you: 78, competitorA: 80, competitorB: 75, competitorC: 70 },
+                  { metric: 'Trend', you: 82, competitorA: 75, competitorB: 78, competitorC: 68 },
+                ]}>
+                  <PolarGrid stroke="#E5E7EB" />
+                  <PolarAngleAxis dataKey="metric" tick={{ fill: '#6B7280', fontSize: 12 }} />
+                  <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#9CA3AF', fontSize: 10 }} />
+                  <Radar name="You" dataKey="you" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.5} />
+                  <Radar name="Competitor A" dataKey="competitorA" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.3} />
+                  <Radar name="Competitor B" dataKey="competitorB" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
+                  <Radar name="Competitor C" dataKey="competitorC" stroke="#F59E0B" fill="#F59E0B" fillOpacity={0.3} />
+                  <Legend
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    iconType="circle"
+                    formatter={(value) => <span style={{ color: '#374151', fontSize: '12px' }}>{value}</span>}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Brand Insights Section Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Brand Insights</h2>
+        <p className="text-gray-600 mb-3">
+          Detailed analysis of your brand's performance across key diagnostic metrics
+        </p>
+        <h3 className="text-lg font-bold text-gray-900 mb-4">Strategic Paths</h3>
+      </div>
+
+      {/* Strategic Paths - SWOT Analysis Grid */}
+      <div className="grid grid-cols-4 gap-4 mb-10">
+        {/* Strengths Column */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
+          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+            <div className="p-2 bg-green-50 rounded-lg">
+              <Trophy className="w-5 h-5 text-green-600" />
+            </div>
+            <h4 className="text-lg font-bold text-gray-900">Strengths</h4>
+          </div>
+          <div className="space-y-6 flex-1">
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Amplify positive customer testimonials across all platforms.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Leverage existing satisfaction. Boost social proof.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Ongoing
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Publish in-depth case studies based on successful client projects.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Showcase expertise and impact.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Q3
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Host expert webinars leveraging internal thought leaders.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Reinforce knowledge authority.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Monthly
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Weaknesses Column */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
+          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+            <div className="p-2 bg-orange-50 rounded-lg">
+              <Wrench className="w-5 h-5 text-orange-600" />
+            </div>
+            <h4 className="text-lg font-bold text-gray-900">Weaknesses</h4>
+          </div>
+          <div className="space-y-6 flex-1">
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Conduct a comprehensive SEO audit for technical issues.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Identify and fix underlying ranking barriers.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Next 4 weeks
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Develop a focused content calendar on missing high-value topics.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Fill content gaps and improve relevance.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Ongoing
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Invest in PR to secure media mentions and backlinks.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Boost domain authority and credibility.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Next 6 months
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Opportunities Column */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
+          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+            <div className="p-2 bg-blue-50 rounded-lg">
+              <Target className="w-5 h-5 text-blue-600" />
+            </div>
+            <h4 className="text-lg font-bold text-gray-900">Opportunities</h4>
+          </div>
+          <div className="space-y-6 flex-1">
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Explore partnerships with complementary businesses.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Expand reach to new audiences.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Q4
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Develop content for emerging platforms like TikTok or Threads.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Capture younger demographics.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Next 3 months
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Target international markets with localized content.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Global expansion potential.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Q4
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Threats Column */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
+          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+            <div className="p-2 bg-red-50 rounded-lg">
+              <Shield className="w-5 h-5 text-red-600" />
+            </div>
+            <h4 className="text-lg font-bold text-gray-900">Threats</h4>
+          </div>
+          <div className="space-y-6 flex-1">
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Monitor competitor ad spend and adjust strategy.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Counter aggressive campaigns.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Ongoing
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Diversify traffic sources beyond main channels.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Mitigate risk from algorithm changes.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Q3
+              </span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-snug mb-1.5">
+                Strengthen cybersecurity measures and data privacy protocols.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                Protect against breaches and regulatory fines.
+              </p>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                Timeline: Next 3 months
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 className="text-lg font-bold text-gray-900 mb-4">Gap Priority Map</h3>
+
+      {/* Gap Priority Map - 2x2 Quadrant Matrix */}
+      <div className="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="relative" style={{ height: '500px' }}>
+          {/* Quadrant Grid */}
+          <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 border border-gray-300">
+            {/* Top-left Quadrant */}
+            <div className="border-r border-b border-gray-300 p-4 relative">
+              <span className="text-xs text-gray-500 absolute top-2 left-2">High Impact, Low Urgency</span>
+              {/* Data Point: Engage with Industry Influencers */}
+              <div className="absolute" style={{ top: '50%', left: '30%' }}>
+                <div className="relative group">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
+                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
+                    Engage with Industry Influencers
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Top-right Quadrant */}
+            <div className="border-b border-gray-300 p-4 relative">
+              <span className="text-xs text-gray-500 absolute top-2 right-2">High Impact, High Urgency</span>
+              {/* Data Point: Update Privacy Policy */}
+              <div className="absolute" style={{ top: '30%', right: '25%' }}>
+                <div className="relative group">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
+                  <div className="absolute right-5 -top-1 whitespace-nowrap text-xs text-gray-700 text-right">
+                    Update Privacy Policy
+                  </div>
+                </div>
+              </div>
+              {/* Data Point: Audit Website Accessibility */}
+              <div className="absolute" style={{ top: '50%', right: '20%' }}>
+                <div className="relative group">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
+                  <div className="absolute right-5 -top-1 whitespace-nowrap text-xs text-gray-700 text-right">
+                    Audit Website Accessibility
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom-left Quadrant */}
+            <div className="border-r border-gray-300 p-4 relative">
+              <span className="text-xs text-gray-500 absolute bottom-2 left-2">Low Impact, Low Urgency</span>
+              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 origin-left">
+                <span className="text-sm font-medium text-gray-600">Impact</span>
+              </div>
+            </div>
+
+            {/* Bottom-right Quadrant */}
+            <div className="p-4 relative">
+              <span className="text-xs text-gray-500 absolute bottom-2 right-2">Low Impact, High Urgency</span>
+              {/* Data Point: Launch Customer Testimonial Campaign */}
+              <div className="absolute" style={{ bottom: '60%', right: '45%' }}>
+                <div className="relative group">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
+                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
+                    Launch Customer Testimonial
+                  </div>
+                  <div className="absolute left-5 top-2.5 whitespace-nowrap text-xs text-gray-700">
+                    Campaign
+                  </div>
+                </div>
+              </div>
+              {/* Data Point: Standardize Social Media Bios */}
+              <div className="absolute" style={{ bottom: '40%', right: '30%' }}>
+                <div className="relative group">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
+                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
+                    Standardize Social Media Bios
+                  </div>
+                </div>
+              </div>
+              {/* Data Point: Optimize Blog SEO */}
+              <div className="absolute" style={{ bottom: '20%', right: '40%' }}>
+                <div className="relative group">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
+                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
+                    Optimize Blog SEO
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* X-axis Label */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-6">
+            <span className="text-sm font-medium text-gray-600">Urgency</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 className="text-lg font-bold text-gray-900 mb-4">Gap Card Panel</h3>
+
+      {/* Gap Cards Panel - Brand Insights */}
+      <div className="grid grid-cols-4 gap-4">
+        {/* Card 1: Clarity */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="col-span-1 bg-white rounded-xl shadow-md border border-gray-200 p-8"
+          transition={{ delay: 0 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
         >
-          <h3 className="text-lg font-bold mb-4 text-gray-900">Competitor Comparison Grid</h3>
-          
-          {/* Comparison Table */}
-          <div className="overflow-x-auto">
-            <table className="text-sm">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-2 pr-2 font-semibold text-gray-600 text-xs">METRIC</th>
-                  <th className="text-center py-2 px-2 font-semibold text-gray-900 text-xs">YOU</th>
-                  <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR A</th>
-                  <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR B</th>
-                  <th className="text-center py-2 px-2 font-semibold text-gray-600 text-xs">COMPETITOR C</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-2 text-gray-700">Visibility</td>
-                  <td className="text-center py-3 px-2 font-semibold text-gray-900">82%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">78%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">90%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">65%</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-2 text-gray-700">Authority</td>
-                  <td className="text-center py-3 px-2 font-semibold text-gray-900">75%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">80%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">72%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">60%</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-2 text-gray-700">Content Coverage</td>
-                  <td className="text-center py-3 px-2 font-semibold text-gray-900">88%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">85%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">75%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">55%</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-2 text-gray-700">Messaging Strength</td>
-                  <td className="text-center py-3 px-2 font-semibold text-gray-900">70%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">72%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">68%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">50%</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-2 text-gray-700">Keyword Overlap</td>
-                  <td className="text-center py-3 px-2 font-semibold text-gray-900">65%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">70%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">60%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">45%</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-2 text-gray-700">Engagement Footprint</td>
-                  <td className="text-center py-3 px-2 font-semibold text-gray-900">78%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">75%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">85%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">62%</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-2 text-gray-700">Webwide Mentions</td>
-                  <td className="text-center py-3 px-2 font-semibold text-gray-900">92%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">89%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">80%</td>
-                  <td className="text-center py-3 px-2 text-gray-600">70%</td>
-                </tr>
-                <tr>
-                  <td className="py-3 pr-2 text-gray-700">Trend Position</td>
-                  <td className="text-center py-3 px-2 font-semibold text-green-600">Leader</td>
-                  <td className="text-center py-3 px-2 text-gray-600">Follower</td>
-                  <td className="text-center py-3 px-2 text-gray-600">Lagging</td>
-                  <td className="text-center py-3 px-2 text-gray-600">Disruptor</td>
-                </tr>
-              </tbody>
-            </table>
+          {/* Header */}
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Clarity</h3>
+            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
           </div>
 
-          {/* Summary Section */}
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <h4 className="text-sm font-semibold mb-3 text-gray-700">Summary</h4>
-            <ul className="space-y-2 text-xs text-gray-600">
-              <li>• Strong in brand mentions and content, leading in many areas.</li>
-              <li>• Good visibility, slightly higher authority in key topics.</li>
-              <li>• High visibility but weaker content coverage, focused on niche.</li>
-              <li>• Emerging brand, significant growth potential in specific areas.</li>
+          {/* Score Section */}
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-blue-600 mb-0.5">78%</div>
+            <div className="text-xs text-gray-600">vs. Avg 65%</div>
+            <div className="text-xs text-gray-600">Confidence: 90%</div>
+          </div>
+
+          {/* Description */}
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            Our brand's messaging is generally clear and understandable to our target audience. However, specific product feature explanations could benefit from more concise language and visual aids to enhance immediate comprehension.
+          </p>
+
+          {/* Webwide Highlight */}
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Customer praise our "easy-to-understand" onboarding process, but some support tickets indicate confusion on advanced features.
+            </p>
+          </div>
+
+          {/* Competitor Examples */}
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A uses animated explainers for complex topics</li>
+              <li>- Competitor B provides interactive tutorials for every new feature</li>
             </ul>
           </div>
+
+          {/* Mentions & Trend */}
+          <div className="flex items-center justify-between mb-2 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">15,400</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stable</span></span>
+          </div>
+
+          {/* Platform Distribution */}
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (40%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (30%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Twitter (20%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Forums (10%)</span>
+            </div>
+          </div>
+
+          {/* Action Button */}
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
         </motion.div>
 
-        {/* Right Column: Two Cards Stacked - 2/3 width */}
-        <div className="col-span-3 space-y-6">
-          {/* Card 2: Trend Position Mini Panel */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl shadow-md border border-gray-200 p-8"
-          >
-            {/* Header Section */}
-            <div className="mb-6">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">Trend position panel</h3>
-                  <p className="text-sm text-gray-600">
-                    Where each brand sits on category trend dynamics.
-                  </p>
-                </div>
-                <span className="bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap ml-4">
-                  DiagnosticResult.trendPanel
-                </span>
-              </div>
-            </div>
-            
-            {/* 2x2 Quadrant Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Leader - Top Left */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
-              >
-                <h4 className="text-base font-bold text-gray-900 mb-2">Leader</h4>
-                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
-                  Sets the narrative and is referenced as a category-defining voice.
-                </p>
-                <div className="mt-auto space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
-                    <span className="text-sm text-gray-700">You</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-gray-700">Comp A</span>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Disruptor - Top Right */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
-              >
-                <h4 className="text-base font-bold text-gray-900 mb-2">Disruptor</h4>
-                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
-                  Introduces new angles and contrarian takes that reshape demand.
-                </p>
-                <div className="mt-auto space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-gray-700">Comp B</span>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Follower - Bottom Left */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
-              >
-                <h4 className="text-base font-bold text-gray-900 mb-2">Follower</h4>
-                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
-                  Joins trends late and mainly echoes existing narratives.
-                </p>
-                <div className="mt-auto space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-gray-700">Comp C</span>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Lagging - Bottom Right */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
-              >
-                <h4 className="text-base font-bold text-gray-900 mb-2">Lagging</h4>
-                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
-                  Rarely shows up in category conversations or emerging themes.
-                </p>
-                <div className="mt-auto space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-gray-700">Long tail</span>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
+        {/* Card 2: Specificity */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Specificity</h3>
+            <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-semibold rounded">Medium</span>
+          </div>
 
-          {/* Card 3: Diagnostic Radar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl shadow-md border border-gray-200 p-8"
-          >
-            <h3 className="text-xl font-bold mb-6 text-gray-900">Diagnostic Radar</h3>
-            
-            {/* Radar Chart */}
-            <ResponsiveContainer width="100%" height={500}>
-              <RadarChart data={[
-                { metric: 'Clarity', you: 85, competitorA: 75, competitorB: 80, competitorC: 65 },
-                { metric: 'Specificity', you: 72, competitorA: 78, competitorB: 70, competitorC: 60 },
-                { metric: 'Relevance', you: 88, competitorA: 82, competitorB: 85, competitorC: 70 },
-                { metric: 'GAP', you: 65, competitorA: 70, competitorB: 60, competitorC: 55 },
-                { metric: 'Messaging', you: 90, competitorA: 85, competitorB: 88, competitorC: 75 },
-                { metric: 'Posting', you: 78, competitorA: 80, competitorB: 75, competitorC: 70 },
-                { metric: 'Trend', you: 82, competitorA: 75, competitorB: 78, competitorC: 68 },
-              ]}>
-                <PolarGrid stroke="#E5E7EB" />
-                <PolarAngleAxis dataKey="metric" tick={{ fill: '#6B7280', fontSize: 12 }} />
-                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#9CA3AF', fontSize: 10 }} />
-                <Radar name="You" dataKey="you" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.5} />
-                <Radar name="Competitor A" dataKey="competitorA" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.3} />
-                <Radar name="Competitor B" dataKey="competitorB" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
-                <Radar name="Competitor C" dataKey="competitorC" stroke="#F59E0B" fill="#F59E0B" fillOpacity={0.3} />
-                <Legend 
-                  wrapperStyle={{ paddingTop: '20px' }}
-                  iconType="circle"
-                  formatter={(value) => <span style={{ color: '#374151', fontSize: '12px' }}>{value}</span>}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </motion.div>
-        </div>
-        </div>
-      </div>
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-purple-600 mb-0.5">72%</div>
+            <div className="text-xs text-gray-600">vs. Avg 75%</div>
+            <div className="text-xs text-gray-600">Confidence: 85%</div>
+          </div>
 
-      {/* Diagnostic Sections Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {diagnosticSections.map((section, index) => {
-          const Icon = section.icon;
-          const colors = getColorClasses(section.color);
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            Our content, while broad, sometimes lacks the depth and specific details that top competitors provide. This can make it harder for technical users to find precise answers, potentially leading to increased bounce rates.
+          </p>
 
-          return (
-            <motion.div
-              key={section.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
-            >
-              {/* Section Header */}
-              <div className="flex items-center gap-3 mb-4">
-                <div
-                  className={`w-12 h-12 ${colors.bg} rounded-xl flex items-center justify-center`}
-                >
-                  <Icon className={`w-6 h-6 ${colors.text}`} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-gray-900">{section.title}</h3>
-                  <p className="text-xs text-gray-500">{section.description}</p>
-                </div>
-              </div>
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Several industry reviews mention our content as "informative but high-level" contrasting with competitors' "data-rich analyses."
+            </p>
+          </div>
 
-              {/* Score */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Score</span>
-                  <span className={`text-2xl font-bold ${colors.text}`}>
-                    {section.score}%
-                  </span>
-                </div>
-                <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${section.score}%` }}
-                    transition={{ duration: 1, delay: index * 0.1 + 0.3 }}
-                    className={`h-full ${colors.progress} rounded-full`}
-                  />
-                </div>
-              </div>
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A publishes detailed case studies with real figures</li>
+              <li>- Competitor B offers comprehensive technical whitepapers</li>
+            </ul>
+          </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-gray-100">
-                <div>
-                  <div className="text-xs text-gray-500">vs Average</div>
-                  <div className="text-sm font-semibold text-green-600">
-                    +12%
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-500">Trend</div>
-                  <div className="text-sm font-semibold text-blue-600">
-                    ↑ Growing
-                  </div>
-                </div>
-              </div>
+          <div className="flex items-center justify-between mb-2 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">12,100</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-red-600">Declining</span></span>
+          </div>
 
-              {/* View Details Button */}
-              <button className="w-full mt-4 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-lg transition-colors">
-                View Details
-              </button>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Insights Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">
-          Key Insights for {selectedFilter}
-        </h3>
-        <div className="space-y-3">
-          <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
-            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <div className="font-semibold text-gray-900">
-                Strong Messaging Consistency
-              </div>
-              <div className="text-sm text-gray-600">
-                Your brand maintains excellent consistency across channels in
-                this segment
-              </div>
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (50%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (25%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Research Sites (15%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">News (10%)</span>
             </div>
           </div>
-          <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-lg border border-orange-200">
-            <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <div className="font-semibold text-gray-900">
-                Opportunity in Specificity
-              </div>
-              <div className="text-sm text-gray-600">
-                Consider adding more data-backed claims to improve credibility
-                in this market
-              </div>
+
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
+        </motion.div>
+
+        {/* Card 3: Relevance */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Relevance</h3>
+            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
+          </div>
+
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-green-600 mb-0.5">88%</div>
+            <div className="text-xs text-gray-600">vs. Avg 80%</div>
+            <div className="text-xs text-gray-600">Confidence: 92%</div>
+          </div>
+
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            Our content strategy aligns closely with current market interests. We consistently address pain points and offer solutions that resonate, as evidenced by high engagement rates on core topics.
+          </p>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Sentiment analysis indicates strong positive correlation between our content and audience needs, often cited as "spot-on."
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A recently launched a series on niche industry challenges</li>
+              <li>- Competitor B partners with influencers for trending topics</li>
+            </ul>
+          </div>
+
+          <div className="flex items-center justify-between mb-3 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">18,900</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-green-600">Growing</span></span>
+          </div>
+
+          <div className="mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (25%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Twitter (30%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Forums (20%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">News (15%)</span>
             </div>
           </div>
-          <div className="flex items-start gap-3 p-4 bg-red-50 rounded-lg border border-red-200">
-            <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <div className="font-semibold text-gray-900">
-                GAP Requires Attention
-              </div>
-              <div className="text-sm text-gray-600">
-                Competitors are outperforming in innovation messaging for this
-                segment
-              </div>
+
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
+        </motion.div>
+
+        {/* Card 4: Influence */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Influence</h3>
+            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">High</span>
+          </div>
+
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-indigo-600 mb-0.5">68%</div>
+            <div className="text-xs text-gray-600">vs. Avg 70%</div>
+            <div className="text-xs text-gray-600">Confidence: 75%</div>
+          </div>
+
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            While we have a solid audience, our brand's ability to drive mass conversation and shape opinions is moderate. We need to boost thought leadership through strategic partnerships and expert content contributors.
+          </p>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Mentions in tier-1 media are often reactive rather than proactive, appearing in discussions initiated by others.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A regularly hosts industry webinars and expert panels</li>
+              <li>- Competitor B's executives are frequently quoted in major publications</li>
+            </ul>
+          </div>
+
+          <div className="flex items-center justify-between mb-3 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">9,500</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stagnant</span></span>
+          </div>
+
+          <div className="mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (50%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">News (20%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Podcasts (15%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Twitter (15%)</span>
             </div>
           </div>
-        </div>
+
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
+        </motion.div>
+
+        {/* Card 5: Impact */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Impact</h3>
+            <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded">Critical</span>
+          </div>
+
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-pink-600 mb-0.5">70%</div>
+            <div className="text-xs text-gray-600">vs. Avg 82%</div>
+            <div className="text-xs text-gray-600">Confidence: 70%</div>
+          </div>
+
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            Our content struggles to translate into measurable business outcomes. Customer testimonials are underutilized and clear calls-to-action are missing, making it compelling enough. This directly affects lead generation and sales.
+          </p>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Analytics show high traffic to content, but low conversion rates compared to industry benchmarks. Missing strong social proof.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A prominently features client success stories and testimonials</li>
+              <li>- Competitor B uses interactive ROI calculators on product pages</li>
+            </ul>
+          </div>
+
+          <div className="flex items-center justify-between mb-3 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">11,000</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-red-600">Declining</span></span>
+          </div>
+
+          <div className="mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Website (60%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Email (20%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (10%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Ads (10%)</span>
+            </div>
+          </div>
+
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
+        </motion.div>
+
+        {/* Card 6: Messaging consistency */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Messaging consistency</h3>
+            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
+          </div>
+
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-teal-600 mb-0.5">94%</div>
+            <div className="text-xs text-gray-600">vs. Avg 88%</div>
+            <div className="text-xs text-gray-600">Confidence: 95%</div>
+          </div>
+
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            Our brand maintains a highly consistent voice and messaging across all communication channels. This fosters strong brand recognition and trust among our audience, reinforcing our core values effectively.
+          </p>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Feedback consistently praises our "unwavering brand identity" and clear value proposition.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A shows slight variations in tone across social media teams</li>
+              <li>- Competitor B recently rebranded, leading to temporary inconsistencies</li>
+            </ul>
+          </div>
+
+          <div className="flex items-center justify-between mb-3 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">16,200</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stable</span></span>
+          </div>
+
+          <div className="mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">All Channels (100%)</span>
+            </div>
+          </div>
+
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
+        </motion.div>
+
+        {/* Card 7: Posting consistency */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Posting consistency</h3>
+            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">High</span>
+          </div>
+
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-orange-600 mb-0.5">60%</div>
+            <div className="text-xs text-gray-600">vs. Avg 70%</div>
+            <div className="text-xs text-gray-600">Confidence: 88%</div>
+          </div>
+
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            Our publishing schedule is irregular across key platforms, leading to missed opportunities for audience engagement and reduced organic reach. A more predictable and frequent content cadence is needed.
+          </p>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Audience polls express a desire for more frequent updates and content releases.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A posts daily on LinkedIn and weekly on their blog</li>
+              <li>- Competitor B has a strict content calendar shared with their audience</li>
+            </ul>
+          </div>
+
+          <div className="flex items-center justify-between mb-3 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">8,800</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stagnant</span></span>
+          </div>
+
+          <div className="mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Social Media (50%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (30%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Email (20%)</span>
+            </div>
+          </div>
+
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
+        </motion.div>
+
+        {/* Card 8: Trend position */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-900">Trend position</h3>
+            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
+          </div>
+
+          <div className="mb-2">
+            <div className="text-2xl font-bold text-cyan-600 mb-0.5">75%</div>
+            <div className="text-xs text-gray-600">vs. Avg 68%</div>
+            <div className="text-xs text-gray-600">Confidence: 85%</div>
+          </div>
+
+          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+            We are generally well-positioned in emerging industry trends, often being early adopters and contributors. This proactive stance helps establish our reputation as an innovative leader in the market.
+          </p>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
+            <p className="text-xs text-gray-600">
+              Our brand is frequently cited in discussions about future industry directions and technological advancements.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
+            <ul className="text-xs text-gray-600 space-y-0.5">
+              <li>- Competitor A is slower to adopt new trends, focusing on established markets</li>
+              <li>- Competitor B is attempting to pivot into new trends with mixed success</li>
+            </ul>
+          </div>
+
+          <div className="flex items-center justify-between mb-3 text-xs">
+            <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">14,000</span></span>
+            <span className="text-gray-600">Trend: <span className="font-semibold text-green-600">Growing</span></span>
+          </div>
+
+          <div className="mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Tech Blogs (30%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Conferences (30%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Industry Reports (20%)</span>
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Forums (10%)</span>
+            </div>
+          </div>
+
+          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+            View deep scan
+          </button>
+        </motion.div>
       </div>
-    </div>
+    </div >
   );
 }

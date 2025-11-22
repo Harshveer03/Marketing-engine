@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   BarChart3,
@@ -211,7 +211,12 @@ export function BrandDiagnosticsPage() {
         
         {/* Horizontal Scrollable Cards Container */}
         <div className="overflow-x-auto pb-4 -mx-2 px-2">
-          <div className="flex gap-4 lg:grid lg:grid-cols-7 lg:gap-4">
+          <div 
+            className="flex gap-4 lg:grid lg:gap-4 lg:overflow-visible"
+            style={{
+              gridTemplateColumns: 'repeat(7, minmax(0, 1fr))'
+            }}
+          >
             {diagnosticSections.map((section, index) => {
               const Icon = section.icon;
               const colors = getColorClasses(section.color);
@@ -241,10 +246,10 @@ export function BrandDiagnosticsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all w-[180px] lg:w-auto flex-shrink-0 flex flex-col h-[200px]"
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all w-[180px] lg:w-full lg:max-w-full flex-shrink-0 flex flex-col h-[220px] min-w-0 overflow-hidden"
                 >
-                  {/* Header with Icon and Trend */}
-                  <div className="flex items-start justify-between mb-3">
+                  {/* Header with Icon and Trend - Fixed Height */}
+                  <div className="flex items-start justify-between mb-3 h-8 flex-shrink-0">
                     <div className={`w-8 h-8 ${colors.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
                       <Icon className={`w-4 h-4 ${colors.text}`} />
                     </div>
@@ -253,25 +258,25 @@ export function BrandDiagnosticsPage() {
                     </div>
                   </div>
 
-                  {/* Metric Name */}
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2 h-10 line-clamp-2">
+                  {/* Metric Name - Fixed Height */}
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3 h-10 line-clamp-2 flex-shrink-0 overflow-hidden text-ellipsis">
                     {section.title}
                   </h3>
 
-                  {/* Score */}
-                  <div className="mb-2">
-                    <span className={`text-3xl font-bold ${colors.text}`}>
+                  {/* Score - Fixed Height */}
+                  <div className="mb-2 h-10 flex items-center flex-shrink-0">
+                    <span className={`text-3xl font-bold ${colors.text} leading-none truncate`}>
                       {section.score}%
                     </span>
                   </div>
 
-                  {/* Comparison */}
-                  <div className={`text-xs font-medium mb-2 ${getTrendColor()}`}>
+                  {/* Comparison - Fixed Height */}
+                  <div className={`text-xs font-medium mb-3 h-5 flex items-center flex-shrink-0 ${getTrendColor()} truncate`}>
                     {getTrendText()}
                   </div>
 
-                  {/* Description */}
-                  <p className="text-xs text-gray-500 line-clamp-2 mt-auto">
+                  {/* Description - Flexible but constrained */}
+                  <p className="text-xs text-gray-500 line-clamp-2 mt-auto flex-shrink overflow-hidden text-ellipsis">
                     {section.description}
                   </p>
                 </motion.div>
@@ -331,7 +336,8 @@ export function BrandDiagnosticsPage() {
       </div>
 
       {/* Three Cards Section - 2 Column Layout */}
-      <div className="grid grid-cols-3 gap-6 mb-8">
+      <div className="-mx-8 px-2 mb-8">
+        <div className="grid grid-cols-3 gap-3 w-full">
         {/* Left Column: Competitor Comparison Grid - 1/3 width */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -426,7 +432,7 @@ export function BrandDiagnosticsPage() {
         </motion.div>
 
         {/* Right Column: Two Cards Stacked - 2/3 width */}
-        <div className="col-span-2 space-y-6">
+        <div className="col-span-3 space-y-6">
           {/* Card 2: Trend Position Mini Panel */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -434,32 +440,94 @@ export function BrandDiagnosticsPage() {
             transition={{ delay: 0.1 }}
             className="bg-white rounded-xl shadow-md border border-gray-200 p-8"
           >
-            <h3 className="text-xl font-bold mb-6 text-gray-900">Trend Position Mini Panel</h3>
+            {/* Header Section */}
+            <div className="mb-6">
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">Trend position panel</h3>
+                  <p className="text-sm text-gray-600">
+                    Where each brand sits on category trend dynamics.
+                  </p>
+                </div>
+                <span className="bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap ml-4">
+                  DiagnosticResult.trendPanel
+                </span>
+              </div>
+            </div>
             
             {/* 2x2 Quadrant Grid */}
-            <div className="grid grid-cols-2 gap-4 h-80">
-              {/* Top Left - Lagging */}
-              <div className="border border-gray-200 rounded-lg p-4 flex items-start justify-start">
-                <span className="text-sm text-gray-500">Lagging</span>
-              </div>
-              
-              {/* Top Right - You (Leader) */}
-              <div className="border border-gray-200 rounded-lg p-4 flex items-center justify-center relative">
-                <span className="absolute top-4 right-4 text-sm text-gray-500">Follower</span>
-                <div className="bg-blue-600 text-white px-4 py-2 rounded-full font-semibold text-sm">
-                  You
+            <div className="grid grid-cols-2 gap-4">
+              {/* Leader - Top Left */}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+              >
+                <h4 className="text-base font-bold text-gray-900 mb-2">Leader</h4>
+                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  Sets the narrative and is referenced as a category-defining voice.
+                </p>
+                <div className="mt-auto space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                    <span className="text-sm text-gray-700">You</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">•</span>
+                    <span className="text-sm text-gray-700">Comp A</span>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
               
-              {/* Bottom Left - empty */}
-              <div className="border border-gray-200 rounded-lg p-4 flex items-end justify-start">
-                <span className="text-sm text-gray-500">Lagging</span>
-              </div>
+              {/* Disruptor - Top Right */}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+              >
+                <h4 className="text-base font-bold text-gray-900 mb-2">Disruptor</h4>
+                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  Introduces new angles and contrarian takes that reshape demand.
+                </p>
+                <div className="mt-auto space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">•</span>
+                    <span className="text-sm text-gray-700">Comp B</span>
+                  </div>
+                </div>
+              </motion.div>
               
-              {/* Bottom Right - Disruptor */}
-              <div className="border border-gray-200 rounded-lg p-4 flex items-end justify-end">
-                <span className="text-sm text-gray-500">Disruptor</span>
-              </div>
+              {/* Follower - Bottom Left */}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+              >
+                <h4 className="text-base font-bold text-gray-900 mb-2">Follower</h4>
+                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  Joins trends late and mainly echoes existing narratives.
+                </p>
+                <div className="mt-auto space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">•</span>
+                    <span className="text-sm text-gray-700">Comp C</span>
+                  </div>
+                </div>
+              </motion.div>
+              
+              {/* Lagging - Bottom Right */}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+              >
+                <h4 className="text-base font-bold text-gray-900 mb-2">Lagging</h4>
+                <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  Rarely shows up in category conversations or emerging themes.
+                </p>
+                <div className="mt-auto space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">•</span>
+                    <span className="text-sm text-gray-700">Long tail</span>
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -498,6 +566,7 @@ export function BrandDiagnosticsPage() {
               </RadarChart>
             </ResponsiveContainer>
           </motion.div>
+        </div>
         </div>
       </div>
 

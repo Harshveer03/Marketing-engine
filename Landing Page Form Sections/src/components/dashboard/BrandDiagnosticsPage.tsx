@@ -4,6 +4,7 @@ import {
   BarChart3,
   TrendingUp,
   AlertTriangle,
+  AlertCircle,
   CheckCircle,
   Target,
   MessageSquare,
@@ -209,7 +210,7 @@ export function BrandDiagnosticsPage() {
       </div>
 
       {/* Performance Snapshot Section */}
-      <div className="mb-8">
+      <div className="mb-2">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Performance Snapshot</h2>
 
         {/* Horizontal Scrollable Cards Container */}
@@ -251,9 +252,9 @@ export function BrandDiagnosticsPage() {
                   transition={{ delay: index * 0.05 }}
                   className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex-shrink-0 flex flex-col overflow-hidden"
                   style={{
-                    width: '175px',
-                    minWidth: '175px',
-                    maxWidth: '175px',
+                    width: '180px',
+                    minWidth: '180px',
+                    maxWidth: '180px',
                     height: '220px',
                     minHeight: '220px',
                     maxHeight: '220px'
@@ -296,6 +297,24 @@ export function BrandDiagnosticsPage() {
           </div>
         </div>
       </div>
+
+      {/* Why this diagnostic matters Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mb-4 bg-blue-50 rounded-xl border border-blue-100 p-6"
+      >
+        <h3 className="text-base font-bold text-gray-900 mb-3">Why this diagnostic matters</h3>
+        <p className="text-sm text-gray-700 mb-3">
+          This canvas shows how clearly and consistently you show up in your market compared to direct competitors. Use it to:
+        </p>
+        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1 ml-2">
+          <li>Prioritize which gaps to close first.</li>
+          <li>Align marketing, product, and sales around the same signals.</li>
+          <li>Track the impact of launches and campaigns on market perception over time.</li>
+        </ul>
+      </motion.div>
 
       {/* Focus Lens Selector Section */}
       <div className="mb-8">
@@ -469,20 +488,22 @@ export function BrandDiagnosticsPage() {
                 {/* Leader - Top Left */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                  className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
                 >
-                  <h4 className="text-base font-bold text-gray-900 mb-2">Leader</h4>
-                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  <h4 className="text-base font-bold text-gray-900 mb-3">Leader</h4>
+                  <p className="text-sm text-gray-600 mb-5 flex-shrink-0 leading-relaxed">
                     Sets the narrative and is referenced as a category-defining voice.
                   </p>
-                  <div className="mt-auto space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
-                      <span className="text-sm text-gray-700">You</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">•</span>
-                      <span className="text-sm text-gray-700">Comp A</span>
+                  <div className="mt-auto">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">•</span>
+                        <span className="text-sm text-gray-700">Comp A</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                        <span className="text-sm bg-gray-900 text-white px-2.5 py-1 rounded-md font-medium">You</span>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -490,13 +511,13 @@ export function BrandDiagnosticsPage() {
                 {/* Disruptor - Top Right */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                  className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
                 >
-                  <h4 className="text-base font-bold text-gray-900 mb-2">Disruptor</h4>
-                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  <h4 className="text-base font-bold text-gray-900 mb-3">Disruptor</h4>
+                  <p className="text-sm text-gray-600 mb-5 flex-shrink-0 leading-relaxed">
                     Introduces new angles and contrarian takes that reshape demand.
                   </p>
-                  <div className="mt-auto space-y-2">
+                  <div className="mt-auto space-y-2.5">
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-500">•</span>
                       <span className="text-sm text-gray-700">Comp B</span>
@@ -507,13 +528,13 @@ export function BrandDiagnosticsPage() {
                 {/* Follower - Bottom Left */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                  className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
                 >
-                  <h4 className="text-base font-bold text-gray-900 mb-2">Follower</h4>
-                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  <h4 className="text-base font-bold text-gray-900 mb-3">Follower</h4>
+                  <p className="text-sm text-gray-600 mb-5 flex-shrink-0 leading-relaxed">
                     Joins trends late and mainly echoes existing narratives.
                   </p>
-                  <div className="mt-auto space-y-2">
+                  <div className="mt-auto space-y-2.5">
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-500">•</span>
                       <span className="text-sm text-gray-700">Comp C</span>
@@ -524,13 +545,13 @@ export function BrandDiagnosticsPage() {
                 {/* Lagging - Bottom Right */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
+                  className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-all h-[200px] flex flex-col"
                 >
-                  <h4 className="text-base font-bold text-gray-900 mb-2">Lagging</h4>
-                  <p className="text-sm text-gray-600 mb-4 flex-shrink-0">
+                  <h4 className="text-base font-bold text-gray-900 mb-3">Lagging</h4>
+                  <p className="text-sm text-gray-600 mb-5 flex-shrink-0 leading-relaxed">
                     Rarely shows up in category conversations or emerging themes.
                   </p>
-                  <div className="mt-auto space-y-2">
+                  <div className="mt-auto space-y-2.5">
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-500">•</span>
                       <span className="text-sm text-gray-700">Long tail</span>
@@ -774,18 +795,23 @@ export function BrandDiagnosticsPage() {
       <h3 className="text-lg font-bold text-gray-900 mb-4">Gap Priority Map</h3>
 
       {/* Gap Priority Map - 2x2 Quadrant Matrix */}
-      <div className="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="relative" style={{ height: '500px' }}>
+      <div className="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <div className="relative" style={{ height: '640px', paddingLeft: '50px', paddingBottom: '50px' }}>
+          {/* Y-axis Label (Impact) - Outside on the left */}
+          <div className="absolute" style={{ left: '0px', top: '50%', transform: 'translateY(-50%) rotate(-90deg)' }}>
+            <span className="text-base font-semibold text-gray-700">Impact</span>
+          </div>
+
           {/* Quadrant Grid */}
-          <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 border border-gray-300">
+          <div className="absolute grid grid-cols-2 grid-rows-2 border border-gray-300" style={{ left: '50px', top: '0', right: '0', bottom: '50px' }}>
             {/* Top-left Quadrant */}
-            <div className="border-r border-b border-gray-300 p-4 relative">
-              <span className="text-xs text-gray-500 absolute top-2 left-2">High Impact, Low Urgency</span>
+            <div className="border-r border-b border-gray-300 p-6 relative">
+              <span className="text-sm text-gray-600 font-medium absolute top-4 left-4">High Impact, Low Urgency</span>
               {/* Data Point: Engage with Industry Influencers */}
               <div className="absolute" style={{ top: '50%', left: '30%' }}>
                 <div className="relative group">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
-                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg"></div>
+                  <div className="absolute left-6 -top-2 whitespace-nowrap text-sm text-gray-800 font-medium">
                     Engage with Industry Influencers
                   </div>
                 </div>
@@ -793,22 +819,22 @@ export function BrandDiagnosticsPage() {
             </div>
 
             {/* Top-right Quadrant */}
-            <div className="border-b border-gray-300 p-4 relative">
-              <span className="text-xs text-gray-500 absolute top-2 right-2">High Impact, High Urgency</span>
+            <div className="border-b border-gray-300 p-6 relative">
+              <span className="text-sm text-gray-600 font-medium absolute top-4 right-4">High Impact, High Urgency</span>
               {/* Data Point: Update Privacy Policy */}
-              <div className="absolute" style={{ top: '30%', right: '25%' }}>
+              <div className="absolute" style={{ top: '25%', right: '20%' }}>
                 <div className="relative group">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
-                  <div className="absolute right-5 -top-1 whitespace-nowrap text-xs text-gray-700 text-right">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg"></div>
+                  <div className="absolute right-6 -top-2 whitespace-nowrap text-sm text-gray-800 font-medium text-right">
                     Update Privacy Policy
                   </div>
                 </div>
               </div>
               {/* Data Point: Audit Website Accessibility */}
-              <div className="absolute" style={{ top: '50%', right: '20%' }}>
+              <div className="absolute" style={{ top: '55%', right: '25%' }}>
                 <div className="relative group">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
-                  <div className="absolute right-5 -top-1 whitespace-nowrap text-xs text-gray-700 text-right">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg"></div>
+                  <div className="absolute right-6 -top-2 whitespace-nowrap text-sm text-gray-800 font-medium text-right">
                     Audit Website Accessibility
                   </div>
                 </div>
@@ -816,42 +842,36 @@ export function BrandDiagnosticsPage() {
             </div>
 
             {/* Bottom-left Quadrant */}
-            <div className="border-r border-gray-300 p-4 relative">
-              <span className="text-xs text-gray-500 absolute bottom-2 left-2">Low Impact, Low Urgency</span>
-              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 origin-left">
-                <span className="text-sm font-medium text-gray-600">Impact</span>
-              </div>
+            <div className="border-r border-gray-300 p-6 relative">
+              <span className="text-sm text-gray-600 font-medium absolute bottom-4 left-4">Low Impact, Low Urgency</span>
             </div>
 
             {/* Bottom-right Quadrant */}
-            <div className="p-4 relative">
-              <span className="text-xs text-gray-500 absolute bottom-2 right-2">Low Impact, High Urgency</span>
+            <div className="p-6 relative">
+              <span className="text-sm text-gray-600 font-medium absolute bottom-4 right-4">Low Impact, High Urgency</span>
               {/* Data Point: Launch Customer Testimonial Campaign */}
-              <div className="absolute" style={{ bottom: '60%', right: '45%' }}>
+              <div className="absolute" style={{ bottom: '60%', right: '40%' }}>
                 <div className="relative group">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
-                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
-                    Launch Customer Testimonial
-                  </div>
-                  <div className="absolute left-5 top-2.5 whitespace-nowrap text-xs text-gray-700">
-                    Campaign
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg"></div>
+                  <div className="absolute left-6 -top-2 whitespace-nowrap text-sm text-gray-800 font-medium">
+                    Launch Customer Testimonial Campaign
                   </div>
                 </div>
               </div>
               {/* Data Point: Standardize Social Media Bios */}
-              <div className="absolute" style={{ bottom: '40%', right: '30%' }}>
+              <div className="absolute" style={{ bottom: '35%', right: '25%' }}>
                 <div className="relative group">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
-                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg"></div>
+                  <div className="absolute left-6 -top-2 whitespace-nowrap text-sm text-gray-800 font-medium">
                     Standardize Social Media Bios
                   </div>
                 </div>
               </div>
               {/* Data Point: Optimize Blog SEO */}
-              <div className="absolute" style={{ bottom: '20%', right: '40%' }}>
+              <div className="absolute" style={{ bottom: '15%', right: '35%' }}>
                 <div className="relative group">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-gray-400 shadow-md"></div>
-                  <div className="absolute left-5 -top-1 whitespace-nowrap text-xs text-gray-700">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg"></div>
+                  <div className="absolute left-6 -top-2 whitespace-nowrap text-sm text-gray-800 font-medium">
                     Optimize Blog SEO
                   </div>
                 </div>
@@ -859,9 +879,9 @@ export function BrandDiagnosticsPage() {
             </div>
           </div>
 
-          {/* X-axis Label */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-6">
-            <span className="text-sm font-medium text-gray-600">Urgency</span>
+          {/* X-axis Label (Urgency) - Outside at the bottom center */}
+          <div className="absolute" style={{ bottom: '0px', left: '50%', transform: 'translateX(-50%)' }}>
+            <span className="text-base font-semibold text-gray-700">Urgency</span>
           </div>
         </div>
       </div>
@@ -875,62 +895,62 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
           {/* Header */}
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Clarity</h3>
-            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Clarity</h3>
+            <span className="px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">Low</span>
           </div>
 
           {/* Score Section */}
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-blue-600 mb-0.5">78%</div>
-            <div className="text-xs text-gray-600">vs. Avg 65%</div>
-            <div className="text-xs text-gray-600">Confidence: 90%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-blue-600 mb-1">78%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 65%</div>
+            <div className="text-sm text-gray-600">Confidence: 90%</div>
           </div>
 
           {/* Description */}
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             Our brand's messaging is generally clear and understandable to our target audience. However, specific product feature explanations could benefit from more concise language and visual aids to enhance immediate comprehension.
           </p>
 
           {/* Webwide Highlight */}
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Customer praise our "easy-to-understand" onboarding process, but some support tickets indicate confusion on advanced features.
             </p>
           </div>
 
           {/* Competitor Examples */}
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A uses animated explainers for complex topics</li>
-              <li>- Competitor B provides interactive tutorials for every new feature</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A uses animated explainers for complex topics</li>
+              <li>Competitor B provides interactive tutorials for every new feature</li>
             </ul>
           </div>
 
           {/* Mentions & Trend */}
-          <div className="flex items-center justify-between mb-2 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">15,400</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stable</span></span>
           </div>
 
           {/* Platform Distribution */}
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (40%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (30%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Twitter (20%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Forums (10%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-medium">LinkedIn (40%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Blog (30%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Twitter (20%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Forums (10%)</span>
             </div>
           </div>
 
           {/* Action Button */}
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
@@ -940,54 +960,54 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Specificity</h3>
-            <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-semibold rounded">Medium</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Specificity</h3>
+            <span className="px-2.5 py-1 bg-orange-100 text-orange-700 text-xs font-semibold rounded-full">Medium</span>
           </div>
 
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-purple-600 mb-0.5">72%</div>
-            <div className="text-xs text-gray-600">vs. Avg 75%</div>
-            <div className="text-xs text-gray-600">Confidence: 85%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-purple-600 mb-1">72%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 75%</div>
+            <div className="text-sm text-gray-600">Confidence: 85%</div>
           </div>
 
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             Our content, while broad, sometimes lacks the depth and specific details that top competitors provide. This can make it harder for technical users to find precise answers, potentially leading to increased bounce rates.
           </p>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Several industry reviews mention our content as "informative but high-level" contrasting with competitors' "data-rich analyses."
             </p>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A publishes detailed case studies with real figures</li>
-              <li>- Competitor B offers comprehensive technical whitepapers</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A publishes detailed case studies with real figures</li>
+              <li>Competitor B offers comprehensive technical whitepapers</li>
             </ul>
           </div>
 
-          <div className="flex items-center justify-between mb-2 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">12,100</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-red-600">Declining</span></span>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (50%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (25%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Research Sites (15%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">News (10%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-medium">Blog (50%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">LinkedIn (25%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Research Sites (15%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">News (10%)</span>
             </div>
           </div>
 
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
@@ -997,54 +1017,54 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Relevance</h3>
-            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Relevance</h3>
+            <span className="px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">Low</span>
           </div>
 
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-green-600 mb-0.5">88%</div>
-            <div className="text-xs text-gray-600">vs. Avg 80%</div>
-            <div className="text-xs text-gray-600">Confidence: 92%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-green-600 mb-1">88%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 80%</div>
+            <div className="text-sm text-gray-600">Confidence: 92%</div>
           </div>
 
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             Our content strategy aligns closely with current market interests. We consistently address pain points and offer solutions that resonate, as evidenced by high engagement rates on core topics.
           </p>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Sentiment analysis indicates strong positive correlation between our content and audience needs, often cited as "spot-on."
             </p>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A recently launched a series on niche industry challenges</li>
-              <li>- Competitor B partners with influencers for trending topics</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A recently launched a series on niche industry challenges</li>
+              <li>Competitor B partners with influencers for trending topics</li>
             </ul>
           </div>
 
-          <div className="flex items-center justify-between mb-3 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">18,900</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-green-600">Growing</span></span>
           </div>
 
-          <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (25%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Twitter (30%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Forums (20%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">News (15%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-medium">LinkedIn (25%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Twitter (30%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Forums (20%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">News (15%)</span>
             </div>
           </div>
 
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
@@ -1054,54 +1074,54 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Influence</h3>
-            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">High</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Influence</h3>
+            <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">High</span>
           </div>
 
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-indigo-600 mb-0.5">68%</div>
-            <div className="text-xs text-gray-600">vs. Avg 70%</div>
-            <div className="text-xs text-gray-600">Confidence: 75%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-indigo-600 mb-1">68%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 70%</div>
+            <div className="text-sm text-gray-600">Confidence: 75%</div>
           </div>
 
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             While we have a solid audience, our brand's ability to drive mass conversation and shape opinions is moderate. We need to boost thought leadership through strategic partnerships and expert content contributors.
           </p>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Mentions in tier-1 media are often reactive rather than proactive, appearing in discussions initiated by others.
             </p>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A regularly hosts industry webinars and expert panels</li>
-              <li>- Competitor B's executives are frequently quoted in major publications</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A regularly hosts industry webinars and expert panels</li>
+              <li>Competitor B's executives are frequently quoted in major publications</li>
             </ul>
           </div>
 
-          <div className="flex items-center justify-between mb-3 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">9,500</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stagnant</span></span>
           </div>
 
-          <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (50%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">News (20%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Podcasts (15%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Twitter (15%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-medium">Blog (50%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">News (20%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Podcasts (15%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Twitter (15%)</span>
             </div>
           </div>
 
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
@@ -1111,54 +1131,54 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Impact</h3>
-            <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded">Critical</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Impact</h3>
+            <span className="px-2.5 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">Critical</span>
           </div>
 
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-pink-600 mb-0.5">70%</div>
-            <div className="text-xs text-gray-600">vs. Avg 82%</div>
-            <div className="text-xs text-gray-600">Confidence: 70%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-pink-600 mb-1">70%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 82%</div>
+            <div className="text-sm text-gray-600">Confidence: 70%</div>
           </div>
 
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             Our content struggles to translate into measurable business outcomes. Customer testimonials are underutilized and clear calls-to-action are missing, making it compelling enough. This directly affects lead generation and sales.
           </p>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Analytics show high traffic to content, but low conversion rates compared to industry benchmarks. Missing strong social proof.
             </p>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A prominently features client success stories and testimonials</li>
-              <li>- Competitor B uses interactive ROI calculators on product pages</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A prominently features client success stories and testimonials</li>
+              <li>Competitor B uses interactive ROI calculators on product pages</li>
             </ul>
           </div>
 
-          <div className="flex items-center justify-between mb-3 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">11,000</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-red-600">Declining</span></span>
           </div>
 
-          <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Website (60%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Email (20%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">LinkedIn (10%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Ads (10%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-medium">Website (60%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Email (20%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">LinkedIn (10%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Ads (10%)</span>
             </div>
           </div>
 
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
@@ -1168,51 +1188,51 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Messaging consistency</h3>
-            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Messaging consistency</h3>
+            <span className="px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">Low</span>
           </div>
 
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-teal-600 mb-0.5">94%</div>
-            <div className="text-xs text-gray-600">vs. Avg 88%</div>
-            <div className="text-xs text-gray-600">Confidence: 95%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-teal-600 mb-1">94%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 88%</div>
+            <div className="text-sm text-gray-600">Confidence: 95%</div>
           </div>
 
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             Our brand maintains a highly consistent voice and messaging across all communication channels. This fosters strong brand recognition and trust among our audience, reinforcing our core values effectively.
           </p>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Feedback consistently praises our "unwavering brand identity" and clear value proposition.
             </p>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A shows slight variations in tone across social media teams</li>
-              <li>- Competitor B recently rebranded, leading to temporary inconsistencies</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A shows slight variations in tone across social media teams</li>
+              <li>Competitor B recently rebranded, leading to temporary inconsistencies</li>
             </ul>
           </div>
 
-          <div className="flex items-center justify-between mb-3 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">16,200</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stable</span></span>
           </div>
 
-          <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">All Channels (100%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-medium">All Channels (100%)</span>
             </div>
           </div>
 
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
@@ -1222,53 +1242,53 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Posting consistency</h3>
-            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">High</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Posting consistency</h3>
+            <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">High</span>
           </div>
 
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-orange-600 mb-0.5">60%</div>
-            <div className="text-xs text-gray-600">vs. Avg 70%</div>
-            <div className="text-xs text-gray-600">Confidence: 88%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-orange-600 mb-1">60%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 70%</div>
+            <div className="text-sm text-gray-600">Confidence: 88%</div>
           </div>
 
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             Our publishing schedule is irregular across key platforms, leading to missed opportunities for audience engagement and reduced organic reach. A more predictable and frequent content cadence is needed.
           </p>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Audience polls express a desire for more frequent updates and content releases.
             </p>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A posts daily on LinkedIn and weekly on their blog</li>
-              <li>- Competitor B has a strict content calendar shared with their audience</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A posts daily on LinkedIn and weekly on their blog</li>
+              <li>Competitor B has a strict content calendar shared with their audience</li>
             </ul>
           </div>
 
-          <div className="flex items-center justify-between mb-3 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">8,800</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-gray-900">Stagnant</span></span>
           </div>
 
-          <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Social Media (50%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Blog (30%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Email (20%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-medium">Social Media (50%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Blog (30%)</span>
+              <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded-md font-medium">Email (20%)</span>
             </div>
           </div>
 
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
@@ -1278,57 +1298,208 @@ export function BrandDiagnosticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow flex flex-col"
+          className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col"
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-900">Trend position</h3>
-            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Low</span>
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-base font-bold text-gray-900">Trend position</h3>
+            <span className="px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">Low</span>
           </div>
 
-          <div className="mb-2">
-            <div className="text-2xl font-bold text-cyan-600 mb-0.5">75%</div>
-            <div className="text-xs text-gray-600">vs. Avg 68%</div>
-            <div className="text-xs text-gray-600">Confidence: 85%</div>
+          <div className="mb-4">
+            <div className="text-3xl font-bold text-cyan-600 mb-1">75%</div>
+            <div className="text-sm text-gray-600 mb-0.5">vs. Avg 68%</div>
+            <div className="text-sm text-gray-600">Confidence: 85%</div>
           </div>
 
-          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
+          <p className="text-sm text-gray-700 mb-5 leading-relaxed">
             We are generally well-positioned in emerging industry trends, often being early adopters and contributors. This proactive stance helps establish our reputation as an innovative leader in the market.
           </p>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Webwide Highlight</h4>
-            <p className="text-xs text-gray-600">
+          <div className="mb-4 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Webwide Highlight</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Our brand is frequently cited in discussions about future industry directions and technological advancements.
             </p>
           </div>
 
-          <div className="mb-2">
-            <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Competitor Examples</h4>
-            <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>- Competitor A is slower to adopt new trends, focusing on established markets</li>
-              <li>- Competitor B is attempting to pivot into new trends with mixed success</li>
+          <div className="mb-5 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Competitor Examples</h4>
+            <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
+              <li>Competitor A is slower to adopt new trends, focusing on established markets</li>
+              <li>Competitor B is attempting to pivot into new trends with mixed success</li>
             </ul>
           </div>
 
-          <div className="flex items-center justify-between mb-3 text-xs">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 text-sm">
             <span className="text-gray-600">Mentions: <span className="font-semibold text-gray-900">14,000</span></span>
             <span className="text-gray-600">Trend: <span className="font-semibold text-green-600">Growing</span></span>
           </div>
 
-          <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-900 mb-1">Platform Distribution</h4>
-            <div className="flex flex-wrap gap-1">
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Tech Blogs (30%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Conferences (30%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Industry Reports (20%)</span>
-              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Forums (10%)</span>
+          <div className="mb-5">
+            <h4 className="text-xs font-bold text-gray-900 mb-3 uppercase tracking-wide">Platform Distribution</h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="text-sm">
+                <span className="font-semibold text-gray-900">Tech Blogs</span>
+                <br />
+                <span className="text-gray-600">(30%)</span>
+              </div>
+              <div className="text-sm">
+                <span className="font-semibold text-gray-900">Conferences</span>
+                <br />
+                <span className="text-gray-600">(30%)</span>
+              </div>
+              <div className="text-sm">
+                <span className="font-semibold text-gray-900">Industry Reports</span>
+                <br />
+                <span className="text-gray-600">(20%)</span>
+              </div>
+              <div className="text-sm">
+                <span className="font-semibold text-gray-900">Forums</span>
+                <br />
+                <span className="text-gray-600">(10%)</span>
+              </div>
             </div>
           </div>
 
-          <button className="w-full mt-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+          <button className="w-full mt-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
             View deep scan
           </button>
         </motion.div>
+      </div>
+
+      {/* Unified Action Priority List */}
+      <div className="mt-12">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Unified Action Priority List</h2>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="text-center px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Action</th>
+                <th className="text-center px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Urg.</th>
+                <th className="text-center px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Eff.</th>
+                <th className="text-center px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Conf.</th>
+                <th className="text-center px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Strat. Edge</th>
+                <th className="text-center px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">GAP Score</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {/* Row 1: Update Privacy Policy */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-center">
+                  <div>
+                    <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">Update Privacy Policy</a>
+                    <div className="mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded">Immediate</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">5</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">2</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">5</td>
+                <td className="px-4 py-4 text-center">
+                  <CheckCircle className="w-5 h-5 text-green-500 inline-block" />
+                </td>
+                <td className="px-6 py-4 text-center text-sm font-semibold text-gray-900">9.2</td>
+              </tr>
+
+              {/* Row 2: Audit Website Accessibility */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-center">
+                  <div>
+                    <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">Audit Website Accessibility</a>
+                    <div className="mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-semibold rounded">High</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">4</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">4</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">3</td>
+                <td className="px-4 py-4 text-center">
+                  <CheckCircle className="w-5 h-5 text-green-500 inline-block" />
+                </td>
+                <td className="px-6 py-4 text-center text-sm font-semibold text-gray-900">8.5</td>
+              </tr>
+
+              {/* Row 3: Optimize Blog SEO */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-center">
+                  <div>
+                    <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">Optimize Blog SEO</a>
+                    <div className="mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-semibold rounded">High</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">4</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">2</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">4</td>
+                <td className="px-4 py-4 text-center">
+                  <CheckCircle className="w-5 h-5 text-green-500 inline-block" />
+                </td>
+                <td className="px-6 py-4 text-center text-sm font-semibold text-gray-900">8.0</td>
+              </tr>
+
+              {/* Row 4: Standardize Social Visuals */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-center">
+                  <div>
+                    <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">Standardize Social Visuals</a>
+                    <div className="mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Medium</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">3</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">3</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">5</td>
+                <td className="px-4 py-4 text-center">
+                  <CheckCircle className="w-5 h-5 text-green-500 inline-block" />
+                </td>
+                <td className="px-6 py-4 text-center text-sm font-semibold text-gray-900">7.8</td>
+              </tr>
+
+              {/* Row 5: Launch Testimonial Campaign */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-center">
+                  <div>
+                    <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">Launch Testimonial Campaign</a>
+                    <div className="mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">Medium</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">3</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">3</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">4</td>
+                <td className="px-4 py-4 text-center">
+                  <CheckCircle className="w-5 h-5 text-green-500 inline-block" />
+                </td>
+                <td className="px-6 py-4 text-center text-sm font-semibold text-gray-900">7.5</td>
+              </tr>
+
+              {/* Row 6: Engage with Influencers */}
+              <tr className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-center">
+                  <div>
+                    <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">Engage with Influencers</a>
+                    <div className="mt-1">
+                      <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">Low</span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">2</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">4</td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">3</td>
+                <td className="px-4 py-4 text-center">
+                  <X className="w-5 h-5 text-red-500 inline-block" />
+                </td>
+                <td className="px-6 py-4 text-center text-sm font-semibold text-gray-900">6.5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div >
   );

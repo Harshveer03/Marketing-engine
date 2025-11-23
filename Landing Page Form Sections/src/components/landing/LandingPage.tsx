@@ -13,10 +13,17 @@ import {
   HelpCircle,
   Shield,
   DollarSign,
-  Settings,
+  Database,
+  TrendingUp,
+  MessageSquare,
+  Lightbulb,
+  RefreshCw,
+  FileText,
   ThumbsUp,
   ThumbsDown,
   MessageCircle,
+  Briefcase,
+  Rocket,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -28,82 +35,10 @@ interface LandingPageProps {
 
 export function LandingPage({ onGetStarted }: LandingPageProps) {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [openEngineIndex, setOpenEngineIndex] = useState<number | null>(null);
   const [helpfulVotes, setHelpfulVotes] = useState<{
     [key: number]: "yes" | "no" | null;
   }>({});
-  const features = [
-    {
-      icon: Zap,
-      title: "AI-Powered Insights",
-      description:
-        "Get intelligent brand recommendations powered by advanced AI technology.",
-      bgImage:
-        "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
-    },
-    {
-      icon: Target,
-      title: "Targeted Strategy",
-      description:
-        "Create brand strategies that resonate with your specific audience.",
-      bgImage:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-    },
-    {
-      icon: Sparkles,
-      title: "Creative Excellence",
-      description:
-        "Generate stunning brand materials that stand out from the competition.",
-      bgImage:
-        "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=600&fit=crop",
-    },
-    {
-      icon: BarChart,
-      title: "Performance Analytics",
-      description:
-        "Track and measure your brand performance with detailed analytics.",
-      bgImage:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-    },
-    {
-      icon: Users,
-      title: "Team Collaboration",
-      description:
-        "Work seamlessly with your team on brand development projects.",
-      bgImage:
-        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop",
-    },
-    {
-      icon: Clock,
-      title: "Fast Turnaround",
-      description: "Get your brand materials ready in minutes, not weeks.",
-      bgImage:
-        "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=800&h=600&fit=crop",
-    },
-  ];
-
-  const steps = [
-    {
-      number: "01",
-      title: "Share Your Info",
-      description: "Provide details about your brand, industry, and audience.",
-    },
-    {
-      number: "02",
-      title: "Get Your Score",
-      description:
-        "Receive a comprehensive brand analysis and recommendations.",
-    },
-    {
-      number: "03",
-      title: "Define Your Goals",
-      description: "Tell us what you want to achieve with your brand.",
-    },
-    {
-      number: "04",
-      title: "Generate Assets",
-      description: "Create professional brand materials instantly.",
-    },
-  ];
 
   const testimonials = [
     {
@@ -217,10 +152,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 How It Works
               </a>
               <a
-                href="#testimonials"
+                href="#pricing"
                 className="text-gray-600 hover:text-black transition-colors"
               >
-                Testimonials
+                Pricing
               </a>
               <a
                 href="#faq"
@@ -263,22 +198,35 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-block bg-gray-100 text-gray-800 px-4 py-2 rounded-full mb-6"
-              >
-                ✨ AI-Powered Brand Intelligence
-              </motion.div>
               <h1 className="text-6xl mb-6 font-bold text-gray-900">
-                Build Your Brand with AI Precision
+                Your Brand's X-Factor, Engineered by One System
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Transform your brand vision into reality with intelligent
-                insights, strategic recommendations, and stunning creative
-                assets—all in one powerful platform.
+                AI-powered diagnostics, insights, and content — aligned
+                perfectly to your strategy.
               </p>
+
+              {/* Value Bullets */}
+              <div className="space-y-3 mb-8">
+                {[
+                  "No more generic content",
+                  "No more guessing your narrative",
+                  "No more copying competitors",
+                  "One system that aligns everything end-to-end",
+                ].map((bullet, index) => (
+                  <motion.div
+                    key={bullet}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 + index * 0.1 }}
+                    className="flex items-center gap-3"
+                  >
+                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium">{bullet}</span>
+                  </motion.div>
+                ))}
+              </div>
+
               <div className="flex gap-4">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -289,7 +237,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                     className="!bg-black hover:!bg-gray-800 !text-white !border-0 shadow-xl rounded-xl px-8 py-6 text-lg font-semibold"
                   >
                     <span className="flex items-center gap-2">
-                      Start Building Your Brand
+                      Start Your Diagnostic
                       <ArrowRight className="w-5 h-5" />
                     </span>
                   </Button>
@@ -310,7 +258,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               <div className="flex items-center gap-8 mt-12">
                 <div>
                   <div className="text-3xl font-bold text-gray-900">10K+</div>
-                  <div className="text-gray-600">Brands Created</div>
+                  <div className="text-gray-600">Brands Optimized</div>
                 </div>
                 <div className="w-px h-12 bg-gray-300"></div>
                 <div>
@@ -350,26 +298,125 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
         </section>
 
+        {/* Sub-Hero - What 1SYX Does */}
+        <section className="relative py-20 overflow-hidden">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-500 opacity-50" />
+          
+          <div className="max-w-4xl mx-auto px-8 text-center relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                1 System for Your X-Factor
+              </h2>
+              <p className="text-xl text-gray-700 mb-6 leading-relaxed">
+                1SYX is the world's first{" "}
+                <span className="font-bold">Marketing Intelligence System</span>{" "}
+                that analyzes your brand, finds your competitive advantage, and
+                generates content aligned with your strategy.
+              </p>
+              <div className="bg-white border-2 border-gray-900 rounded-xl p-6 inline-block">
+                <p className="text-lg text-gray-900 font-semibold">
+                  This isn't another AI tool.
+                  <br />
+                  It's your{" "}
+                  <span className="text-black font-bold">
+                    AI CMO + Strategist + Content Engine
+                  </span>
+                  .
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Trusted By Section */}
-        <section className="bg-gray-900 py-12 border-y border-gray-200">
+        <section className="bg-gray-50 py-12 border-y border-gray-200">
           <div className="max-w-7xl mx-auto px-8">
-            <p className="text-center text-gray-600 mb-8 font-medium text-xl">
-              Trusted by leading brands worldwide
+            <p className="text-center text-gray-900 mb-8 font-medium text-2xl">
+              Trusted by teams, founders, and brands around the world
             </p>
             <div className="flex justify-center items-center gap-12">
-              <div className="text-2xl font-bold text-gray-400">ACME Corp</div>
-              <div className="text-2xl font-bold text-gray-400">TechVision</div>
-              <div className="text-2xl font-bold text-gray-400">Innovate</div>
-              <div className="text-2xl font-bold text-gray-400">
+              <div className="text-2xl font-bold text-gray-500">ACME Corp</div>
+              <div className="text-2xl font-bold text-gray-500">TechVision</div>
+              <div className="text-2xl font-bold text-gray-500">Innovate</div>
+              <div className="text-2xl font-bold text-gray-500">
                 BrightFuture
               </div>
-              <div className="text-2xl font-bold text-gray-400">NextGen</div>
+              <div className="text-2xl font-bold text-gray-500">NextGen</div>
             </div>
           </div>
         </section>
 
-        {/* Features Section */}
-        <section id="features" className="max-w-7xl mx-auto px-8 py-20">
+        {/* The Problem Section */}
+        <section className="bg-gray-900 py-20 relative overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-30 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop')`,
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/80 to-gray-900/90" />
+
+          <div className="max-w-5xl mx-auto px-8 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-5xl mb-8 text-white font-bold leading-tight">
+                Brands don't fail because of weak products.
+                <br />
+                They fail because of weak messaging.
+              </h2>
+
+
+              <div className="flex justify-center mb-8">
+                <div className="grid grid-cols-2 gap-6 text-left max-w-4xl">
+                  {[
+                    "Your narrative sounds generic",
+                    "Your ICP can't understand your value",
+                    "Competitors dominate the conversation",
+                    "Website & social messaging don't match",
+                    "Content is inconsistent and random",
+                    "Agencies are expensive, AI tools are too generic",
+                  ].map((problem, index) => (
+                    <motion.div
+                      key={problem}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.1 * index }}
+                      className="flex items-start gap-3 bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-white/10"
+                    >
+                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-300 font-medium">{problem}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-xl p-8 inline-block">
+                <p className="text-2xl text-white font-bold">
+                  You don't need more content.
+                  <br />
+                  You need <span className="text-green-400">strategic content</span>.
+                  <br />
+                  <span className="text-white">1SYX delivers that.</span>
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* What is 1SYX Section */}
+        <section className="max-w-7xl mx-auto px-8 py-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -377,47 +424,297 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl mb-4">
-              Powerful Features for Brand Success
+            <h2 className="text-5xl mb-4 font-bold text-gray-900">
+              One System. Endless Strategic Power.
             </h2>
-            <p className="text-xl text-gray-600">
-              Everything you need to build, refine, and scale your brand
+            <p className="text-xl text-gray-600 mb-12">
+              1SYX is a unified AI system that powers your entire marketing strategy
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="bg-white p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 relative overflow-hidden group"
-              >
-                {/* Background Image - Very Subtle */}
-                <div
-                  className="absolute inset-0 opacity-[0.15] group-hover:opacity-[0.12] transition-opacity duration-500 bg-cover bg-center"
-                  style={{ backgroundImage: `url('${feature.bgImage}')` }}
-                />
-
-                {/* White overlay for text readability */}
-                <div className="absolute inset-0 bg-white/50" />
-
-                <div className="relative z-10">
-                  <div className="w-14 h-14 bg-black flex items-center justify-center mb-6">
-                    <feature.icon className="w-7 h-7 text-white" />
+          <div className="grid grid-cols-2 gap-12 items-center mb-12">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-4"
+            >
+              {[
+                "Extracts your brand + competitor data",
+                "Diagnoses your messaging",
+                "Identifies your true market position",
+                "Generates insights & strategy",
+                "Produces content across all channels",
+                "Learns from performance and improves",
+              ].map((item, index) => (
+                <motion.div
+                  key={item}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * index }}
+                  className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200"
+                >
+                  <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="text-xl mb-3 text-gray-900 font-bold">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-800 font-medium leading-relaxed">
-                    {feature.description}
-                  </p>
+                  <span className="text-gray-800 font-medium text-lg">{item}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-12 text-center"
+            >
+              <Sparkles className="w-16 h-16 text-yellow-400 mx-auto mb-6" />
+              <h3 className="text-3xl font-bold text-white mb-4">
+                Your entire marketing
+              </h3>
+              <p className="text-xl text-gray-300">
+                <span className="text-green-400 font-bold">aligned</span>,{" "}
+                <span className="text-blue-400 font-bold">intelligent</span>,{" "}
+                <span className="text-purple-400 font-bold">automated</span>
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* The 6 Engines Section */}
+        <section id="features" className="bg-gray-50 py-20 border-y border-gray-200">
+          <div className="max-w-5xl mx-auto px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-5xl mb-4 font-bold text-gray-900">
+                The 6 Engines of 1SYX
+              </h2>
+              <p className="text-xl text-gray-600">
+                A complete system working together to power your brand
+              </p>
+            </motion.div>
+
+            <div className="space-y-4">
+              {/* Engine 1: Extraction */}
+              <EngineCard
+                index={0}
+                number="1"
+                icon={Database}
+                title="Extraction Engine"
+                subtitle="All your inputs, intelligently structured"
+                openIndex={openEngineIndex}
+                setOpenIndex={setOpenEngineIndex}
+              >
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3">Uploads Supported:</h4>
+                    <ul className="space-y-2">
+                      {["Website URL", "Social profiles", "Competitor URLs", "PDFs", "Text descriptions", "Logos & visuals"].map((item) => (
+                        <li key={item} className="flex items-center gap-2 text-gray-700">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3">Extracts:</h4>
+                    <ul className="space-y-2">
+                      {["Brand name", "Industry", "ICP", "Persona", "Website messaging", "Social content", "Competitor content", "Visual identity"].map((item) => (
+                        <li key={item} className="flex items-center gap-2 text-gray-700">
+                          <CheckCircle className="w-4 h-4 text-blue-600" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </motion.div>
-            ))}
+              </EngineCard>
+
+              {/* Engine 2: Diagnostic */}
+              <EngineCard
+                index={1}
+                number="2"
+                icon={Target}
+                title="Diagnostic Engine"
+                subtitle="Your brand evaluated like a consulting firm would"
+                openIndex={openEngineIndex}
+                setOpenIndex={setOpenEngineIndex}
+              >
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3">Evaluated across 7 metrics:</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {["Clarity", "Relevance", "Specificity", "GAP Severity", "Message Consistency", "Post Consistency", "Trend Position (Leader/Follower/Lagger/Disrupter)"].map((metric) => (
+                        <div key={metric} className="bg-white p-3 rounded-lg border border-gray-200 text-gray-700 font-medium">
+                          {metric}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3">Evaluated under 4 filters:</h4>
+                    <div className="grid grid-cols-4 gap-3">
+                      {["Industry", "ICP", "Persona", "Geography"].map((filter) => (
+                        <div key={filter} className="bg-black text-white p-3 rounded-lg text-center font-medium">
+                          {filter}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4">
+                    <p className="text-gray-900 font-semibold">
+                      ⚡ Powered entirely by your PDF rulebooks
+                    </p>
+                  </div>
+                </div>
+              </EngineCard>
+
+              {/* Engine 3: Insight */}
+              <EngineCard
+                index={2}
+                number="3"
+                icon={Lightbulb}
+                title="Insight Engine"
+                subtitle="Analysis → Strategy"
+                openIndex={openEngineIndex}
+                setOpenIndex={setOpenEngineIndex}
+              >
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-4">Outputs:</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      "Positioning insights",
+                      "Narrative direction",
+                      "ICP-specific messaging",
+                      "Strengths & weaknesses",
+                      "Competitor advantage map",
+                      "Priority roadmap",
+                      "Messaging Do's & Don'ts",
+                      "Content pillars",
+                    ].map((output) => (
+                      <div key={output} className="flex items-start gap-2 bg-white p-3 rounded-lg border border-gray-200">
+                        <Sparkles className="w-4 h-4 text-yellow-500 mt-1 flex-shrink-0" />
+                        <span className="text-gray-700 font-medium">{output}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </EngineCard>
+
+              {/* Engine 4: Content Generation */}
+              <EngineCard
+                index={3}
+                number="4"
+                icon={FileText}
+                title="Content Generation Engine"
+                subtitle="Content that aligns with your strategy — every time"
+                openIndex={openEngineIndex}
+                setOpenIndex={setOpenEngineIndex}
+              >
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-4">Generates:</h4>
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        "LinkedIn posts",
+                        "X threads",
+                        "Instagram captions",
+                        "YouTube scripts",
+                        "Blog posts",
+                        "Ads",
+                        "Image prompts",
+                        "Video scripts",
+                        "Landing page copy",
+                      ].map((content) => (
+                        <div key={content} className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-3 rounded-lg text-center font-medium">
+                          {content}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="bg-blue-50 border-2 border-blue-400 rounded-lg p-4">
+                    <p className="text-gray-900 font-semibold mb-2">Uses:</p>
+                    <div className="flex gap-2">
+                      <span className="bg-white px-3 py-1 rounded-full text-sm font-medium">Diagnostics</span>
+                      <span className="bg-white px-3 py-1 rounded-full text-sm font-medium">Insights</span>
+                      <span className="bg-white px-3 py-1 rounded-full text-sm font-medium">PDF knowledge rules</span>
+                    </div>
+                  </div>
+                </div>
+              </EngineCard>
+
+              {/* Engine 5: Engagement Fetcher */}
+              <EngineCard
+                index={4}
+                number="5"
+                icon={TrendingUp}
+                title="Engagement Fetcher Engine"
+                subtitle="Performance visibility from every channel"
+                openIndex={openEngineIndex}
+                setOpenIndex={setOpenEngineIndex}
+              >
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-4">Tracks:</h4>
+                  <div className="grid grid-cols-3 gap-4">
+                    {[
+                      { label: "Engagement", icon: Users },
+                      { label: "CTR", icon: Target },
+                      { label: "Watch-time", icon: Clock },
+                      { label: "Traffic", icon: TrendingUp },
+                      { label: "Conversions", icon: CheckCircle },
+                      { label: "Competitor trends", icon: BarChart },
+                    ].map((item) => (
+                      <div key={item.label} className="bg-white p-4 rounded-lg border-2 border-gray-200 text-center">
+                        <item.icon className="w-8 h-8 text-gray-900 mx-auto mb-2" />
+                        <p className="text-gray-700 font-semibold">{item.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </EngineCard>
+
+              {/* Engine 6: Analysis & Feedback Loop */}
+              <EngineCard
+                index={5}
+                number="6"
+                icon={RefreshCw}
+                title="Analysis & Feedback Loop"
+                subtitle="Your brand gets smarter over time"
+                openIndex={openEngineIndex}
+                setOpenIndex={setOpenEngineIndex}
+              >
+                <div className="space-y-4">
+                  {[
+                    "Learns what works",
+                    "Updates insights",
+                    "Refines messaging",
+                    "Strengthens narrative",
+                    "Suggests new angles",
+                    "Improves diagnostics",
+                  ].map((feature, index) => (
+                    <motion.div
+                      key={feature}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                      className="flex items-center gap-4 bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200"
+                    >
+                      <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-6 h-6 text-white" />
+                      </div>
+                      <span className="text-gray-800 font-semibold text-lg">{feature}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </EngineCard>
+            </div>
           </div>
         </section>
 
@@ -426,15 +723,12 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           id="how-it-works"
           className="bg-gray-900 py-20 relative overflow-hidden"
         >
-          {/* Background Image */}
           <div
             className="absolute inset-0 opacity-10 bg-cover bg-center"
             style={{
               backgroundImage: `url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1920&h=1080&fit=crop')`,
             }}
           />
-
-          {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/80 to-gray-900/90" />
 
           <div className="max-w-7xl mx-auto px-8 relative z-10">
@@ -452,7 +746,12 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             </motion.div>
 
             <div className="grid grid-cols-4 gap-8">
-              {steps.map((step, index) => (
+              {[
+                { number: "01", title: "Upload Your Inputs", description: "Provide details about your brand, industry, and audience." },
+                { number: "02", title: "Run Your Diagnostic", description: "Receive a comprehensive brand analysis and recommendations." },
+                { number: "03", title: "Review Insights", description: "Get strategic insights and positioning recommendations." },
+                { number: "04", title: "Generate Content Aligned With Strategy", description: "Create professional brand materials instantly." },
+              ].map((step, index) => (
                 <motion.div
                   key={step.number}
                   initial={{ opacity: 0, y: 30 }}
@@ -493,6 +792,159 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Outcomes Section */}
+        <section className="max-w-7xl mx-auto px-8 py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl mb-4 font-bold text-gray-900">
+              Real Outcomes, Real Impact
+            </h2>
+            <p className="text-xl text-gray-600">
+              Measurable results that transform your brand
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 gap-8 mb-12">
+            {/* Benefits Grid */}
+            <div className="space-y-4">
+              {[
+                "Crystal-clear messaging",
+                "Higher engagement",
+                "Stronger positioning",
+                "Consistent brand voice",
+              ].map((benefit, index) => (
+                <motion.div
+                  key={benefit}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * index }}
+                  className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border-2 border-green-200"
+                >
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600" />
+                    <span className="text-gray-900 font-semibold text-lg">{benefit}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="space-y-4">
+              {[
+                "ICP-specific resonance",
+                "Faster growth",
+                "Real-time insights",
+                "Zero agency dependency",
+              ].map((benefit, index) => (
+                <motion.div
+                  key={benefit}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * index }}
+                  className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-2 border-purple-200"
+                >
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-purple-600" />
+                    <span className="text-gray-900 font-semibold text-lg">{benefit}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats - Before/After Comparison */}
+          <div className="grid grid-cols-4 gap-6">
+            {[
+              { stat: "3×", label: "clearer messaging", before: "Confusing", after: "Crystal Clear" },
+              { stat: "70%", label: "faster content cycles", before: "Weeks", after: "Days" },
+              { stat: "40%", label: "average engagement uplift", before: "Low", after: "High" },
+              { stat: "5-10hrs", label: "saved per week", before: "Manual", after: "Automated" },
+            ].map((item, index) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 * index }}
+                className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-200 text-center"
+              >
+                <div className="text-4xl font-bold text-gray-900 mb-2">{item.stat}</div>
+                <div className="text-gray-700 font-semibold mb-4">{item.label}</div>
+                <div className="flex items-center justify-center gap-2 text-sm">
+                  <span className="bg-red-100 text-red-700 px-2 py-1 rounded">{item.before}</span>
+                  <ArrowRight className="w-4 h-4 text-gray-400" />
+                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded">{item.after}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Who Is It For Section */}
+        <section className="bg-gray-50 py-20 border-y border-gray-200">
+          <div className="max-w-7xl mx-auto px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-5xl mb-4 font-bold text-gray-900">
+                Who Is It For?
+              </h2>
+              <p className="text-xl text-gray-600">
+                Built for anyone who wants to communicate better
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-4 gap-6 mb-12">
+              {[
+                { icon: Rocket, label: "SaaS Founders" },
+                { icon: Briefcase, label: "Agencies" },
+                { icon: Users, label: "Marketing Teams" },
+                { icon: Target, label: "Consultants" },
+                { icon: Sparkles, label: "Creators" },
+                { icon: Users, label: "Personal Brands" },
+                { icon: TrendingUp, label: "DTC Brands" },
+                { icon: BarChart, label: "B2B & B2C Companies" },
+              ].map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.05 * index }}
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white p-6 rounded-xl shadow-md border-2 border-gray-200 text-center hover:border-gray-900 transition-all"
+                >
+                  <item.icon className="w-12 h-12 text-gray-900 mx-auto mb-3" />
+                  <p className="text-gray-900 font-semibold">{item.label}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="bg-white border-2 border-gray-900 rounded-xl p-6 inline-block">
+                <p className="text-xl text-gray-900 font-bold">
+                  If you speak to an audience,{" "}
+                  <span className="text-black">1SYX helps you speak better.</span>
+                </p>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -550,6 +1002,153 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
         </section>
 
+        {/* Pricing Section */}
+        <section id="pricing" className="bg-gray-50 py-20 border-y border-gray-200">
+          <div className="max-w-7xl mx-auto px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-5xl mb-4 font-bold text-gray-900">
+                Simple, Transparent Pricing
+              </h2>
+              <p className="text-xl text-gray-600">
+                Choose the plan that fits your needs
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-4 gap-6">
+              {/* Free Tier */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all"
+              >
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Free</h3>
+                <p className="text-gray-600 mb-4">For exploring</p>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold text-gray-900">$0</span>
+                  <span className="text-gray-600">/mo</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {["Basic diagnostics", "Limited uploads", "Sample insights", "Community support"].map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  onClick={onGetStarted}
+                  variant="outline"
+                  className="w-full !border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100"
+                >
+                  Get Started
+                </Button>
+              </motion.div>
+
+              {/* Starter Tier */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all"
+              >
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
+                <p className="text-gray-600 mb-4">For individuals & solopreneurs</p>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold text-gray-900">$19</span>
+                  <span className="text-gray-600">/mo</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {["Basic diagnostics", "Limited PDF input", "Standard content generation", "Email support"].map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  onClick={onGetStarted}
+                  variant="outline"
+                  className="w-full !border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100"
+                >
+                  Choose Starter
+                </Button>
+              </motion.div>
+
+              {/* Growth Tier - Recommended */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                className="bg-white rounded-2xl p-8 shadow-2xl border-4 border-black relative"
+              >
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 rounded-full text-sm font-semibold">
+                  RECOMMENDED
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Growth</h3>
+                <p className="text-gray-600 mb-4">For startups & teams</p>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold text-gray-900">$49</span>
+                  <span className="text-gray-600">/mo</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {["Advanced diagnostics", "Insight engine", "Multi-channel content engine", "Competitor analysis", "Priority support"].map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  onClick={onGetStarted}
+                  className="w-full !bg-black hover:!bg-gray-800 !text-white"
+                >
+                  Choose Growth
+                </Button>
+              </motion.div>
+
+              {/* Enterprise Tier */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all"
+              >
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                <p className="text-gray-600 mb-4">For organizations & agencies</p>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold text-gray-900">Custom</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {["Unlimited engines", "Custom rulebooks", "Team collaboration", "Dedicated support", "Custom integrations"].map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  onClick={onGetStarted}
+                  variant="outline"
+                  className="w-full !border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100"
+                >
+                  Contact Sales
+                </Button>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         {/* FAQ Section */}
         <section id="faq" className="bg-white py-20 border-y border-gray-200">
           <div className="max-w-4xl mx-auto px-8">
@@ -583,14 +1182,12 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                     className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
                   >
                     <div className="flex items-center gap-4 flex-1">
-                      {/* Question Number */}
                       <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                         <span className="text-sm font-bold text-gray-700">
                           {index + 1}
                         </span>
                       </div>
 
-                      {/* Icon */}
                       <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
                         <faq.icon className="w-6 h-6 text-white" />
                       </div>
@@ -634,7 +1231,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                               {faq.answer}
                             </p>
 
-                            {/* Was this helpful section */}
                             <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
                               <span className="text-sm text-gray-600 font-medium">
                                 Was this helpful?
@@ -689,7 +1285,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               ))}
             </div>
 
-            {/* Still have questions CTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -734,7 +1329,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             transition={{ duration: 0.6 }}
             className="rounded-3xl p-16 text-center relative overflow-hidden shadow-2xl border-2 border-gray-300"
           >
-            {/* Background Image */}
             <div
               className="absolute inset-0 rounded-3xl"
               style={{
@@ -744,7 +1338,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               }}
             />
 
-            {/* Dark overlay for text readability */}
             <div
               className="absolute inset-0 rounded-3xl"
               style={{
@@ -754,7 +1347,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             />
 
             <div className="relative z-10">
-              {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -767,7 +1359,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   className="font-semibold text-sm"
                   style={{ color: "#ffffff" }}
                 >
-                  Limited Time Offer
+                  Transform Your Brand Today
                 </span>
               </motion.div>
 
@@ -775,17 +1367,16 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 className="text-5xl md:text-6xl mb-6 font-bold leading-tight"
                 style={{ color: "#ffffff" }}
               >
-                Ready to Transform Your Brand?
+                Ready to Unlock Your X-Factor?
               </h2>
               <p
                 className="text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
                 style={{ color: "#e5e7eb" }}
               >
-                Join thousands of businesses using 1SYX to create powerful,
-                memorable brands that drive results.
+                Join thousands of brands using 1SYX to transform their messaging,
+                sharpen their narrative, and dominate their category.
               </p>
 
-              {/* CTA Buttons */}
               <div className="flex gap-4 justify-center mb-6">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -795,7 +1386,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                     onClick={onGetStarted}
                     className="bg-white text-black hover:bg-gray-100 border-0 shadow-xl rounded-xl px-10 py-6 text-lg font-semibold"
                   >
-                    Get Started for Free
+                    Get Started Free
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </motion.div>
@@ -812,7 +1403,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 </motion.div>
               </div>
 
-              {/* Trust indicators */}
               <div className="flex items-center justify-center gap-8 text-sm">
                 <div className="flex items-center gap-2">
                   <CheckCircle
@@ -859,7 +1449,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   />
                   <span className="text-xl font-semibold text-white">1SYX</span>
                 </div>
-                <p className="text-gray-400">1-System For Your 'X' Factor</p>
+                <p className="text-gray-400">1 System for Your X-Factor</p>
               </div>
 
               <div>
@@ -953,5 +1543,87 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </footer>
       </div>
     </div>
+  );
+}
+
+// Engine Card Component
+interface EngineCardProps {
+  index: number;
+  number: string;
+  icon: React.ElementType;
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+  openIndex: number | null;
+  setOpenIndex: (index: number | null) => void;
+}
+
+function EngineCard({
+  index,
+  number,
+  icon: Icon,
+  title,
+  subtitle,
+  children,
+  openIndex,
+  setOpenIndex,
+}: EngineCardProps) {
+  const isOpen = openIndex === index;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
+      className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300"
+    >
+      <button
+        onClick={() => setOpenIndex(isOpen ? null : index)}
+        className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
+      >
+        <div className="flex items-center gap-4 flex-1">
+          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span className="text-xl font-bold text-gray-700">{number}</span>
+          </div>
+
+          <div className="w-14 h-14 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+            <Icon className="w-7 h-7 text-white" />
+          </div>
+
+          <div className="flex-1">
+            <h3 className="text-xl font-bold text-gray-900 mb-1">{title}</h3>
+            <p className="text-gray-600 font-medium">{subtitle}</p>
+          </div>
+        </div>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex-shrink-0 ml-4"
+        >
+          {isOpen ? (
+            <Minus className="w-6 h-6 text-gray-900" />
+          ) : (
+            <Plus className="w-6 h-6 text-gray-900" />
+          )}
+        </motion.div>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 pb-6 pt-2 border-t border-gray-100">
+              <div className="pl-28 pr-10">{children}</div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

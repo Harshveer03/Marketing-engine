@@ -302,7 +302,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         <section className="relative py-20 overflow-hidden">
           {/* Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-500 opacity-50" />
-          
+
           <div className="max-w-4xl mx-auto px-8 text-center relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -416,69 +416,72 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* What is 1SYX Section */}
-        <section className="max-w-7xl mx-auto px-8 py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-5xl mb-4 font-bold text-gray-900">
-              One System. Endless Strategic Power.
-            </h2>
-            <p className="text-xl text-gray-600 mb-12">
-              1SYX is a unified AI system that powers your entire marketing strategy
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 gap-12 items-center mb-12">
+        <section className="relative py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500 opacity-50" />
+          <div className="relative z-10 max-w-7xl mx-auto px-8">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="space-y-4"
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
             >
-              {[
-                "Extracts your brand + competitor data",
-                "Diagnoses your messaging",
-                "Identifies your true market position",
-                "Generates insights & strategy",
-                "Produces content across all channels",
-                "Learns from performance and improves",
-              ].map((item, index) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 * index }}
-                  className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200"
-                >
-                  <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-gray-800 font-medium text-lg">{item}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-12 text-center"
-            >
-              <Sparkles className="w-16 h-16 text-yellow-400 mx-auto mb-6" />
-              <h3 className="text-3xl font-bold text-white mb-4">
-                Your entire marketing
-              </h3>
-              <p className="text-xl text-gray-300">
-                <span className="text-green-400 font-bold">aligned</span>,{" "}
-                <span className="text-blue-400 font-bold">intelligent</span>,{" "}
-                <span className="text-purple-400 font-bold">automated</span>
+              <h2 className="text-5xl mb-4 font-bold text-black drop-shadow-sm">
+                One System. Endless Strategic Power.
+              </h2>
+              <p className="text-xl text-gray-900 font-medium mb-12">
+                1SYX is a unified AI system that powers your entire marketing strategy
               </p>
             </motion.div>
+
+            <div className="grid grid-cols-2 gap-12 items-center mb-12">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="space-y-4"
+              >
+                {[
+                  "Extracts your brand + competitor data",
+                  "Diagnoses your messaging",
+                  "Identifies your true market position",
+                  "Generates insights & strategy",
+                  "Produces content across all channels",
+                  "Learns from performance and improves",
+                ].map((item, index) => (
+                  <motion.div
+                    key={item}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 * index }}
+                    className="flex items-center gap-4 bg-white backdrop-blur-sm p-4 rounded-lg border border-white/20 shadow-sm"
+                  >
+                    <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    </div>
+                    <span className="text-gray-900 font-medium text-lg">{item}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-2xl p-12 text-center shadow-xl"
+              >
+                <Sparkles className="w-16 h-16 text-orange-500 mx-auto mb-6" />
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                  Your entire marketing
+                </h3>
+                <p className="text-xl text-gray-600">
+                  <span className="text-green-600 font-bold">aligned</span>,{" "}
+                  <span className="text-blue-600 font-bold">intelligent</span>,{" "}
+                  <span className="text-purple-600 font-bold">automated</span>
+                </p>
+              </motion.div>
+            </div>
           </div>
         </section>
 
@@ -511,30 +514,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 openIndex={openEngineIndex}
                 setOpenIndex={setOpenEngineIndex}
               >
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3">Uploads Supported:</h4>
-                    <ul className="space-y-2">
-                      {["Website URL", "Social profiles", "Competitor URLs", "PDFs", "Text descriptions", "Logos & visuals"].map((item) => (
-                        <li key={item} className="flex items-center gap-2 text-gray-700">
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3">Extracts:</h4>
-                    <ul className="space-y-2">
-                      {["Brand name", "Industry", "ICP", "Persona", "Website messaging", "Social content", "Competitor content", "Visual identity"].map((item) => (
-                        <li key={item} className="flex items-center gap-2 text-gray-700">
-                          <CheckCircle className="w-4 h-4 text-blue-600" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Seamlessly ingests your website, social profiles, and documents to build a comprehensive structured brand profile.
+                </p>
               </EngineCard>
 
               {/* Engine 2: Diagnostic */}
@@ -547,33 +529,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 openIndex={openEngineIndex}
                 setOpenIndex={setOpenEngineIndex}
               >
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3">Evaluated across 7 metrics:</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {["Clarity", "Relevance", "Specificity", "GAP Severity", "Message Consistency", "Post Consistency", "Trend Position (Leader/Follower/Lagger/Disrupter)"].map((metric) => (
-                        <div key={metric} className="bg-white p-3 rounded-lg border border-gray-200 text-gray-700 font-medium">
-                          {metric}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3">Evaluated under 4 filters:</h4>
-                    <div className="grid grid-cols-4 gap-3">
-                      {["Industry", "ICP", "Persona", "Geography"].map((filter) => (
-                        <div key={filter} className="bg-black text-white p-3 rounded-lg text-center font-medium">
-                          {filter}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4">
-                    <p className="text-gray-900 font-semibold">
-                      ⚡ Powered entirely by your PDF rulebooks
-                    </p>
-                  </div>
-                </div>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Evaluates your brand health across 7 key metrics and 4 strategic filters to identify gaps and opportunities.
+                </p>
               </EngineCard>
 
               {/* Engine 3: Insight */}
@@ -586,26 +544,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 openIndex={openEngineIndex}
                 setOpenIndex={setOpenEngineIndex}
               >
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-4">Outputs:</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      "Positioning insights",
-                      "Narrative direction",
-                      "ICP-specific messaging",
-                      "Strengths & weaknesses",
-                      "Competitor advantage map",
-                      "Priority roadmap",
-                      "Messaging Do's & Don'ts",
-                      "Content pillars",
-                    ].map((output) => (
-                      <div key={output} className="flex items-start gap-2 bg-white p-3 rounded-lg border border-gray-200">
-                        <Sparkles className="w-4 h-4 text-yellow-500 mt-1 flex-shrink-0" />
-                        <span className="text-gray-700 font-medium">{output}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Transforms raw diagnostic data into actionable positioning, narrative direction, and strategic priorities.
+                </p>
               </EngineCard>
 
               {/* Engine 4: Content Generation */}
@@ -618,36 +559,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 openIndex={openEngineIndex}
                 setOpenIndex={setOpenEngineIndex}
               >
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-4">Generates:</h4>
-                    <div className="grid grid-cols-3 gap-3">
-                      {[
-                        "LinkedIn posts",
-                        "X threads",
-                        "Instagram captions",
-                        "YouTube scripts",
-                        "Blog posts",
-                        "Ads",
-                        "Image prompts",
-                        "Video scripts",
-                        "Landing page copy",
-                      ].map((content) => (
-                        <div key={content} className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-3 rounded-lg text-center font-medium">
-                          {content}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="bg-blue-50 border-2 border-blue-400 rounded-lg p-4">
-                    <p className="text-gray-900 font-semibold mb-2">Uses:</p>
-                    <div className="flex gap-2">
-                      <span className="bg-white px-3 py-1 rounded-full text-sm font-medium">Diagnostics</span>
-                      <span className="bg-white px-3 py-1 rounded-full text-sm font-medium">Insights</span>
-                      <span className="bg-white px-3 py-1 rounded-full text-sm font-medium">PDF knowledge rules</span>
-                    </div>
-                  </div>
-                </div>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Instantly generates on-brand content for social, web, and video that aligns perfectly with your defined strategy.
+                </p>
               </EngineCard>
 
               {/* Engine 5: Engagement Fetcher */}
@@ -660,24 +574,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 openIndex={openEngineIndex}
                 setOpenIndex={setOpenEngineIndex}
               >
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-4">Tracks:</h4>
-                  <div className="grid grid-cols-3 gap-4">
-                    {[
-                      { label: "Engagement", icon: Users },
-                      { label: "CTR", icon: Target },
-                      { label: "Watch-time", icon: Clock },
-                      { label: "Traffic", icon: TrendingUp },
-                      { label: "Conversions", icon: CheckCircle },
-                      { label: "Competitor trends", icon: BarChart },
-                    ].map((item) => (
-                      <div key={item.label} className="bg-white p-4 rounded-lg border-2 border-gray-200 text-center">
-                        <item.icon className="w-8 h-8 text-gray-900 mx-auto mb-2" />
-                        <p className="text-gray-700 font-semibold">{item.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Aggregates performance data from all your active channels to give you clear visibility into what's driving results.
+                </p>
               </EngineCard>
 
               {/* Engine 6: Analysis & Feedback Loop */}
@@ -690,29 +589,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 openIndex={openEngineIndex}
                 setOpenIndex={setOpenEngineIndex}
               >
-                <div className="space-y-4">
-                  {[
-                    "Learns what works",
-                    "Updates insights",
-                    "Refines messaging",
-                    "Strengthens narrative",
-                    "Suggests new angles",
-                    "Improves diagnostics",
-                  ].map((feature, index) => (
-                    <motion.div
-                      key={feature}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 * index }}
-                      className="flex items-center gap-4 bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200"
-                    >
-                      <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="w-6 h-6 text-white" />
-                      </div>
-                      <span className="text-gray-800 font-semibold text-lg">{feature}</span>
-                    </motion.div>
-                  ))}
-                </div>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Continuously learns from performance data to refine your messaging and improve your brand's impact over time.
+                </p>
               </EngineCard>
             </div>
           </div>
@@ -1244,11 +1123,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                                       [index]: "yes",
                                     });
                                   }}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
-                                    helpfulVotes[index] === "yes"
-                                      ? "bg-green-50 border-green-500 text-green-700"
-                                      : "border-gray-300 text-gray-600 hover:bg-gray-50"
-                                  }`}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[index] === "yes"
+                                    ? "bg-green-50 border-green-500 text-green-700"
+                                    : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                    }`}
                                 >
                                   <ThumbsUp className="w-4 h-4" />
                                   <span className="text-sm font-medium">
@@ -1263,11 +1141,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                                       [index]: "no",
                                     });
                                   }}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
-                                    helpfulVotes[index] === "no"
-                                      ? "bg-red-50 border-red-500 text-red-700"
-                                      : "border-gray-300 text-gray-600 hover:bg-gray-50"
-                                  }`}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[index] === "no"
+                                    ? "bg-red-50 border-red-500 text-red-700"
+                                    : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                    }`}
                                 >
                                   <ThumbsDown className="w-4 h-4" />
                                   <span className="text-sm font-medium">

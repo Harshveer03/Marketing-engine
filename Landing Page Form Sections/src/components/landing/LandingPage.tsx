@@ -35,7 +35,7 @@ interface LandingPageProps {
 
 export function LandingPage({ onGetStarted }: LandingPageProps) {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [openEngineIndex, setOpenEngineIndex] = useState<number | null>(null);
+
   const [helpfulVotes, setHelpfulVotes] = useState<{
     [key: number]: "yes" | "no" | null;
   }>({});
@@ -198,16 +198,16 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-6xl mb-6 font-bold text-gray-900">
+              <h1 className="text-6xl mb-8 font-bold text-gray-900">
                 Your Brand's X-Factor, Engineered by One System
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
+              <p className="text-xl text-gray-600 mb-6">
                 AI-powered diagnostics, insights, and content — aligned
                 perfectly to your strategy.
               </p>
 
               {/* Value Bullets */}
-              <div className="space-y-3 mb-8">
+              <div className="space-y-4 mb-8">
                 {[
                   "No more generic content",
                   "No more guessing your narrative",
@@ -219,9 +219,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-4"
                   >
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: "#16a34a" }} />
                     <span className="text-gray-700 font-medium">{bullet}</span>
                   </motion.div>
                 ))}
@@ -486,8 +486,18 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* The 6 Engines Section */}
-        <section id="features" className="bg-gray-50 py-20 border-y border-gray-200">
-          <div className="max-w-5xl mx-auto px-8">
+        <section id="features" className="relative py-20 border-y border-gray-200 overflow-hidden">
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&h=1080&fit=crop')`,
+            }}
+          />
+          {/* Light Overlay */}
+          <div className="absolute inset-0 bg-white/85" />
+
+          <div className="relative z-10 max-w-6xl mx-auto px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -503,7 +513,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </p>
             </motion.div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-8">
               {/* Engine 1: Extraction */}
               <EngineCard
                 index={0}
@@ -511,8 +521,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 icon={Database}
                 title="Extraction Engine"
                 subtitle="All your inputs, intelligently structured"
-                openIndex={openEngineIndex}
-                setOpenIndex={setOpenEngineIndex}
+
               >
                 <p className="text-gray-600 text-lg leading-relaxed">
                   Seamlessly ingests your website, social profiles, and documents to build a comprehensive structured brand profile.
@@ -526,8 +535,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 icon={Target}
                 title="Diagnostic Engine"
                 subtitle="Your brand evaluated like a consulting firm would"
-                openIndex={openEngineIndex}
-                setOpenIndex={setOpenEngineIndex}
+
               >
                 <p className="text-gray-600 text-lg leading-relaxed">
                   Evaluates your brand health across 7 key metrics and 4 strategic filters to identify gaps and opportunities.
@@ -541,8 +549,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 icon={Lightbulb}
                 title="Insight Engine"
                 subtitle="Analysis → Strategy"
-                openIndex={openEngineIndex}
-                setOpenIndex={setOpenEngineIndex}
+
               >
                 <p className="text-gray-600 text-lg leading-relaxed">
                   Transforms raw diagnostic data into actionable positioning, narrative direction, and strategic priorities.
@@ -556,8 +563,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 icon={FileText}
                 title="Content Generation Engine"
                 subtitle="Content that aligns with your strategy — every time"
-                openIndex={openEngineIndex}
-                setOpenIndex={setOpenEngineIndex}
+
               >
                 <p className="text-gray-600 text-lg leading-relaxed">
                   Instantly generates on-brand content for social, web, and video that aligns perfectly with your defined strategy.
@@ -571,8 +577,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 icon={TrendingUp}
                 title="Engagement Fetcher Engine"
                 subtitle="Performance visibility from every channel"
-                openIndex={openEngineIndex}
-                setOpenIndex={setOpenEngineIndex}
+
               >
                 <p className="text-gray-600 text-lg leading-relaxed">
                   Aggregates performance data from all your active channels to give you clear visibility into what's driving results.
@@ -586,8 +591,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 icon={RefreshCw}
                 title="Analysis & Feedback Loop"
                 subtitle="Your brand gets smarter over time"
-                openIndex={openEngineIndex}
-                setOpenIndex={setOpenEngineIndex}
+
               >
                 <p className="text-gray-600 text-lg leading-relaxed">
                   Continuously learns from performance data to refine your messaging and improve your brand's impact over time.
@@ -676,7 +680,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* Outcomes Section */}
-        <section className="max-w-7xl mx-auto px-8 py-20">
+        <section className="px-8 py-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -692,85 +696,98 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 gap-8 mb-12">
-            {/* Benefits Grid */}
-            <div className="space-y-4">
-              {[
-                "Crystal-clear messaging",
-                "Higher engagement",
-                "Stronger positioning",
-                "Consistent brand voice",
-              ].map((benefit, index) => (
-                <motion.div
-                  key={benefit}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 * index }}
-                  className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border-2 border-green-200"
-                >
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
-                    <span className="text-gray-900 font-semibold text-lg">{benefit}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <div className="space-y-4">
-              {[
-                "ICP-specific resonance",
-                "Faster growth",
-                "Real-time insights",
-                "Zero agency dependency",
-              ].map((benefit, index) => (
-                <motion.div
-                  key={benefit}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 * index }}
-                  className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-2 border-purple-200"
-                >
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-purple-600" />
-                    <span className="text-gray-900 font-semibold text-lg">{benefit}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          <div className="max-w-7xl mx-auto">
 
-          {/* Stats - Before/After Comparison */}
-          <div className="grid grid-cols-4 gap-6">
-            {[
-              { stat: "3×", label: "clearer messaging", before: "Confusing", after: "Crystal Clear" },
-              { stat: "70%", label: "faster content cycles", before: "Weeks", after: "Days" },
-              { stat: "40%", label: "average engagement uplift", before: "Low", after: "High" },
-              { stat: "5-10hrs", label: "saved per week", before: "Manual", after: "Automated" },
-            ].map((item, index) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 * index }}
-                className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-200 text-center"
-              >
-                <div className="text-4xl font-bold text-gray-900 mb-2">{item.stat}</div>
-                <div className="text-gray-700 font-semibold mb-4">{item.label}</div>
-                <div className="flex items-center justify-center gap-2 text-sm">
-                  <span className="bg-red-100 text-red-700 px-2 py-1 rounded">{item.before}</span>
-                  <ArrowRight className="w-4 h-4 text-gray-400" />
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded">{item.after}</span>
-                </div>
-              </motion.div>
-            ))}
+            <div className="grid grid-cols-2 gap-8 mb-12">
+              {/* Benefits Grid */}
+              <div className="space-y-6">
+                {[
+                  "Crystal-clear messaging",
+                  "Higher engagement",
+                  "Stronger positioning",
+                  "Consistent brand voice",
+                ].map((benefit, index) => (
+                  <motion.div
+                    key={benefit}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 * index }}
+                    className="bg-white p-6 rounded-lg border-2 border-green-200"
+                  >
+                    <div className="flex items-center gap-4">
+                      <CheckCircle className="w-6 h-6 text-green-600" />
+                      <span className="text-gray-900 font-semibold text-lg">{benefit}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="space-y-6">
+                {[
+                  "ICP-specific resonance",
+                  "Faster growth",
+                  "Real-time insights",
+                  "Zero agency dependency",
+                ].map((benefit, index) => (
+                  <motion.div
+                    key={benefit}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 * index }}
+                    className="bg-white p-6 rounded-lg border-2 border-purple-200"
+                  >
+                    <div className="flex items-center gap-4">
+                      <CheckCircle className="w-6 h-6 text-purple-600" />
+                      <span className="text-gray-900 font-semibold text-lg">{benefit}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stats - Before/After Comparison */}
+            <div className="grid grid-cols-4 gap-4 py-6 mb-12">
+              {[
+                { stat: "3×", label: "clearer messaging", before: "Confusing", after: "Crystal Clear" },
+                { stat: "70%", label: "faster content cycles", before: "Weeks", after: "Days" },
+                { stat: "40%", label: "average engagement uplift", before: "Low", after: "High" },
+                { stat: "5-10hrs", label: "saved per week", before: "Manual", after: "Automated" },
+              ].map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * index }}
+                  className="bg-white rounded-xl p-8 shadow-lg border-2 border-gray-200 text-center"
+                >
+                  <div className="text-4xl font-bold text-gray-900 mb-2">{item.stat}</div>
+                  <div className="text-gray-700 font-semibold mb-4">{item.label}</div>
+                  <div className="flex items-center justify-center gap-2 text-sm">
+                    <span className="bg-red-100 text-red-700 px-2 py-1 rounded">{item.before}</span>
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded">{item.after}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Who Is It For Section */}
-        <section className="bg-gray-50 py-20 border-y border-gray-200">
-          <div className="max-w-7xl mx-auto px-8">
+        <section className="relative px-8 py-20 border-y border-gray-200 overflow-hidden">
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=1080&fit=crop')`,
+            }}
+          />
+          {/* Dark Overlay */}
+          <div className="absolute inset-0" style={{ backgroundColor: '#252424cc' }} />
+
+          <div className="relative z-10 max-w-7xl mx-auto px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -778,15 +795,15 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               transition={{ duration: 0.6 }}
               className="text-center mb-16"
             >
-              <h2 className="text-5xl mb-4 font-bold text-gray-900">
+              <h2 className="text-5xl mb-4 font-bold text-white">
                 Who Is It For?
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-white">
                 Built for anyone who wants to communicate better
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-4 gap-6 mb-12">
+            <div className="grid grid-cols-4 gap-8 mb-12 justify-center">
               {[
                 { icon: Rocket, label: "SaaS Founders" },
                 { icon: Briefcase, label: "Agencies" },
@@ -804,9 +821,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   viewport={{ once: true }}
                   transition={{ delay: 0.05 * index }}
                   whileHover={{ scale: 1.05 }}
-                  className="bg-white p-6 rounded-xl shadow-md border-2 border-gray-200 text-center hover:border-gray-900 transition-all"
+                  className="bg-white p-8 rounded-xl shadow-md border-2 border-gray-200 text-center hover:border-gray-900 transition-all"
                 >
-                  <item.icon className="w-12 h-12 text-gray-900 mx-auto mb-3" />
+                  <item.icon className="w-15 h-15 text-gray-900 mx-auto mb-3" />
                   <p className="text-gray-900 font-semibold">{item.label}</p>
                 </motion.div>
               ))}
@@ -816,7 +833,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center"
+              className="text-center mb-12 py-12"
             >
               <div className="bg-white border-2 border-gray-900 rounded-xl p-6 inline-block">
                 <p className="text-xl text-gray-900 font-bold">
@@ -882,8 +899,11 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="bg-gray-50 py-20 border-y border-gray-200">
-          <div className="max-w-7xl mx-auto px-8">
+        <section id="pricing" className="relative py-20 overflow-hidden">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-500 opacity-50" />
+
+          <div className="relative z-10 max-w-7xl mx-auto px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -891,22 +911,22 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               transition={{ duration: 0.6 }}
               className="text-center mb-16"
             >
-              <h2 className="text-5xl mb-4 font-bold text-gray-900">
+              <h2 className="text-5xl mb-4 font-bold text-black">
                 Simple, Transparent Pricing
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-black">
                 Choose the plan that fits your needs
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-4 gap-8">
               {/* Free Tier */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all flex flex-col h-full"
               >
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Free</h3>
                 <p className="text-gray-600 mb-4">For exploring</p>
@@ -914,9 +934,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   <span className="text-5xl font-bold text-gray-900">$0</span>
                   <span className="text-gray-600">/mo</span>
                 </div>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-4 mb-8 flex-grow">
                   {["Basic diagnostics", "Limited uploads", "Sample insights", "Community support"].map((feature) => (
-                    <li key={feature} className="flex items-start gap-2">
+                    <li key={feature} className="flex items-start gap-4">
                       <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                       <span className="text-gray-700">{feature}</span>
                     </li>
@@ -937,7 +957,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all flex flex-col h-full"
               >
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
                 <p className="text-gray-600 mb-4">For individuals & solopreneurs</p>
@@ -945,7 +965,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                   <span className="text-5xl font-bold text-gray-900">$19</span>
                   <span className="text-gray-600">/mo</span>
                 </div>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-4 mb-8">
                   {["Basic diagnostics", "Limited PDF input", "Standard content generation", "Email support"].map((feature) => (
                     <li key={feature} className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
@@ -956,7 +976,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 <Button
                   onClick={onGetStarted}
                   variant="outline"
-                  className="w-full !border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100"
+                  className="w-full !border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100 mt-auto"
                 >
                   Choose Starter
                 </Button>
@@ -968,18 +988,20 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="bg-white rounded-2xl p-8 shadow-2xl border-4 border-black relative"
+                className="bg-white rounded-2xl p-8 shadow-2xl border-4 border-black relative flex flex-col h-full"
               >
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-1 rounded-full text-sm font-semibold">
-                  RECOMMENDED
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Growth</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2 flex-wrap">
+                  Growth
+                  <div className="font-semibold px-1 py-1 rounded-[1px]" style={{ fontSize: "15px", backgroundColor: "#000000ff", color: "#ffffff", borderRadius: "12px" }}>
+                    (Recommended)
+                  </div>
+                </h3>
                 <p className="text-gray-600 mb-4">For startups & teams</p>
                 <div className="mb-6">
                   <span className="text-5xl font-bold text-gray-900">$49</span>
                   <span className="text-gray-600">/mo</span>
                 </div>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-4 mb-8 flex-grow">
                   {["Advanced diagnostics", "Insight engine", "Multi-channel content engine", "Competitor analysis", "Priority support"].map((feature) => (
                     <li key={feature} className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
@@ -1001,14 +1023,14 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-gray-300 transition-all flex flex-col !h-full"
               >
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
                 <p className="text-gray-600 mb-4">For organizations & agencies</p>
                 <div className="mb-6">
                   <span className="text-5xl font-bold text-gray-900">Custom</span>
                 </div>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-4 mb-8">
                   {["Unlimited engines", "Custom rulebooks", "Team collaboration", "Dedicated support", "Custom integrations"].map((feature) => (
                     <li key={feature} className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
@@ -1019,18 +1041,18 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 <Button
                   onClick={onGetStarted}
                   variant="outline"
-                  className="w-full !border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100"
+                  className="w-full !border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100 mt-auto"
                 >
                   Contact Sales
                 </Button>
               </motion.div>
             </div>
           </div>
-        </section>
+        </section >
 
         {/* FAQ Section */}
-        <section id="faq" className="bg-white py-20 border-y border-gray-200">
-          <div className="max-w-4xl mx-auto px-8">
+        < section id="faq" className="bg-white/40 py-20 border-y border-gray-200 " >
+          <div className="max-w-7xl mx-auto px-8 ">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1044,122 +1066,250 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </p>
             </motion.div>
 
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300"
-                >
-                  <button
-                    onClick={() =>
-                      setOpenFaqIndex(openFaqIndex === index ? null : index)
-                    }
-                    className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-bold text-gray-700">
-                          {index + 1}
-                        </span>
-                      </div>
-
-                      <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
-                        <faq.icon className="w-6 h-6 text-white" />
-                      </div>
-
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                            {faq.category}
-                          </span>
-                        </div>
-                        <h3 className="text-lg font-bold text-gray-900">
-                          {faq.question}
-                        </h3>
-                      </div>
-                    </div>
+            <div className="grid grid-cols-2 gap-8 items-start">
+              {/* Left Column */}
+              <div className="space-y-6">
+                {faqs.filter((_, i) => i % 2 === 0).map((faq, index) => {
+                  const originalIndex = index * 2;
+                  return (
                     <motion.div
-                      animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="flex-shrink-0 ml-4"
+                      key={originalIndex}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col"
                     >
-                      {openFaqIndex === index ? (
-                        <Minus className="w-6 h-6 text-gray-900" />
-                      ) : (
-                        <Plus className="w-6 h-6 text-gray-900" />
-                      )}
-                    </motion.div>
-                  </button>
-
-                  <AnimatePresence>
-                    {openFaqIndex === index && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
+                      <button
+                        onClick={() =>
+                          setOpenFaqIndex(openFaqIndex === originalIndex ? null : originalIndex)
+                        }
+                        className="w-full p-6 flex items-center justify-between text-left transition-colors duration-200"
                       >
-                        <div className="px-6 pb-6 pt-2 border-t border-gray-100">
-                          <div className="pl-20 pr-10">
-                            <p className="text-gray-700 leading-relaxed mb-6">
-                              {faq.answer}
-                            </p>
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-gray-700">
+                              {originalIndex + 1}
+                            </span>
+                          </div>
 
-                            <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
-                              <span className="text-sm text-gray-600 font-medium">
-                                Was this helpful?
+                          <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+                            <faq.icon className="w-6 h-6 text-white" />
+                          </div>
+
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                {faq.category}
                               </span>
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setHelpfulVotes({
-                                      ...helpfulVotes,
-                                      [index]: "yes",
-                                    });
-                                  }}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[index] === "yes"
-                                    ? "bg-green-50 border-green-500 text-green-700"
-                                    : "border-gray-300 text-gray-600 hover:bg-gray-50"
-                                    }`}
-                                >
-                                  <ThumbsUp className="w-4 h-4" />
-                                  <span className="text-sm font-medium">
-                                    Yes
-                                  </span>
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setHelpfulVotes({
-                                      ...helpfulVotes,
-                                      [index]: "no",
-                                    });
-                                  }}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[index] === "no"
-                                    ? "bg-red-50 border-red-500 text-red-700"
-                                    : "border-gray-300 text-gray-600 hover:bg-gray-50"
-                                    }`}
-                                >
-                                  <ThumbsDown className="w-4 h-4" />
-                                  <span className="text-sm font-medium">
-                                    No
-                                  </span>
-                                </button>
-                              </div>
                             </div>
+                            <h3 className="text-lg font-bold text-gray-900">
+                              {faq.question}
+                            </h3>
                           </div>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
+                        <motion.div
+                          animate={{ rotate: openFaqIndex === originalIndex ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="flex-shrink-0 ml-4"
+                        >
+                          {openFaqIndex === originalIndex ? (
+                            <Minus className="w-6 h-6 text-gray-900" />
+                          ) : (
+                            <Plus className="w-6 h-6 text-gray-900" />
+                          )}
+                        </motion.div>
+                      </button>
+
+                      <AnimatePresence>
+                        {openFaqIndex === originalIndex && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-6 pb-6 pt-2 border-t border-gray-100">
+                              <div className="pl-20 pr-10">
+                                <p className="text-gray-700 leading-relaxed mb-6">
+                                  {faq.answer}
+                                </p>
+
+                                <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                                  <span className="text-sm text-gray-600 font-medium">
+                                    Was this helpful?
+                                  </span>
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setHelpfulVotes({
+                                          ...helpfulVotes,
+                                          [originalIndex]: "yes",
+                                        });
+                                      }}
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[originalIndex] === "yes"
+                                        ? "bg-green-50 border-green-500 text-green-700"
+                                        : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                        }`}
+                                    >
+                                      <ThumbsUp className="w-4 h-4" />
+                                      <span className="text-sm font-medium">
+                                        Yes
+                                      </span>
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setHelpfulVotes({
+                                          ...helpfulVotes,
+                                          [originalIndex]: "no",
+                                        });
+                                      }}
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[originalIndex] === "no"
+                                        ? "bg-red-50 border-red-500 text-red-700"
+                                        : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                        }`}
+                                    >
+                                      <ThumbsDown className="w-4 h-4" />
+                                      <span className="text-sm font-medium">
+                                        No
+                                      </span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-6">
+                {faqs.filter((_, i) => i % 2 !== 0).map((faq, index) => {
+                  const originalIndex = index * 2 + 1;
+                  return (
+                    <motion.div
+                      key={originalIndex}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col"
+                    >
+                      <button
+                        onClick={() =>
+                          setOpenFaqIndex(openFaqIndex === originalIndex ? null : originalIndex)
+                        }
+                        className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
+                      >
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-gray-700">
+                              {originalIndex + 1}
+                            </span>
+                          </div>
+
+                          <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+                            <faq.icon className="w-6 h-6 text-white" />
+                          </div>
+
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                {faq.category}
+                              </span>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900">
+                              {faq.question}
+                            </h3>
+                          </div>
+                        </div>
+                        <motion.div
+                          animate={{ rotate: openFaqIndex === originalIndex ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="flex-shrink-0 ml-4"
+                        >
+                          {openFaqIndex === originalIndex ? (
+                            <Minus className="w-6 h-6 text-gray-900" />
+                          ) : (
+                            <Plus className="w-6 h-6 text-gray-900" />
+                          )}
+                        </motion.div>
+                      </button>
+
+                      <AnimatePresence>
+                        {openFaqIndex === originalIndex && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-6 pb-6 pt-2 border-t border-gray-100">
+                              <div className="pl-20 pr-10">
+                                <p className="text-gray-700 leading-relaxed mb-6">
+                                  {faq.answer}
+                                </p>
+
+                                <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                                  <span className="text-sm text-gray-600 font-medium">
+                                    Was this helpful?
+                                  </span>
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setHelpfulVotes({
+                                          ...helpfulVotes,
+                                          [originalIndex]: "yes",
+                                        });
+                                      }}
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[originalIndex] === "yes"
+                                        ? "bg-green-50 border-green-500 text-green-700"
+                                        : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                        }`}
+                                    >
+                                      <ThumbsUp className="w-4 h-4" />
+                                      <span className="text-sm font-medium">
+                                        Yes
+                                      </span>
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setHelpfulVotes({
+                                          ...helpfulVotes,
+                                          [originalIndex]: "no",
+                                        });
+                                      }}
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${helpfulVotes[originalIndex] === "no"
+                                        ? "bg-red-50 border-red-500 text-red-700"
+                                        : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                                        }`}
+                                    >
+                                      <ThumbsDown className="w-4 h-4" />
+                                      <span className="text-sm font-medium">
+                                        No
+                                      </span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
 
             <motion.div
@@ -1169,152 +1319,172 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               transition={{ delay: 0.4 }}
               className="mt-12 text-center"
             >
-              <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8 border-2 border-gray-200">
-                <MessageCircle className="w-12 h-12 text-gray-900 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Still have questions?
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Can't find the answer you're looking for? Our support team is
-                  here to help.
-                </p>
-                <div className="flex gap-4 justify-center">
-                  <Button
-                    onClick={onGetStarted}
-                    className="!bg-black hover:!bg-gray-800 !text-white !border-0 shadow-lg"
-                  >
-                    Contact Support
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="!border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100 !bg-white"
-                  >
-                    View Documentation
-                  </Button>
+              <div className="relative rounded-2xl p-8 border-2 border-gray-200 overflow-hidden">
+                <div
+                  className="absolute inset-0 opacity-70"
+                  style={{
+                    backgroundImage: `url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2084&q=80')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+                <div
+                  className="absolute inset-0 rounded-2xl"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom right, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85))",
+                  }}
+                />
+                <div className="relative z-10">
+                  <MessageCircle className="w-12 h-12 text-white mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    Still have questions?
+                  </h3>
+                  <p className="text-white mb-6">
+                    Can't find the answer you're looking for? Our support team is
+                    here to help.
+                  </p>
+                  <div className="flex gap-4 justify-center">
+                    <Button
+                      onClick={onGetStarted}
+                      className="!bg-black hover:!bg-gray-800 !text-white !border-0 shadow-lg"
+                    >
+                      Contact Support
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="!border-2 !border-gray-800 !text-gray-900 hover:!bg-gray-100 !bg-white"
+                    >
+                      View Documentation
+                    </Button>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </div>
-        </section>
+        </section >
 
         {/* Final CTA Section */}
-        <section className="max-w-7xl mx-auto px-8 py-20">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="rounded-3xl p-16 text-center relative overflow-hidden shadow-2xl border-2 border-gray-300"
-          >
-            <div
-              className="absolute inset-0 rounded-3xl"
-              style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1920&h=1080&fit=crop')`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
+        <section className="py-20 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500 opacity-50" />
+          <div className="max-w-7xl mx-auto px-8 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="rounded-3xl p-16 text-center relative overflow-hidden shadow-2xl border-2 border-gray-300"
+            >
+              <div
+                className="absolute inset-0 rounded-3xl"
+                style={{
+                  backgroundImage: `url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1920&h=1080&fit=crop')`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
 
-            <div
-              className="absolute inset-0 rounded-3xl"
-              style={{
-                background:
-                  "linear-gradient(to bottom right, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85))",
-              }}
-            />
+              <div
+                className="absolute inset-0 rounded-3xl"
+                style={{
+                  background:
+                    "linear-gradient(to bottom right, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85))",
+                }}
+              />
 
-            <div className="relative z-10">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 mb-6"
-              >
-                <Sparkles className="w-5 h-5" style={{ color: "#fde047" }} />
-                <span
-                  className="font-semibold text-sm"
+              <div className="relative z-10">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 mb-6"
+                >
+                  <Sparkles className="w-5 h-5" style={{ color: "#fde047" }} />
+                  <span
+                    className="font-semibold text-sm"
+                    style={{ color: "#ffffff" }}
+                  >
+                    Transform Your Brand Today
+                  </span>
+                </motion.div>
+
+                <h2
+                  className="text-5xl md:text-6xl mb-6 font-bold leading-tight"
                   style={{ color: "#ffffff" }}
                 >
-                  Transform Your Brand Today
-                </span>
-              </motion.div>
-
-              <h2
-                className="text-5xl md:text-6xl mb-6 font-bold leading-tight"
-                style={{ color: "#ffffff" }}
-              >
-                Ready to Unlock Your X-Factor?
-              </h2>
-              <p
-                className="text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
-                style={{ color: "#e5e7eb" }}
-              >
-                Join thousands of brands using 1SYX to transform their messaging,
-                sharpen their narrative, and dominate their category.
-              </p>
-
-              <div className="flex gap-4 justify-center mb-6">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  Ready to Unlock Your X-Factor?
+                </h2>
+                <p
+                  className="text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
+                  style={{ color: "#e5e7eb" }}
                 >
-                  <Button
-                    onClick={onGetStarted}
-                    className="bg-white text-black hover:bg-gray-100 border-0 shadow-xl rounded-xl px-10 py-6 text-lg font-semibold"
-                  >
-                    Get Started Free
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    variant="outline"
-                    className="!border-2 !border-white !text-white hover:!bg-white/10 !bg-transparent rounded-xl px-10 py-6 text-lg font-semibold"
-                  >
-                    Schedule a Demo
-                  </Button>
-                </motion.div>
-              </div>
+                  Join thousands of brands using 1SYX to transform their messaging,
+                  sharpen their narrative, and dominate their category.
+                </p>
 
-              <div className="flex items-center justify-center gap-8 text-sm">
-                <div className="flex items-center gap-2">
-                  <CheckCircle
-                    className="w-5 h-5"
-                    style={{ color: "#4ade80" }}
-                  />
-                  <span className="font-medium" style={{ color: "#e5e7eb" }}>
-                    No credit card required
-                  </span>
+                <div className="flex gap-4 justify-center mb-6">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Button
+                      onClick={onGetStarted}
+                      className="bg-white text-black hover:bg-gray-100 border-0 shadow-xl rounded-xl px-10 py-6 text-lg font-semibold"
+                    >
+                      Get Started Free
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </motion.div>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Button
+                      variant="outline"
+                      className="!border-2 !border-white !text-white hover:!bg-white/10 !bg-transparent rounded-xl px-10 py-6 text-lg font-semibold"
+                    >
+                      Schedule a Demo
+                    </Button>
+                  </motion.div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle
-                    className="w-5 h-5"
-                    style={{ color: "#4ade80" }}
-                  />
-                  <span className="font-medium" style={{ color: "#e5e7eb" }}>
-                    14-day free trial
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle
-                    className="w-5 h-5"
-                    style={{ color: "#4ade80" }}
-                  />
-                  <span className="font-medium" style={{ color: "#e5e7eb" }}>
-                    Cancel anytime
-                  </span>
+
+                <div className="flex items-center justify-center gap-8 text-sm">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle
+                      className="w-5 h-5"
+                      style={{ color: "#4ade80" }}
+                    />
+                    <span className="font-medium" style={{ color: "#e5e7eb" }}>
+                      No credit card required
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle
+                      className="w-5 h-5"
+                      style={{ color: "#4ade80" }}
+                    />
+                    <span className="font-medium" style={{ color: "#e5e7eb" }}>
+                      14-day free trial
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle
+                      className="w-5 h-5"
+                      style={{ color: "#4ade80" }}
+                    />
+                    <span className="font-medium" style={{ color: "#e5e7eb" }}>
+                      Cancel anytime
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        </section>
+            </motion.div>
+          </div>
+        </section >
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-gray-300 py-12">
+        < footer className="bg-gray-900 text-gray-300 py-12" >
           <div className="max-w-7xl mx-auto px-8">
             <div className="grid grid-cols-4 gap-8 mb-8">
               <div>
@@ -1417,9 +1587,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </div>
             </div>
           </div>
-        </footer>
-      </div>
-    </div>
+        </footer >
+      </div >
+    </div >
   );
 }
 
@@ -1431,8 +1601,6 @@ interface EngineCardProps {
   title: string;
   subtitle: string;
   children: React.ReactNode;
-  openIndex: number | null;
-  setOpenIndex: (index: number | null) => void;
 }
 
 function EngineCard({
@@ -1442,65 +1610,30 @@ function EngineCard({
   title,
   subtitle,
   children,
-  openIndex,
-  setOpenIndex,
 }: EngineCardProps) {
-  const isOpen = openIndex === index;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300"
+      className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col h-full p-8"
     >
-      <button
-        onClick={() => setOpenIndex(isOpen ? null : index)}
-        className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
-      >
-        <div className="flex items-center gap-4 flex-1">
-          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-xl font-bold text-gray-700">{number}</span>
-          </div>
-
-          <div className="w-14 h-14 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
-            <Icon className="w-7 h-7 text-white" />
-          </div>
-
-          <div className="flex-1">
-            <h3 className="text-xl font-bold text-gray-900 mb-1">{title}</h3>
-            <p className="text-gray-600 font-medium">{subtitle}</p>
-          </div>
+      <div className="flex items-start justify-between mb-6">
+        <div className="w-14 h-14 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+          <Icon className="w-7 h-7 text-white" />
         </div>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-          className="flex-shrink-0 ml-4"
-        >
-          {isOpen ? (
-            <Minus className="w-6 h-6 text-gray-900" />
-          ) : (
-            <Plus className="w-6 h-6 text-gray-900" />
-          )}
-        </motion.div>
-      </button>
+        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span className="text-lg font-bold text-gray-700">{number}</span>
+        </div>
+      </div>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-          >
-            <div className="px-6 pb-6 pt-2 border-t border-gray-100">
-              <div className="pl-28 pr-10">{children}</div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600 font-medium mb-4">{subtitle}</p>
+
+      <div className="mt-auto pt-4 border-t border-gray-100">
+        {children}
+      </div>
     </motion.div>
   );
 }

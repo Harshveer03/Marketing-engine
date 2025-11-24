@@ -7,7 +7,6 @@ import {
   Megaphone,
   FileText,
   BarChart3,
-  Calendar,
   Settings,
   Crown,
   User,
@@ -27,7 +26,6 @@ const menuItems = [
   { id: "campaigns", label: "Campaigns", icon: Megaphone },
   { id: "posts", label: "Posts", icon: FileText },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
-  { id: "calendar", label: "Calendar", icon: Calendar },
   { id: "profile", label: "Profile", icon: User },
   { id: "settings", label: "Settings", icon: Settings },
 ];

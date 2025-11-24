@@ -5,6 +5,7 @@ import { BrandDiagnosticsPage } from "./BrandDiagnosticsPage";
 import { ProfilePage } from "./ProfilePage";
 import { CampaignsPage } from "./CampaignsPage";
 import { PostsPage } from "./PostsPage";
+import { AnalyticsPage } from "./AnalyticsPage";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
@@ -49,6 +50,8 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
             <CampaignsPage />
           ) : activeSection === "posts" ? (
             <PostsPage />
+          ) : activeSection === "analytics" ? (
+            <AnalyticsPage />
           ) : (
           <div className="p-8">
             {/* Enhanced Greeting Card - Full Width */}

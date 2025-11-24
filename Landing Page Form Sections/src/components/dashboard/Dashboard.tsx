@@ -2,6 +2,9 @@ import { useState } from "react";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardHeader } from "./DashboardHeader";
 import { BrandDiagnosticsPage } from "./BrandDiagnosticsPage";
+import { ProfilePage } from "./ProfilePage";
+import { CampaignsPage } from "./CampaignsPage";
+import { PostsPage } from "./PostsPage";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
@@ -11,6 +14,7 @@ import {
   BarChart3,
   FileText,
   Zap,
+  Crown,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { motion } from "motion/react";
@@ -39,6 +43,12 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
         <main className="flex-1 overflow-auto">
           {activeSection === "diagnostics" ? (
             <BrandDiagnosticsPage />
+          ) : activeSection === "profile" ? (
+            <ProfilePage />
+          ) : activeSection === "campaigns" ? (
+            <CampaignsPage />
+          ) : activeSection === "posts" ? (
+            <PostsPage />
           ) : (
           <div className="p-8">
             {/* Enhanced Greeting Card - Full Width */}
@@ -68,10 +78,10 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
                 {/* Center: Greeting & Welcome Message */}
                 <div className="flex-1">
                   <h1 className="text-2xl font-semibold text-white mb-0.5">
-                    Good morning, User 👋
+                    Welcome back!, User 👋
                   </h1>
                   <p className="text-white/80 text-sm">
-                    Welcome back! Ready to create something amazing today?
+                    Ready to create something amazing today?
                   </p>
                 </div>
 
@@ -261,37 +271,42 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
           )}
         </main>
 
-        {/* Right Sidebar - Hidden on Brand Diagnostics page */}
-        {activeSection !== "diagnostics" && (
-          <aside className="w-64 bg-white border-l border-gray-200 p-6 overflow-auto">
+        {/* Right Sidebar - Hidden on Brand Diagnostics and Profile pages */}
+        {activeSection !== "diagnostics" && activeSection !== "profile" && (
+          <aside className="bg-white border-l border-gray-200 p-6 overflow-auto" style={{ width: '320px' }}>
             {/* Calendar */}
-            <div className="mb-10">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Calendar</h3>
-              <div className="calendar-widget">
+            <div className="flex flex-col items-center">
+              <h3 className="text-xs font-bold text-gray-900 mb-6 uppercase tracking-wider">Calendar</h3>
+              <div className="calendar-widget w-full flex justify-center">
                 <Calendar
                   onChange={(value) => setSelectedDate(value as Date)}
                   value={selectedDate}
-                  className="border-0 rounded-xl shadow-sm"
+                  className="border-0 shadow-sm"
                 />
               </div>
             </div>
 
-            {/* Schedule */}
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">
-                My Schedule
-              </h3>
-              <div className="space-y-3">
-                {[
-                  { time: "10:00 AM", title: "Team Meeting" },
-                  { time: "2:00 PM", title: "Content Review" },
-                  { time: "4:30 PM", title: "Campaign Launch" },
-                ].map((item, i) => (
-                  <div key={i} className="bg-gray-50 p-4 rounded-xl">
-                    <p className="text-xs text-gray-500">{item.time}</p>
-                    <p className="font-semibold text-gray-900">{item.title}</p>
+            {/* Upgrade Card */}
+            <div className="mt-8 px-2">
+              <div className="bg-black rounded-3xl p-6 text-black shadow-xl shadow-black/10 relative overflow-hidden text-center">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-gray-800 to-transparent opacity-30 rounded-full -mr-20 -mt-20 blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-gray-800 to-transparent opacity-30 rounded-full -ml-20 -mb-20 blur-2xl" />
+                
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md border border-white/10 shadow-inner">
+                    <Crown className="w-6 h-6 text-yellow-400 fill-yellow-400" />
                   </div>
-                ))}
+                  
+                  <h3 className="text-xl font-bold mb-2 tracking-tight">Upgrade to Pro</h3>
+                  <p className="text-gray-400 text-sm mb-6 leading-relaxed max-w-[200px]">
+                    Get advanced analytics and unlimited campaigns.
+                  </p>
+                  
+                  <Button className="w-full text-white hover:bg-gray-100 border-2 font-bold h-11 rounded-xl shadow-lg shadow-white/10 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                    Upgrade Now
+                  </Button>
+                </div>
               </div>
             </div>
           </aside>

@@ -12,6 +12,8 @@ import {
   Save,
   Eye,
   ArrowRight,
+  TrendingUp,
+  Globe,
 } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -21,12 +23,16 @@ interface PreviewSectionProps {
     industry: string;
     description: string;
     targetAudience: string;
+    targetIndustries?: string[];
+    targetGeography?: string[];
   };
   onUpdateData: (data: {
     brandName: string;
     industry: string;
     description: string;
     targetAudience: string;
+    targetIndustries?: string[];
+    targetGeography?: string[];
   }) => void;
   onNext?: () => void;
 }
@@ -95,7 +101,7 @@ export function PreviewSection({
               transition={{ duration: 0.5 }}
               className="w-14 h-14 !bg-black rounded-xl flex items-center justify-center shadow-xl"
             >
-              <Eye className="w-7 h-7 text-black" />
+              <Eye className="w-6 h-6 text-black" />
             </motion.div>
             <h3 className="text-3xl text-gray-900 font-bold">
               Your Brand Details
@@ -269,6 +275,62 @@ export function PreviewSection({
                 </p>
               </div>
             )}
+          </motion.div>
+
+          {/* Target Industries */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.7 }}
+          >
+            <Label className="text-black font-semibold flex items-center gap-2 text-base mb-2">
+              <TrendingUp className="w-4 h-4 text-black" />
+              Relevant Target Industries
+            </Label>
+            <div className="p-4 bg-gray-50 border-2 border-gray-200 rounded-md min-h-[60px]">
+              {formData.targetIndustries && formData.targetIndustries.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {formData.targetIndustries.map((industry, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-gray-900 text-white px-3 py-1.5 rounded-full text-xs font-medium"
+                    >
+                      <span>{industry}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-400 italic text-base">Not provided</p>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Target Geography */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.8 }}
+          >
+            <Label className="text-black font-semibold flex items-center gap-2 text-base mb-2">
+              <Globe className="w-4 h-4 text-black" />
+              Relevant Geography
+            </Label>
+            <div className="p-4 bg-gray-50 border-2 border-gray-200 rounded-md min-h-[60px]">
+              {formData.targetGeography && formData.targetGeography.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {formData.targetGeography.map((geography, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-gray-900 text-white px-3 py-1.5 rounded-full text-xs font-medium"
+                    >
+                      <span>{geography}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-400 italic text-base">Not provided</p>
+              )}
+            </div>
           </motion.div>
         </div>
 

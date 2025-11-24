@@ -250,14 +250,14 @@ export function BrandDiagnosticsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex-shrink-0 flex flex-col overflow-hidden"
+                  className="bg-white shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex-shrink-0 flex flex-col overflow-hidden"
                   style={{
-                    width: '180px',
-                    minWidth: '180px',
-                    maxWidth: '180px',
-                    height: '220px',
-                    minHeight: '220px',
-                    maxHeight: '220px'
+                    width: '174px',
+                    minWidth: '174px',
+                    maxWidth: '174px',
+                    height: '214px',
+                    minHeight: '214px',
+                    maxHeight: '214px'
                   }}
                 >
                   {/* Header with Icon and Trend - Fixed Height */}

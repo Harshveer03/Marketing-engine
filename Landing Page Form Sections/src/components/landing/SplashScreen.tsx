@@ -8,17 +8,12 @@ interface SplashScreenProps {
 export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleClick = () => {
-    if (!isAnimating) {
-      setIsAnimating(true);
-    }
-  };
+
 
   return (
     <AnimatePresence>
       <motion.div
-        onClick={handleClick}
-        className="fixed inset-0 z-50 cursor-pointer"
+        className="fixed inset-0 z-50"
         initial={{ opacity: 1 }}
         animate={{ opacity: isAnimating ? 0 : 1 }}
         exit={{ opacity: 0 }}
@@ -33,6 +28,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           justifyContent: "center",
         }}
       >
+
+
         {/* Click Prompt - Top Center */}
         <motion.div
           className="absolute left-0 right-0 text-center z-10"
@@ -62,9 +59,12 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             transformStyle: "preserve-3d",
           }}
         >
-          <img
-            src="/1syx.jpg"
-            alt="1SYX"
+          <video
+            src="/1syx-logo-animation.mp4"
+            autoPlay
+            muted
+            playsInline
+            onEnded={() => setIsAnimating(true)}
             className="max-w-2xl w-full h-auto object-contain"
           />
         </motion.div>

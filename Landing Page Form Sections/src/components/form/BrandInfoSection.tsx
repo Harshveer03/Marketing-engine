@@ -482,7 +482,7 @@ export function BrandInfoSection({
                 <TrendingUp className="w-4 h-4" />
                 Relevant Target Industries
               </Label>
-              
+
               <div className="flex gap-2">
                 <div className="flex-1 relative">
                   <Button
@@ -501,11 +501,10 @@ export function BrandInfoSection({
                           key={industry}
                           onClick={() => addIndustry(industry)}
                           disabled={targetIndustries.includes(industry)}
-                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                            targetIndustries.includes(industry)
-                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                              : 'text-gray-700 hover:bg-gray-100'
-                          }`}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${targetIndustries.includes(industry)
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                         >
                           {industry}
                         </button>
@@ -583,7 +582,7 @@ export function BrandInfoSection({
                 <Globe className="w-4 h-4" />
                 Relevant Geography
               </Label>
-              
+
               <div className="flex gap-2">
                 <div className="flex-1 relative">
                   <Button
@@ -602,11 +601,10 @@ export function BrandInfoSection({
                           key={geography}
                           onClick={() => addGeography(geography)}
                           disabled={targetGeography.includes(geography)}
-                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                            targetGeography.includes(geography)
-                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                              : 'text-gray-700 hover:bg-gray-100'
-                          }`}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${targetGeography.includes(geography)
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                         >
                           {geography}
                         </button>
@@ -679,65 +677,36 @@ export function BrandInfoSection({
             </div>
           </div>
 
-          {/* 3. Brand Assets Section */}
-          <div className="pt-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Image className="w-5 h-5" />
-              Brand Assets
-            </h3>
-            <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-3 text-base">
-              Logos, Images & Fonts
-            </Label>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="group relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-black hover:bg-gray-100 transition-all duration-300 cursor-pointer"
-            >
-              <div className="w-14 h-14 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow border border-gray-200">
-                <Image className="w-7 h-7 text-gray-700" />
-              </div>
-              <p className="text-gray-900 font-semibold text-sm mb-1">
-                Upload logos, images, fonts
-              </p>
-              <p className="text-gray-600 text-sm">PNG, JPG, SVG up to 10MB</p>
-              <input
-                type="file"
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                multiple
-                accept="image/*,.svg"
-              />
-            </motion.div>
-          </div>
-
-          {/* 4. Marketing Materials Section */}
+          {/* 3. Brand Resources Section */}
           <div className="pt-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <Upload className="w-5 h-6" />
-              Marketing Materials
+              Brand Resources
             </h3>
             <Label className="text-gray-900 font-semibold flex items-center gap-2 mb-3 text-base">
-              Existing Materials
+              Upload Brand Documents
             </Label>
             <motion.div
               whileHover={{ scale: 1.01 }}
               className="group relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-black hover:bg-gray-100 transition-all duration-300 cursor-pointer"
             >
               <div className="w-14 h-14 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow border border-gray-200">
-                <Upload className="w-7 h-7 text-gray-700" />
+                <FileText className="w-7 h-7 text-gray-700" />
               </div>
               <p className="text-gray-900 font-semibold text-sm mb-1">
-                Upload marketing materials
+                Upload brand resources & materials
               </p>
-              <p className="text-gray-600 text-sm">PDF, DOC, PPT up to 20MB</p>
+              <p className="text-gray-600 text-sm">PDF files up to 20MB</p>
               <input
                 type="file"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 multiple
-                accept=".pdf,.doc,.docx,.ppt,.pptx"
+                accept=".pdf"
               />
             </motion.div>
           </div>
 
-          {/* 5. Brand Description Section */}
+          {/* 4. Brand Description Section */}
           <div className="pt-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <FileText className="w-5 h-6" />

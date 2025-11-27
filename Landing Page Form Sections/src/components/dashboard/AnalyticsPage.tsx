@@ -107,7 +107,7 @@ export function AnalyticsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 p-8">
+    <div className="p-8">
       <div className="max-w-[1600px] mx-auto space-y-10">
         {/* Header Section */}
         <motion.div
@@ -121,7 +121,7 @@ export function AnalyticsPage() {
             </h1>
             <p className="text-gray-600 text-lg">Track performance and insights across all channels</p>
           </div>
-          
+
           {/* Time Range Selector */}
           <div className="flex items-center gap-2 bg-white rounded-2xl border border-gray-200 p-1.5 shadow-sm">
             {[
@@ -133,11 +133,10 @@ export function AnalyticsPage() {
               <button
                 key={range.value}
                 onClick={() => setTimeRange(range.value)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                  timeRange === range.value
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${timeRange === range.value
                     ? "bg-gradient-to-r from-gray-900 to-gray-800 text-black shadow-lg shadow-gray-900/20"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 {range.label}
               </button>
@@ -159,9 +158,8 @@ export function AnalyticsPage() {
                 <div className={`w-14 h-14 bg-gradient-to-br ${metric.gradientFrom} ${metric.gradientTo} rounded-2xl flex items-center justify-center shadow-lg ${metric.shadowColor} group-hover:scale-110 transition-transform duration-300`}>
                   <metric.icon className="w-7 h-7 text-black" />
                 </div>
-                <div className={`flex items-center gap-1.5 text-xs font-bold px-4 py-1.5 rounded-full ${
-                  metric.trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                }`}>
+                <div className={`flex items-center gap-1.5 text-xs font-bold px-4 py-1.5 rounded-full ${metric.trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                  }`}>
                   {metric.trend === "up" ? (
                     <ArrowUpRight className="w-4 h-4" />
                   ) : (
@@ -199,7 +197,7 @@ export function AnalyticsPage() {
               </button>
             </div>
           </div>
-          
+
           {/* Bar Chart */}
           <div className="relative" style={{ height: '320px' }}>
             {/* Grid lines */}
@@ -208,7 +206,7 @@ export function AnalyticsPage() {
                 <div key={i} className="w-full border-t border-gray-100" />
               ))}
             </div>
-            
+
             {/* Bars */}
             <div className="absolute inset-0 flex items-end justify-around gap-4 px-8 pb-12">
               {weeklyData.map((item, index) => (
@@ -250,7 +248,7 @@ export function AnalyticsPage() {
                 <p className="text-sm text-gray-500">Traffic breakdown by platform</p>
               </div>
             </div>
-            
+
             <div className="space-y-7">
               {platformStats.map((platform, index) => (
                 <div key={index}>
@@ -302,7 +300,7 @@ export function AnalyticsPage() {
                 <p className="text-sm text-gray-500">User journey stages</p>
               </div>
             </div>
-            
+
             <div className="space-y-5">
               {[
                 { stage: "Visitors", count: "245.8K", percentage: 100, color: "from-blue-500 to-blue-600" },
@@ -353,7 +351,7 @@ export function AnalyticsPage() {
               <p className="text-gray-500">Essential engagement and behavior indicators</p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-4 gap-8">
             {engagementMetrics.map((item, index) => (
               <motion.div
@@ -367,9 +365,8 @@ export function AnalyticsPage() {
                   <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-200 group-hover:scale-110 transition-transform">
                     <item.icon className="w-5 h-5 text-gray-600" />
                   </div>
-                  <div className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full ${
-                    item.trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                  }`}>
+                  <div className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full ${item.trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    }`}>
                     {item.trend === "up" ? (
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     ) : (
@@ -429,12 +426,11 @@ export function AnalyticsPage() {
                     className="hover:bg-gray-50 transition-colors group"
                   >
                     <td className="px-8 py-6">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-base shadow-sm ${
-                        item.rank === 1 ? "bg-gradient-to-br from-yellow-400 to-yellow-500 text-black" :
-                        item.rank === 2 ? "bg-gradient-to-br from-gray-300 to-gray-400 text-black" :
-                        item.rank === 3 ? "bg-gradient-to-br from-orange-400 to-orange-500 text-black" :
-                        "bg-gray-100 text-gray-600"
-                      }`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-base shadow-sm ${item.rank === 1 ? "bg-gradient-to-br from-yellow-400 to-yellow-500 text-black" :
+                          item.rank === 2 ? "bg-gradient-to-br from-gray-300 to-gray-400 text-black" :
+                            item.rank === 3 ? "bg-gradient-to-br from-orange-400 to-orange-500 text-black" :
+                              "bg-gray-100 text-gray-600"
+                        }`}>
                         {item.rank}
                       </div>
                     </td>

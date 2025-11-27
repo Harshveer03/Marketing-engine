@@ -27,7 +27,6 @@ const menuItems = [
   { id: "posts", label: "Posts", icon: FileText },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "profile", label: "Profile", icon: User },
-  { id: "settings", label: "Settings", icon: Settings },
 ];
 
 export function DashboardSidebar({
@@ -57,11 +56,10 @@ export function DashboardSidebar({
                   style={{
                     backgroundColor: isActive ? "#000000" : "transparent",
                   }}
-                  className={`w-full flex flex-col items-center gap-1 py-3 px-2 rounded-xl transition-all ${
-                    isActive
+                  className={`w-full flex flex-col items-center gap-1 py-3 px-2 rounded-xl transition-all ${isActive
                       ? "text-white shadow-lg"
                       : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="text-xs font-medium">{item.label}</span>
@@ -123,11 +121,10 @@ export function DashboardSidebar({
               style={{
                 backgroundColor: isActive ? "#000000" : "transparent",
               }}
-              className={`w-full flex flex-col items-center gap-1 py-3 px-2 rounded-xl transition-all ${
-                isActive
+              className={`w-full flex flex-col items-center gap-1 py-3 px-2 rounded-xl transition-all ${isActive
                   ? "text-white shadow-lg"
                   : "text-gray-700 hover:bg-gray-100"
-              }`}
+                }`}
             >
               <Icon className="w-5 h-5" />
               <span className="text-xs font-medium">{item.label}</span>

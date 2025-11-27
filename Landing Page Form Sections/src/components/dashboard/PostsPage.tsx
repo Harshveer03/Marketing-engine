@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   Plus,
   Search,
@@ -22,6 +22,9 @@ import {
   Twitter,
   Instagram,
   Facebook,
+  Sparkles,
+  Building2,
+  Users as UsersIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -43,6 +46,12 @@ interface Post {
 export function PostsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [topic, setTopic] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [persona, setPersona] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [tone, setTone] = useState("");
 
   const posts: Post[] = [
     {
@@ -95,16 +104,24 @@ export function PostsPage() {
     },
   ];
 
+  const suggestedTopics = [
+    "5 Ways to Boost Team Productivity",
+    "The Future of Remote Work",
+    "Building a Strong Company Culture",
+    "Leadership Lessons from 2024",
+    "Innovation in the Digital Age"
+  ];
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "published":
-        return "bg-green-100 text-green-700 border-green-200";
+        return { bg: "rgba(16, 185, 129, 0.15)", text: "#059669", border: "#6EE7B7" };
       case "scheduled":
-        return "bg-blue-100 text-blue-700 border-blue-200";
+        return { bg: "rgba(59, 130, 246, 0.15)", text: "#2563EB", border: "#93C5FD" };
       case "draft":
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return { bg: "rgba(107, 114, 128, 0.15)", text: "#4B5563", border: "#D1D5DB" };
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return { bg: "rgba(107, 114, 128, 0.15)", text: "#4B5563", border: "#D1D5DB" };
     }
   };
 
@@ -164,15 +181,188 @@ export function PostsPage() {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Posts</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Posts</h1>
               <p className="text-gray-600">Manage, schedule, and publish your content</p>
             </div>
-            <Button className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20 transition-all hover:scale-105">
+            <Button
+              onClick={() => setIsFormOpen(!isFormOpen)}
+              className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20 transition-all hover:scale-105"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Create Post
             </Button>
           </div>
         </motion.div>
+
+        {/* Inline Post Creation Form */}
+        <AnimatePresence>
+          {isFormOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden mb-8"
+            >
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                <div className="space-y-6">
+                  {/* Topic Input */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Post Topic
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="Enter your post topic..."
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* AI Suggested Topics */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="w-4 h-4" style={{ color: "#8B5CF6" }} />
+                      <label className="text-sm font-semibold text-gray-700">
+                        AI Suggested Topics
+                      </label>
+                    </div>
+                    <div className="grid grid-cols-5 gap-3">
+                      {suggestedTopics.map((suggestedTopic, index) => (
+                        <motion.button
+                          key={index}
+                          type="button"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setTopic(suggestedTopic)}
+                          className="p-3 rounded-xl border-2 border-gray-200 hover:border-purple-300 bg-gradient-to-br from-purple-50 to-white text-sm font-medium text-gray-700 hover:text-purple-700 transition-all text-left"
+                        >
+                          {suggestedTopic}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Target Industry */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4" style={{ color: "#10B981" }} />
+                        Target Industry
+                      </div>
+                    </label>
+                    <select
+                      value={industry}
+                      onChange={(e) => setIndustry(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none bg-white text-sm cursor-pointer hover:border-gray-400 transition-colors"
+                    >
+                      <option value="">Select industry...</option>
+                      <option value="technology">Technology</option>
+                      <option value="healthcare">Healthcare</option>
+                      <option value="finance">Finance</option>
+                      <option value="education">Education</option>
+                      <option value="retail">Retail</option>
+                    </select>
+                  </div>
+
+                  {/* Target Persona */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <UsersIcon className="w-4 h-4" style={{ color: "#3B82F6" }} />
+                        Target Persona
+                      </div>
+                    </label>
+                    <select
+                      value={persona}
+                      onChange={(e) => setPersona(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none bg-white text-sm cursor-pointer hover:border-gray-400 transition-colors"
+                    >
+                      <option value="">Select persona...</option>
+                      <option value="ceo">CEO / Founder</option>
+                      <option value="manager">Manager</option>
+                      <option value="professional">Professional</option>
+                      <option value="student">Student</option>
+                      <option value="general">General Audience</option>
+                    </select>
+                  </div>
+
+                  {/* Platform */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Share2 className="w-4 h-4" style={{ color: "#EC4899" }} />
+                        Platform
+                      </div>
+                    </label>
+                    <select
+                      value={platform}
+                      onChange={(e) => setPlatform(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none bg-white text-sm cursor-pointer hover:border-gray-400 transition-colors"
+                    >
+                      <option value="">Select platform...</option>
+                      <option value="blog">Blog</option>
+                      <option value="linkedin-article">LinkedIn Article</option>
+                      <option value="linkedin-post">LinkedIn Post</option>
+                      <option value="twitter-post">X (Twitter) Post</option>
+                      <option value="youtube">YouTube Description & Script</option>
+                    </select>
+                  </div>
+
+                  {/* Tone */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4" style={{ color: "#F59E0B" }} />
+                        Tone
+                      </div>
+                    </label>
+                    <select
+                      value={tone}
+                      onChange={(e) => setTone(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none bg-white text-sm cursor-pointer hover:border-gray-400 transition-colors"
+                    >
+                      <option value="">Select tone...</option>
+                      <option value="insightful">Insightful</option>
+                      <option value="educational">Educational</option>
+                      <option value="actionable">Actionable</option>
+                      <option value="professional">Professional</option>
+                      <option value="alerting">Alerting</option>
+                    </select>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-end gap-3 pt-6">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsFormOpen(false)}
+                      className="px-6"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        console.log({ topic, industry, persona, platform, tone });
+                        setIsFormOpen(false);
+                        setTopic("");
+                        setIndustry("");
+                        setPersona("");
+                        setPlatform("");
+                        setTone("");
+                      }}
+                      className="!bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-6 shadow-lg shadow-purple-500/30"
+                    >
+                      Generate Post
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Stats Overview */}
         <motion.div
@@ -183,8 +373,14 @@ export function PostsPage() {
         >
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-black/20">
-                <FileText className="w-6 h-6 text-black" />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
+                  boxShadow: "0 10px 15px -3px rgba(139, 92, 246, 0.3)"
+                }}
+              >
+                <FileText className="w-6 h-6 text-white" />
               </div>
               <span className="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
@@ -197,8 +393,14 @@ export function PostsPage() {
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-black/20">
-                <Clock className="w-6 h-6 text-black" />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+                  boxShadow: "0 10px 15px -3px rgba(59, 130, 246, 0.3)"
+                }}
+              >
+                <Clock className="w-6 h-6 text-white" />
               </div>
               <span className="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-700 rounded-full flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
@@ -211,8 +413,14 @@ export function PostsPage() {
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-black/20">
-                <Heart className="w-6 h-6 text-black" />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
+                  boxShadow: "0 10px 15px -3px rgba(236, 72, 153, 0.3)"
+                }}
+              >
+                <Heart className="w-6 h-6 text-white" />
               </div>
               <span className="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
@@ -232,35 +440,33 @@ export function PostsPage() {
           className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden"
         >
           {/* Card Header with Search & Filter */}
-          <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row gap-4 justify-between items-center bg-gray-50/50">
-            <h2 className="text-xl font-bold text-gray-900 w-full sm:w-auto">Recent Posts</h2>
-            
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <div className="p-6 border-b border-gray-200 flex items-center justify-between gap-4 bg-gray-50/50">
+            <h2 className="text-xl font-bold text-gray-900">Recent Posts</h2>
+
+            <div className="flex items-center gap-3">
               {/* Search */}
-              <div className="relative w-full sm:w-auto">
+              <div className="relative">
                 <Input
                   type="text"
                   placeholder="Search posts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="!pl-12 border-gray-300 focus:border-black h-10 w-full sm:w-64 bg-white"
+                  className="!pl-12 border-gray-300 focus:border-black h-10 w-64 bg-white"
                 />
               </div>
 
               {/* Status Filter */}
-              <div className="relative w-full sm:w-auto">
+              <div className="relative">
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="!pl-12 pr-10 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none h-10 bg-white text-sm appearance-none cursor-pointer hover:border-gray-400 transition-colors w-full sm:w-40"
+                  className="!pl-12 pr-10 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none h-10 bg-white text-sm appearance-none cursor-pointer hover:border-gray-400 transition-colors w-40"
                 >
                   <option value="all">All Status</option>
                   <option value="published">Published</option>
                   <option value="scheduled">Scheduled</option>
                   <option value="draft">Draft</option>
                 </select>
-
-
               </div>
             </div>
           </div>
@@ -311,9 +517,12 @@ export function PostsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-                          post.status
-                        )}`}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
+                        style={{
+                          backgroundColor: getStatusColor(post.status).bg,
+                          color: getStatusColor(post.status).text,
+                          borderColor: getStatusColor(post.status).border,
+                        }}
                       >
                         {getStatusIcon(post.status)}
                         {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
@@ -401,7 +610,10 @@ export function PostsPage() {
                   : "Start creating content to engage with your audience."}
               </p>
               {!searchQuery && (
-                <Button className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20">
+                <Button
+                  onClick={() => setIsFormOpen(true)}
+                  className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Post
                 </Button>

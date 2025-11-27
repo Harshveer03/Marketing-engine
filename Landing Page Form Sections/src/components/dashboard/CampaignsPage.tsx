@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   Plus,
   Search,
@@ -18,6 +18,8 @@ import {
   CheckCircle,
   FileText,
   Megaphone,
+  Sparkles,
+  Building2,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -37,6 +39,11 @@ interface Campaign {
 export function CampaignsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [topic, setTopic] = useState("");
+  const [goal, setGoal] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [duration, setDuration] = useState("2weeks");
 
   const campaigns: Campaign[] = [
     {
@@ -85,18 +92,24 @@ export function CampaignsPage() {
     },
   ];
 
+  const suggestedTopics = [
+    "Product Launch Q1 2025",
+    "Brand Awareness Drive",
+    "Holiday Season Sale"
+  ];
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-green-100 text-green-700 border-green-200";
+        return { bg: "rgba(16, 185, 129, 0.15)", text: "#059669", border: "#6EE7B7" };
       case "paused":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
+        return { bg: "rgba(245, 158, 11, 0.15)", text: "#D97706", border: "#FCD34D" };
       case "completed":
-        return "bg-blue-100 text-blue-700 border-blue-200";
+        return { bg: "rgba(59, 130, 246, 0.15)", text: "#2563EB", border: "#93C5FD" };
       case "draft":
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return { bg: "rgba(107, 114, 128, 0.15)", text: "#4B5563", border: "#D1D5DB" };
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return { bg: "rgba(107, 114, 128, 0.15)", text: "#4B5563", border: "#D1D5DB" };
     }
   };
 
@@ -119,6 +132,15 @@ export function CampaignsPage() {
     return matchesSearch && matchesFilter;
   });
 
+  const handleSubmit = () => {
+    console.log({ topic, goal, industry, duration });
+    setIsFormOpen(false);
+    setTopic("");
+    setGoal("");
+    setIndustry("");
+    setDuration("2weeks");
+  };
+
   return (
     <div className="p-8">
       <div className="max-w-7xl mx-auto">
@@ -130,15 +152,145 @@ export function CampaignsPage() {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Campaigns</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Campaigns</h1>
               <p className="text-gray-600">Manage and track your marketing campaigns</p>
             </div>
-            <Button className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20 transition-all hover:scale-105">
+            <Button
+              onClick={() => setIsFormOpen(!isFormOpen)}
+              className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20 transition-all hover:scale-105"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Create Campaign
             </Button>
           </div>
         </motion.div>
+
+        {/* Inline Campaign Creation Form */}
+        <AnimatePresence>
+          {isFormOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden mb-8"
+            >
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                <div className="space-y-6">
+                  {/* Topic Input */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Campaign Topic
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="Enter your campaign topic..."
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* AI Suggested Topics */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="w-4 h-4" style={{ color: "#8B5CF6" }} />
+                      <label className="text-sm font-semibold text-gray-700">
+                        AI Suggested Topics
+                      </label>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      {suggestedTopics.map((suggestedTopic, index) => (
+                        <motion.button
+                          key={index}
+                          type="button"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setTopic(suggestedTopic)}
+                          className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 bg-gradient-to-br from-purple-50 to-white text-sm font-medium text-gray-700 hover:text-purple-700 transition-all text-left"
+                        >
+                          {suggestedTopic}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Goal of Campaign */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Target className="w-4 h-4" style={{ color: "#3B82F6" }} />
+                        Goal of Campaign
+                      </div>
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="e.g., Increase brand awareness, Generate leads..."
+                      value={goal}
+                      onChange={(e) => setGoal(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Target Industry */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4" style={{ color: "#10B981" }} />
+                        Target Industry
+                      </div>
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="e.g., Technology, Healthcare, Finance..."
+                      value={industry}
+                      onChange={(e) => setIndustry(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Duration */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" style={{ color: "#F59E0B" }} />
+                        Duration
+                      </div>
+                    </label>
+                    <select
+                      value={duration}
+                      onChange={(e) => setDuration(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none bg-white text-sm cursor-pointer hover:border-gray-400 transition-colors"
+                    >
+                      <option value="1week">1 Week</option>
+                      <option value="2weeks">2 Weeks</option>
+                      <option value="1month">1 Month</option>
+                    </select>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsFormOpen(false)}
+                      className="px-6"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleSubmit}
+                      className="!bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-6 shadow-lg shadow-purple-500/30"
+                    >
+                      Create Campaign
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Stats Overview */}
         <motion.div
@@ -149,8 +301,14 @@ export function CampaignsPage() {
         >
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg shadow-black/20">
-                <Target className="w-8 h-8 text-black" />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
+                  boxShadow: "0 10px 15px -3px rgba(99, 102, 241, 0.3)"
+                }}
+              >
+                <Target className="w-6 h-6 text-white" />
               </div>
               <span className="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
@@ -163,8 +321,14 @@ export function CampaignsPage() {
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg shadow-black/20">
-                <Eye className="w-8 h-8 text-black" />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+                  boxShadow: "0 10px 15px -3px rgba(59, 130, 246, 0.3)"
+                }}
+              >
+                <Eye className="w-6 h-6 text-white" />
               </div>
               <span className="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
@@ -177,8 +341,14 @@ export function CampaignsPage() {
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg shadow-black/20">
-                <Users className="w-8 h-8 text-black" />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+                  boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.3)"
+                }}
+              >
+                <Users className="w-6 h-6 text-white" />
               </div>
               <span className="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" />
@@ -198,27 +368,27 @@ export function CampaignsPage() {
           className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden"
         >
           {/* Card Header with Search & Filter */}
-          <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row gap-4 justify-between items-center bg-gray-50/50">
-            <h2 className="text-xl font-bold text-gray-900 w-full sm:w-auto">All Campaigns</h2>
-            
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <div className="p-6 border-b border-gray-200 flex items-center justify-between gap-4 bg-gray-50/50">
+            <h2 className="text-xl font-bold text-gray-900">All Campaigns</h2>
+
+            <div className="flex items-center gap-3">
               {/* Search */}
-              <div className="relative w-full sm:w-auto">
+              <div className="relative">
                 <Input
                   type="text"
                   placeholder="Search campaigns..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="!pl-12 border-gray-300 focus:border-black h-10 w-full sm:w-64 bg-white"
+                  className="!pl-12 border-gray-300 focus:border-black h-10 w-64 bg-white"
                 />
               </div>
 
               {/* Status Filter */}
-              <div className="relative w-full sm:w-auto">
+              <div className="relative">
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="!pl-12 pr-10 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none h-10 bg-white text-sm appearance-none cursor-pointer hover:border-gray-400 transition-colors w-full sm:w-40"
+                  className="!pl-12 pr-10 py-2 border border-gray-300 rounded-lg focus:border-black focus:outline-none h-10 bg-white text-sm appearance-none cursor-pointer hover:border-gray-400 transition-colors w-40"
                 >
                   <option value="all">All Status</option>
                   <option value="active">Active</option>
@@ -262,13 +432,13 @@ export function CampaignsPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%)", border: "1px solid #E5E7EB" }}>
                           {campaign.platform === "Social Media" ? (
-                            <Users className="w-5 h-5 text-gray-600" />
+                            <Users className="w-5 h-5" style={{ color: "#EC4899" }} />
                           ) : campaign.platform === "Email" ? (
-                            <FileText className="w-5 h-5 text-gray-600" />
+                            <FileText className="w-5 h-5" style={{ color: "#3B82F6" }} />
                           ) : (
-                            <Megaphone className="w-5 h-5 text-gray-600" />
+                            <Megaphone className="w-5 h-5" style={{ color: "#8B5CF6" }} />
                           )}
                         </div>
                         <div>
@@ -279,9 +449,12 @@ export function CampaignsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-                          campaign.status
-                        )}`}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
+                        style={{
+                          backgroundColor: getStatusColor(campaign.status).bg,
+                          color: getStatusColor(campaign.status).text,
+                          borderColor: getStatusColor(campaign.status).border,
+                        }}
                       >
                         {getStatusIcon(campaign.status)}
                         {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
@@ -357,7 +530,10 @@ export function CampaignsPage() {
                   : "Get started by creating your first marketing campaign to track performance."}
               </p>
               {!searchQuery && (
-                <Button className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20">
+                <Button
+                  onClick={() => setIsFormOpen(true)}
+                  className="!bg-black hover:bg-gray-800 text-white shadow-lg shadow-black/20"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Campaign
                 </Button>

@@ -199,15 +199,9 @@ export function BrandDiagnosticsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="relative overflow-hidden">
       {/* Grid pattern background */}
-      <div
-        className="absolute inset-0 opacity-[0.15]"
-        style={{
-          backgroundImage: `linear-gradient(to right, #d1d5db 1px, transparent 1px), linear-gradient(to bottom, #d1d5db 1px, transparent 1px)`,
-          backgroundSize: "40px 40px",
-        }}
-      />
+
 
       <div className="relative z-10 p-8 space-y-6">
         {/* View Toggle Button - At the very top */}

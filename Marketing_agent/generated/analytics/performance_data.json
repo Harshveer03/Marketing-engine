@@ -1,0 +1,50 @@
+[
+    {
+        "platform": "linkedin",
+        "title": "Redefine GTM: AI powers market leadership and growth.",
+        "metrics": {
+            "impressions": 13623,
+            "likes": 78,
+            "comments": 23,
+            "shares": 25,
+            "engagement_rate": 0.009
+        },
+        "timestamp": "2025-11-09T08:04:33.733617"
+    },
+    {
+        "platform": "twitter",
+        "title": "Redefine GTM: AI powers market leadership and growth.",
+        "metrics": {
+            "impressions": 8239,
+            "likes": 273,
+            "comments": 18,
+            "shares": 29,
+            "engagement_rate": 0.039
+        },
+        "timestamp": "2025-11-09T08:04:33.735669"
+    },
+    {
+        "platform": "youtube",
+        "title": "Redefine GTM: AI powers market leadership and growth.",
+        "metrics": {
+            "impressions": 4803,
+            "likes": 86,
+            "comments": 25,
+            "shares": 13,
+            "engagement_rate": 0.026
+        },
+        "timestamp": "2025-11-09T08:04:33.738831"
+    },
+    {
+        "platform": "blog",
+        "title": "Rewire Sales: AI Guarantees Predictable Revenue Growth by 2025.",
+        "metrics": {
+            "impressions": 18952,
+            "likes": 83,
+            "comments": 12,
+            "shares": 47,
+            "engagement_rate": 0.007
+        },
+        "timestamp": "2025-11-09T08:04:33.751844"
+    }
+]

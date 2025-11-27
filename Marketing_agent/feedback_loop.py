@@ -2,8 +2,8 @@ import os
 import json
 from dotenv import load_dotenv
 
-INSIGHTS_FILE = "./analytics/performance_insights.json"
-FEEDBACK_CONTEXT_FILE = "./analytics/feedback_context.json"
+INSIGHTS_FILE = "./generated/analytics/performance_insights.json"
+FEEDBACK_CONTEXT_FILE = "./generated/analytics/feedback_context.json"
 
 class FeedbackLoop:
     def __init__(self):

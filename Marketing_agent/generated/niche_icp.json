@@ -1,0 +1,218 @@
+{
+    "industry": "GTM Behavior Rewiring System",
+    "target_audience": [
+        "B2B SaaS Founders leading sales",
+        "AEs in Product-Led Growth companies",
+        "GTM Leaders in lean B2B SaaS teams"
+    ],
+    "customer_pain_points": [
+        {
+            "challenge": "Founder-Led Sales is breaking and cannot scale",
+            "why": [
+                {
+                    "cause": "Lack of scalable GTM behavior system",
+                    "explanation": "Founders cannot scale themselves, leading to a lack of trust in the rep layer and resulting in buyers being ghosted and confused.",
+                    "indicators": [
+                        "Founder-Led Sales Is Breaking",
+                        "can’t scale themselves",
+                        "don’t trust the rep layer",
+                        "ghosted and confused"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "New AEs in Product-Led Growth companies use ineffective, outdated scripts",
+            "why": [
+                {
+                    "cause": "Reliance on outdated sales scripts in PLG environments",
+                    "explanation": "New AEs bring traditional sales scripts that are not adapted to Product-Led Growth buyer psychology, leading to constant questions about appropriate messaging.",
+                    "indicators": [
+                        "New AE Joins a Product-Led Company",
+                        "bring old scripts that don’t work",
+                        "ask “what should I say here?” constantly"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Outbound Reply Rate is below 1% with no clear understanding of failure points",
+            "why": [
+                {
+                    "cause": "Unidentified GTM sequence failures",
+                    "explanation": "Teams lack insight into specific failures in personalization, CTA, tone, or length of outbound sequences, preventing learning and iteration from sequence results.",
+                    "indicators": [
+                        "Outbound Reply Rate Is <1%",
+                        "No clue what’s failing — personalization, CTA, tone, length?",
+                        "Nobody is learning from the sequence results"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Pipeline Forecast is based on subjective 'Vibes' instead of data",
+            "why": [
+                {
+                    "cause": "Absence of data-driven GTM behavior insights",
+                    "explanation": "Forecasting relies on subjective 'vibes' rather than concrete data from sales interactions, leading to unpredictable revenue outcomes.",
+                    "indicators": [
+                        "Pipeline Forecast Is Based on “Vibes”"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Repeating GTM mistakes without knowing where buyers drop off or what reps should have said",
+            "why": [
+                {
+                    "cause": "Lack of granular GTM behavior analysis and prescriptive guidance",
+                    "explanation": "Teams repeat GTM mistakes because they lack specific insights into where buyers drop off, why messages fail, or what reps should have said instead, leading to lost momentum.",
+                    "indicators": [
+                        "nobody knows where the buyer dropped off",
+                        "why your message didn’t land",
+                        "what your rep should’ve said instead",
+                        "buyer dropped off",
+                        "message didn’t land"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Inability to make GTM changes stick despite coaching or playbooks",
+            "why": [
+                {
+                    "cause": "Absence of a systemic execution rewiring mechanism",
+                    "explanation": "Teams have failed to make behavioral changes stick because existing solutions like coaching or playbooks lack a system for real-time, performance-critical content rewriting and drilling.",
+                    "indicators": [
+                        "Our team is not very coachable",
+                        "We’ve tried playbooks, templates, coaching…",
+                        "Reps are polite, but buyers still ghost",
+                        "We’re not sure what to fix anymore"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        },
+        {
+            "challenge": "Over-reliance on insight-only tools like Gong without actionable execution",
+            "why": [
+                {
+                    "cause": "Misconception that insight equals solution",
+                    "explanation": "Companies assume tools like Gong provide the full solution, but they only show what happened, not what should have happened or how to rewrite it for execution.",
+                    "indicators": [
+                        "We already have Gong",
+                        "Gong shows you what happened"
+                    ],
+                    "recommended_first_checks": []
+                }
+            ]
+        }
+    ],
+    "customer_needs": [
+        {
+            "need": "Systematic GTM behavior rewiring for lean B2B SaaS teams to fix critical sales interaction moments",
+            "how": [
+                {
+                    "approach": "GTM Behavior Rewiring System",
+                    "details": "KLYRR provides a GTM behavior rewiring system that includes call behavior scoring, timestamp rewrites, decision signal detection, VoiceGPT drills, async practice, weekly rep challenges, call/email scoring, a coaching protocol, and behavior evolution tracking.",
+                    "measurable_signs": [
+                        "Team performance becomes predictable, observable",
+                        "Rep fluency becomes a source of pipeline reliability",
+                        "Trust, confidence, urgency — felt at every touchpoint",
+                        "Prospects convert faster and earlier"
+                    ],
+                    "first_deliverables": [
+                        "Call behavior scoring",
+                        "timestamp rewrites",
+                        "decision signal detection",
+                        "VoiceGPT drills",
+                        "async practice",
+                        "weekly rep challenges",
+                        "Call/email scoring",
+                        "coaching protocol",
+                        "behavior evolution tracking",
+                        "cold email reframes",
+                        "discovery scoring",
+                        "messaging system"
+                    ]
+                }
+            ]
+        },
+        {
+            "need": "Actionable, real-time rewrites of rep phrasing based on actual call transcripts",
+            "how": [
+                {
+                    "approach": "Transcript-based Execution Rewiring",
+                    "details": "KLYRR listens to calls, provides rewrites based on real transcripts, and drills them until they stick, ensuring reps know what to say instead of just getting coaching notes.",
+                    "measurable_signs": [
+                        "changes what the buyer hears",
+                        "rep fluency becomes a source of pipeline reliability"
+                    ],
+                    "first_deliverables": [
+                        "rewrites based on our real transcripts",
+                        "timestamp rewrites",
+                        "VoiceGPT drills"
+                    ]
+                }
+            ]
+        },
+        {
+            "need": "Improved outbound reply rates and continuous learning from GTM sequence results",
+            "how": [
+                {
+                    "approach": "Performance-Critical Content Rewriting",
+                    "details": "KLYRR rewrites performance-critical content like cold emails, identifying and fixing failures in personalization, CTA, tone, or length, enabling learning from sequence results to increase reply rates.",
+                    "measurable_signs": [
+                        "Outbound Reply Rate increase",
+                        "Prospects convert faster and earlier"
+                    ],
+                    "first_deliverables": [
+                        "cold email reframes",
+                        "analysis of failing outbound sequence elements"
+                    ]
+                }
+            ]
+        },
+        {
+            "need": "Predictable pipeline forecasting driven by observable GTM performance and rep fluency",
+            "how": [
+                {
+                    "approach": "VoiceGPT Drills & Messaging System",
+                    "details": "KLYRR's VoiceGPT drills and messaging system ensure rep fluency and consistent GTM behaviors, making team performance predictable and observable, thus enabling more reliable pipeline forecasts.",
+                    "measurable_signs": [
+                        "Team performance becomes predictable, observable",
+                        "Rep fluency becomes a source of pipeline reliability"
+                    ],
+                    "first_deliverables": [
+                        "VoiceGPT drill reports",
+                        "messaging system adherence scores"
+                    ]
+                }
+            ]
+        },
+        {
+            "need": "A system that anchors buyers on risk and urgency, not just features",
+            "how": [
+                {
+                    "approach": "Buyer Perception Optimization",
+                    "details": "KLYRR's rewiring focuses on influencing the buyer’s perception of risk, urgency, and confidence in the rep at every touchpoint, moving conversations beyond mere feature discussions.",
+                    "measurable_signs": [
+                        "buyer’s perception of risk, urgency, and confidence in the rep",
+                        "Trust, confidence, urgency — felt at every touchpoint"
+                    ],
+                    "first_deliverables": [
+                        "call behavior scoring",
+                        "decision signal detection"
+                    ]
+                }
+            ]
+        }
+    ],
+    "value_proposition": "KLYRR is a GTM behavior rewiring system that fixes critical sales interaction moments, transforming rep fluency and buyer perception to drive predictable revenue outcomes for lean B2B SaaS teams.",
+    "brand_tone": "Pragmatic GTM Execution Authority"
+}

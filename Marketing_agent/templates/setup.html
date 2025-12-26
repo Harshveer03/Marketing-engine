@@ -1,0 +1,261 @@
+{% extends "base.html" %} {% block title %}Setup - Marketing Engine{% endblock
+%} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+          <i class="fas fa-cog me-2"></i>Marketing Engine Setup
+        </h4>
+      </div>
+      <div class="card-body">
+        <div id="setup-step-1">
+          <h5>Welcome to Your Personal Marketing Engine!</h5>
+          <p class="text-muted">
+            To get started, please upload your business document (PDF, DOCX, or
+            TXT) that describes your company, products, and target market.
+          </p>
+
+          <div
+            class="upload-area border-dashed p-4 text-center mb-3"
+            id="upload-area"
+          >
+            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+            <h6>Drag & Drop your document here</h6>
+            <p class="text-muted">or click to browse files</p>
+            <input
+              type="file"
+              id="file-input"
+              class="d-none"
+              accept=".pdf,.docx,.txt"
+            />
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              onclick="document.getElementById('file-input').click()"
+            >
+              <i class="fas fa-folder-open me-2"></i>Choose File
+            </button>
+          </div>
+
+          <div class="selected-file d-none mb-3" id="selected-file">
+            <div class="alert alert-info">
+              <i class="fas fa-file me-2"></i>
+              <span id="file-name"></span>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger float-end"
+                onclick="clearFile()"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-lg w-100"
+            id="upload-btn"
+            onclick="uploadFile()"
+            disabled
+          >
+            <i class="fas fa-rocket me-2"></i>Setup Marketing Engine
+          </button>
+        </div>
+
+        <div id="setup-step-2" class="d-none">
+          <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5>Processing Your Document...</h5>
+            <p class="text-muted">
+              This may take a few minutes. We're analyzing your business and
+              setting up your personalized marketing engine.
+            </p>
+
+            <div class="progress mb-3">
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                style="width: 0%"
+                id="progress-bar"
+              ></div>
+            </div>
+
+            <div id="status-messages">
+              <p class="text-muted">Starting setup...</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="setup-step-3" class="d-none">
+          <div class="text-center">
+            <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+            <h4 class="text-success">Setup Complete!</h4>
+            <p class="text-muted">
+              Your marketing engine is ready to generate content tailored to
+              your business.
+            </p>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">
+              <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  let selectedFile = null;
+  let setupInterval = null;
+
+  // File selection handling
+  document
+    .getElementById("file-input")
+    .addEventListener("change", function (e) {
+      if (e.target.files.length > 0) {
+        selectedFile = e.target.files[0];
+        showSelectedFile(selectedFile.name);
+      }
+    });
+
+  // Drag and drop handling
+  const uploadArea = document.getElementById("upload-area");
+  uploadArea.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    uploadArea.classList.add("drag-over");
+  });
+
+  uploadArea.addEventListener("dragleave", function (e) {
+    e.preventDefault();
+    uploadArea.classList.remove("drag-over");
+  });
+
+  uploadArea.addEventListener("drop", function (e) {
+    e.preventDefault();
+    uploadArea.classList.remove("drag-over");
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (
+        file.type === "application/pdf" ||
+        file.name.endsWith(".pdf") ||
+        file.name.endsWith(".docx") ||
+        file.name.endsWith(".txt")
+      ) {
+        selectedFile = file;
+        showSelectedFile(file.name);
+      } else {
+        alert("Please select a PDF, DOCX, or TXT file.");
+      }
+    }
+  });
+
+  function showSelectedFile(fileName) {
+    document.getElementById("file-name").textContent = fileName;
+    document.getElementById("selected-file").classList.remove("d-none");
+    document.getElementById("upload-btn").disabled = false;
+  }
+
+  function clearFile() {
+    selectedFile = null;
+    document.getElementById("selected-file").classList.add("d-none");
+    document.getElementById("upload-btn").disabled = true;
+    document.getElementById("file-input").value = "";
+  }
+
+  function uploadFile() {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    // Show processing step
+    document.getElementById("setup-step-1").classList.add("d-none");
+    document.getElementById("setup-step-2").classList.remove("d-none");
+
+    // Start progress animation
+    let progress = 0;
+    const progressBar = document.getElementById("progress-bar");
+    const statusMessages = document.getElementById("status-messages");
+
+    const progressInterval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress > 90) progress = 90;
+      progressBar.style.width = progress + "%";
+    }, 500);
+
+    // Upload file
+    fetch("/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          statusMessages.innerHTML =
+            '<p class="text-info">Document uploaded successfully. Processing...</p>';
+          checkSetupStatus();
+        } else {
+          clearInterval(progressInterval);
+          alert("Error: " + data.error);
+          location.reload();
+        }
+      })
+      .catch((error) => {
+        clearInterval(progressInterval);
+        alert("Upload failed: " + error);
+        location.reload();
+      });
+
+    // Check setup status periodically
+    function checkSetupStatus() {
+      setupInterval = setInterval(() => {
+        fetch("/setup_status")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.configured) {
+              clearInterval(setupInterval);
+              clearInterval(progressInterval);
+              progressBar.style.width = "100%";
+
+              setTimeout(() => {
+                document.getElementById("setup-step-2").classList.add("d-none");
+                document
+                  .getElementById("setup-step-3")
+                  .classList.remove("d-none");
+              }, 1000);
+            } else if (!data.in_progress) {
+              clearInterval(setupInterval);
+              clearInterval(progressInterval);
+              alert("Setup failed. Please try again.");
+              location.reload();
+            }
+          });
+      }, 2000);
+    }
+  }
+</script>
+
+<style>
+  .upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .upload-area:hover,
+  .upload-area.drag-over {
+    border-color: #0d6efd;
+    background-color: #f8f9ff;
+  }
+
+  .border-dashed {
+    border-style: dashed !important;
+  }
+</style>
+{% endblock %}

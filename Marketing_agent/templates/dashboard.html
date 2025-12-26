@@ -1,0 +1,1318 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+  <!-- Stats Cards -->
+  <div class="col-md-3 mb-4">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">{{ stats.blogs }}</h4>
+            <p class="mb-0">Blog Posts</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-blog fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">{{ stats.social_posts }}</h4>
+            <p class="mb-0">Social Posts</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-share-alt fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">{{ stats.trends }}</h4>
+            <p class="mb-0">Trends Tracked</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-chart-line fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4 class="mb-0">
+              {% if performance and performance.summary and
+              performance.summary.platforms %} {% set platforms =
+              performance.summary.platforms %} {% set engagement_values = [] %}
+              {% for platform, data in platforms.items() %} {% if
+              engagement_values.append(data.avg_engagement) %}{% endif %} {%
+              endfor %} {% if engagement_values %} {{
+              "%.1f"|format((engagement_values|sum / engagement_values|length) *
+              100) }}% {% else %} N/A {% endif %} {% else %} N/A {% endif %}
+            </h4>
+            <p class="mb-0">Avg Engagement</p>
+          </div>
+          <div class="align-self-center">
+            <i class="fas fa-heart fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-magic me-2"></i>Content Generation
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-info w-100"
+              onclick="generateContent('trends')"
+            >
+              <i class="fas fa-chart-line me-2"></i>Fetch Trends
+            </button>
+          </div>
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-primary w-100"
+              onclick="showBlogModeSelection()"
+            >
+              <i class="fas fa-blog me-2"></i>Generate Blog
+            </button>
+          </div>
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-success w-100"
+              onclick="showSocialModeSelection()"
+            >
+              <i class="fas fa-share-alt me-2"></i>Generate Social
+            </button>
+          </div>
+          <div class="col-md-3 mb-2">
+            <button
+              class="btn btn-warning w-100"
+              onclick="generateContent('analysis')"
+            >
+              <i class="fas fa-analytics me-2"></i>Run Analysis
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Topic Selection Section (Hidden by default) -->
+<div class="row mb-4 d-none" id="topicSelectionSection">
+  <div class="col-12">
+    <div class="card border-success">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-lightbulb me-2"></i>Select Topic for Social Content
+        </h5>
+      </div>
+      <div class="card-body">
+        <!-- Loading State -->
+        <div id="topicLoading" class="text-center py-4">
+          <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Generating topics...</span>
+          </div>
+          <p class="mt-2 text-muted">
+            Analyzing trends and generating topics...
+          </p>
+        </div>
+
+        <!-- Topic Selection Content -->
+        <div id="topicSelectionContent" class="d-none">
+          <div class="row">
+            <div class="col-md-8">
+              <h6 class="mb-3">Choose a topic:</h6>
+              <div id="topicList" class="mb-3">
+                <!-- Topics will be populated here -->
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Tone:</label>
+                <select class="form-select" id="toneSelect">
+                  <option value="professional">Professional</option>
+                  <option value="casual">Casual</option>
+                  <option value="bold">Bold</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Target Audience:</label>
+                <select class="form-select" id="audienceSelect">
+                  <option value="CXOs">CXOs</option>
+                  <option value="Founders">Founders</option>
+                  <option value="Marketers">Marketers</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              onclick="hideTopicSelection()"
+            >
+              <i class="fas fa-times me-2"></i>Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="generateSocialBtn"
+              disabled
+              onclick="generateSocialFromDashboard()"
+            >
+              <i class="fas fa-magic me-2"></i>Generate Social Content
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Topic Selection Section (Hidden by default) -->
+<div class="row mb-4 d-none" id="blogTopicSelectionSection">
+  <div class="col-12">
+    <div class="card border-primary">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-blog me-2"></i>Select Topic for Blog Content
+        </h5>
+      </div>
+      <div class="card-body">
+        <!-- Loading State -->
+        <div id="blogTopicLoading" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Generating topics...</span>
+          </div>
+          <p class="mt-2 text-muted">
+            Analyzing trends and generating topics...
+          </p>
+        </div>
+
+        <!-- Topic Selection Content -->
+        <div id="blogTopicSelectionContent" class="d-none">
+          <div class="row">
+            <div class="col-md-8">
+              <h6 class="mb-3">Choose a topic:</h6>
+              <div id="blogTopicList" class="mb-3">
+                <!-- Topics will be populated here -->
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Tone:</label>
+                <select class="form-select" id="blogToneSelect">
+                  <option value="professional">Professional</option>
+                  <option value="casual">Casual</option>
+                  <option value="bold">Bold</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Target Audience:</label>
+                <select class="form-select" id="blogAudienceSelect">
+                  <option value="CXOs">CXOs</option>
+                  <option value="Founders">Founders</option>
+                  <option value="Marketers">Marketers</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              onclick="hideBlogTopicSelection()"
+            >
+              <i class="fas fa-times me-2"></i>Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="generateBlogBtn"
+              disabled
+              onclick="generateBlogFromDashboard()"
+            >
+              <i class="fas fa-blog me-2"></i>Generate Blog Content
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Content Tabs -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <ul
+          class="nav nav-tabs card-header-tabs"
+          id="contentTabs"
+          role="tablist"
+        >
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="trends-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#trends"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-chart-line me-2"></i>Trends
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active"
+              id="blogs-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#blogs"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-blog me-2"></i>Blogs
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="social-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#social"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-share-alt me-2"></i>Social Media
+            </button>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="performance-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#performance"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-analytics me-2"></i>Performance
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content" id="contentTabsContent">
+          <!-- Trends Tab -->
+          <div class="tab-pane fade" id="trends" role="tabpanel">
+            <div id="trends-content">
+              <div class="text-center text-muted">
+                <i class="fas fa-chart-line fa-3x mb-3"></i>
+                <p>
+                  No trends data available. Click "Fetch Trends" to get the
+                  latest industry insights.
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Blogs Tab -->
+          <div class="tab-pane fade show active" id="blogs" role="tabpanel">
+            <div id="blogs-content">
+              <div class="text-center text-muted">
+                <i class="fas fa-blog fa-3x mb-3"></i>
+                <p>
+                  No blog posts generated yet. Click "Generate Blog" to create
+                  your first post.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Media Tab -->
+          <div class="tab-pane fade" id="social" role="tabpanel">
+            <!-- Social Media Sub-Navigation -->
+            <div class="card mb-3">
+              <div class="card-header p-0">
+                <ul
+                  class="nav nav-tabs card-header-tabs"
+                  id="socialTabs"
+                  role="tablist"
+                >
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link active"
+                      id="linkedin-article-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#linkedin-article"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-linkedin me-2"></i>LinkedIn Article
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="linkedin-post-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#linkedin-post"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-linkedin me-2"></i>LinkedIn Post
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="twitter-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#twitter"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-x-twitter me-2"></i>X (Twitter)
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="youtube-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#youtube"
+                      type="button"
+                      role="tab"
+                    >
+                      <i class="fab fa-youtube me-2"></i>YouTube
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="socialTabsContent">
+                  <!-- LinkedIn Article Content -->
+                  <div
+                    class="tab-pane fade show active"
+                    id="linkedin-article"
+                    role="tabpanel"
+                  >
+                    <div id="linkedin-article-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-linkedin fa-3x mb-3"></i>
+                        <p>No LinkedIn Article content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- LinkedIn Post Content -->
+                  <div class="tab-pane fade" id="linkedin-post" role="tabpanel">
+                    <div id="linkedin-post-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-linkedin fa-3x mb-3"></i>
+                        <p>No LinkedIn Post content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- X (Twitter) Content -->
+                  <div class="tab-pane fade" id="twitter" role="tabpanel">
+                    <div id="twitter-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-x-twitter fa-3x mb-3"></i>
+                        <p>No X (Twitter) content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- YouTube Content -->
+                  <div class="tab-pane fade" id="youtube" role="tabpanel">
+                    <div id="youtube-content">
+                      <div class="text-center text-muted">
+                        <i class="fab fa-youtube fa-3x mb-3"></i>
+                        <p>No YouTube content generated yet.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Tab -->
+          <div class="tab-pane fade" id="performance" role="tabpanel">
+            <div id="performance-content">
+              {% if performance %}
+              <div class="row">
+                {% for platform, data in performance.summary.platforms.items()
+                %}
+                <div class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-header">
+                      <h6 class="mb-0">{{ platform.title() }}</h6>
+                    </div>
+                    <div class="card-body">
+                      <p>
+                        <strong>Avg Engagement:</strong> {{
+                        "%.1f"|format(data.avg_engagement * 100) }}%
+                      </p>
+                      <p>
+                        <strong>Insights:</strong> {{ data.insights[:100] }}...
+                      </p>
+                      <p>
+                        <strong>Recommendations:</strong> {{
+                        data.recommendations[:100] }}...
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="text-center text-muted">
+                <i class="fas fa-analytics fa-3x mb-3"></i>
+                <p>
+                  No performance data available. Click "Run Analysis" to
+                  generate insights.
+                </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Export Button -->
+<div class="row mt-4">
+  <div class="col-12 text-center">
+    <button class="btn btn-outline-primary btn-lg" onclick="exportContent()">
+      <i class="fas fa-download me-2"></i>Export All Content
+    </button>
+  </div>
+</div>
+
+<!-- Blog Mode Selection Modal -->
+<div class="modal fade" id="blogModeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choose Blog Generation Mode</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100"
+              style="cursor: pointer"
+              onclick="selectBlogMode('automatic')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center"
+              >
+                <i class="fas fa-magic fa-3x text-primary mb-3"></i>
+                <h5>Automatic</h5>
+                <p class="text-muted mb-0">
+                  AI generates topics from your industry trends
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100"
+              style="cursor: pointer"
+              onclick="selectBlogMode('manual')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center"
+              >
+                <i class="fas fa-pen fa-3x text-success mb-3"></i>
+                <h5>Manual</h5>
+                <p class="text-muted mb-0">
+                  Write your own topic and we'll find relevant trends
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Industry Selection Modal -->
+<div class="modal fade" id="blogIndustryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Target Industry</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Select the industry to fetch relevant trends for blog topic generation.
+        </div>
+        <div class="mb-3">
+          <label for="blogTargetIndustrySelect" class="form-label fw-bold">Target Industry:</label>
+          <select id="blogTargetIndustrySelect" class="form-select form-select-lg">
+            <option value="IT & Dev">IT & Development</option>
+            <option value="Sales/Marketing">Sales/Marketing</option>
+            <option value="Fintech">Fintech</option>
+            <option value="Billing">Billing</option>
+            <option value="Retail">Retail</option>
+            <option value="Logistics">Logistics</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="HRTech">HRTech</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Agritech">Agritech</option>
+            <option value="Energy">Energy</option>
+            <option value="Travel">Travel</option>
+            <option value="Legal">Legal</option>
+            <option value="Media">Media</option>
+            <option value="Government">Government</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="fetchBlogTrends()"
+        >
+          <i class="fas fa-arrow-right me-2"></i>Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Trend Slider Modal -->
+<div class="modal fade" id="blogTrendSliderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">How much should topics follow trends?</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Adjust the slider to control the balance between trend-following and original topics.
+        </div>
+        <div class="mb-4">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted"><i class="fas fa-chart-line me-1"></i>Follow Trends</span>
+            <span class="text-muted">Create Trends<i class="fas fa-lightbulb ms-1"></i></span>
+          </div>
+          <input
+            type="range"
+            class="form-range"
+            id="trendInfluenceSlider"
+            min="0"
+            max="100"
+            step="20"
+            value="0"
+            list="tickmarks"
+          />
+          <datalist id="tickmarks">
+            <option value="0" label="0"></option>
+            <option value="20" label="20"></option>
+            <option value="40" label="40"></option>
+            <option value="60" label="60"></option>
+            <option value="80" label="80"></option>
+            <option value="100" label="100"></option>
+          </datalist>
+          <div class="d-flex justify-content-between mt-1">
+            <small>0</small>
+            <small>20</small>
+            <small>40</small>
+            <small>60</small>
+            <small>80</small>
+            <small>100</small>
+          </div>
+          <div class="text-center mt-3">
+            <span class="badge bg-primary" id="sliderValueDisplay">Value: 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="generateBlogTopicsWithSlider()"
+        >
+          <i class="fas fa-magic me-2"></i>Generate Topics
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Industry and Platform Selection Modal -->
+<div class="modal fade" id="socialIndustryPlatformModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Target Industry and Platform</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Select the industry and platform to fetch relevant trends for social media topic generation.
+        </div>
+        <div class="mb-3">
+          <label for="socialTargetIndustrySelect" class="form-label fw-bold">Target Industry:</label>
+          <select id="socialTargetIndustrySelect" class="form-select form-select-lg">
+            <option value="IT & Dev">IT & Development</option>
+            <option value="Sales/Marketing">Sales/Marketing</option>
+            <option value="Fintech">Fintech</option>
+            <option value="Billing">Billing</option>
+            <option value="Retail">Retail</option>
+            <option value="Logistics">Logistics</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="HRTech">HRTech</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Agritech">Agritech</option>
+            <option value="Energy">Energy</option>
+            <option value="Travel">Travel</option>
+            <option value="Legal">Legal</option>
+            <option value="Media">Media</option>
+            <option value="Government">Government</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="socialTargetPlatformSelect" class="form-label fw-bold">Target Platform:</label>
+          <select id="socialTargetPlatformSelect" class="form-select form-select-lg">
+            <option value="linkedin-article">LinkedIn - Article</option>
+            <option value="linkedin-post">LinkedIn - Post</option>
+            <option value="twitter">X (Twitter)</option>
+            <option value="youtube">YouTube</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="fetchSocialTrends()">
+          <i class="fas fa-arrow-right me-2"></i>Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Trend Slider Modal -->
+<div class="modal fade" id="socialTrendSliderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">How much should topics follow trends?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Adjust the slider to control the balance between trend-following and original topics.
+        </div>
+        <div class="mb-4">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted"><i class="fas fa-chart-line me-1"></i>Follow Trends</span>
+            <span class="text-muted">Create Trends<i class="fas fa-lightbulb ms-1"></i></span>
+          </div>
+          <input type="range" class="form-range" id="socialTrendInfluenceSlider" min="0" max="100" step="20" value="0" list="socialTickmarks" />
+          <datalist id="socialTickmarks">
+            <option value="0" label="0"></option>
+            <option value="20" label="20"></option>
+            <option value="40" label="40"></option>
+            <option value="60" label="60"></option>
+            <option value="80" label="80"></option>
+            <option value="100" label="100"></option>
+          </datalist>
+          <div class="d-flex justify-content-between mt-1">
+            <small>0</small>
+            <small>20</small>
+            <small>40</small>
+            <small>60</small>
+            <small>80</small>
+            <small>100</small>
+          </div>
+          <div class="text-center mt-3">
+            <span class="badge bg-success" id="socialSliderValueDisplay">Value: 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="generateSocialTopicsWithSlider()">
+          <i class="fas fa-magic me-2"></i>Generate Topics
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Social Mode Selection Modal -->
+<div class="modal fade" id="socialModeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choose Social Generation Mode</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100 border-2"
+              style="cursor: pointer; transition: all 0.3s"
+              onmouseover="this.style.borderColor='#0d6efd'; this.style.boxShadow='0 4px 12px rgba(13,110,253,0.3)'"
+              onmouseout="this.style.borderColor=''; this.style.boxShadow=''"
+              onclick="selectSocialMode('automatic')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center py-4"
+              >
+                <i class="fas fa-magic fa-3x text-primary mb-3"></i>
+                <h5 class="mb-2">Automatic</h5>
+                <p class="text-muted mb-0 small">
+                  AI generates topics from your industry trends
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="card mode-card h-100 border-2"
+              style="cursor: pointer; transition: all 0.3s"
+              onmouseover="this.style.borderColor='#198754'; this.style.boxShadow='0 4px 12px rgba(25,135,84,0.3)'"
+              onmouseout="this.style.borderColor=''; this.style.boxShadow=''"
+              onclick="selectSocialMode('manual')"
+            >
+              <div
+                class="card-body text-center d-flex flex-column justify-content-center py-4"
+              >
+                <i class="fas fa-pen fa-3x text-success mb-3"></i>
+                <h5 class="mb-2">Manual</h5>
+                <p class="text-muted mb-0 small">
+                  Write your own topic and we'll find relevant trends
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Manual Social Topic Input Modal -->
+<div
+  class="modal fade"
+  id="manualSocialTopicModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter Your Social Media Topic</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Enter your social media topic and we'll fetch relevant trends to
+          create compelling content for your selected platforms.
+        </div>
+        <div class="mb-3">
+          <label for="manualSocialTopicInput" class="form-label fw-bold"
+            >Your Topic:</label
+          >
+          <input
+            type="text"
+            id="manualSocialTopicInput"
+            class="form-control form-control-lg"
+            placeholder="e.g., AI revolutionizing customer support in healthcare"
+          />
+          <small class="text-muted"
+            >Be specific and descriptive for best results</small
+          >
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="manualSocialIndustrySelect" class="form-label"
+              >Industry:</label
+            >
+            <select id="manualSocialIndustrySelect" class="form-select">
+              <option value="IT & Dev">IT & Development</option>
+              <option value="Sales/Marketing">Sales/Marketing</option>
+              <option value="Fintech">Fintech</option>
+              <option value="Billing">Billing</option>
+              <option value="Retail">Retail</option>
+              <option value="Logistics">Logistics</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Education">Education</option>
+              <option value="HRTech">HRTech</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="Agritech">Agritech</option>
+              <option value="Energy">Energy</option>
+              <option value="Travel">Travel</option>
+              <option value="Legal">Legal</option>
+              <option value="Media">Media</option>
+              <option value="Government">Government</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualSocialToneSelect" class="form-label">Tone:</label>
+            <select id="manualSocialToneSelect" class="form-select">
+              <option value="professional">Professional</option>
+              <option value="casual">Casual</option>
+              <option value="bold">Bold</option>
+              <option value="technical">Technical</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualSocialAudienceSelect" class="form-label"
+              >Target Audience:</label
+            >
+            <select id="manualSocialAudienceSelect" class="form-select">
+              <option value="CXOs">CXOs</option>
+              <option value="Founders">Founders</option>
+              <option value="Marketers">Marketers</option>
+              <option value="Developers">Developers</option>
+              <option value="Managers">Managers</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Select Platform:</label>
+          <select class="form-select" id="manualPlatformSelect">
+            <option value="linkedin-article">LinkedIn - Article</option>
+            <option value="linkedin-post">LinkedIn - Post</option>
+            <option value="twitter">X (Twitter)</option>
+            <option value="youtube">YouTube</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="generateSocialManual()"
+        >
+          <i class="fas fa-magic me-2"></i>Generate Social Content
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Manual Blog Topic Input Modal -->
+<div
+  class="modal fade"
+  id="manualBlogTopicModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter Your Blog Topic</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Enter your blog topic and we'll fetch relevant trends to create
+          compelling content.
+        </div>
+        <div class="mb-3">
+          <label for="manualBlogTopicInput" class="form-label fw-bold"
+            >Your Topic:</label
+          >
+          <input
+            type="text"
+            id="manualBlogTopicInput"
+            class="form-control form-control-lg"
+            placeholder="e.g., How AI is transforming customer service in 2025"
+          />
+          <small class="text-muted"
+            >Be specific and descriptive for best results</small
+          >
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="manualBlogIndustrySelect" class="form-label"
+              >Industry:</label
+            >
+            <select id="manualBlogIndustrySelect" class="form-select">
+              <option value="IT & Dev">IT & Development</option>
+              <option value="Sales/Marketing">Sales/Marketing</option>
+              <option value="Fintech">Fintech</option>
+              <option value="Billing">Billing</option>
+              <option value="Retail">Retail</option>
+              <option value="Logistics">Logistics</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Education">Education</option>
+              <option value="HRTech">HRTech</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="Agritech">Agritech</option>
+              <option value="Energy">Energy</option>
+              <option value="Travel">Travel</option>
+              <option value="Legal">Legal</option>
+              <option value="Media">Media</option>
+              <option value="Government">Government</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualBlogToneSelect" class="form-label">Tone:</label>
+            <select id="manualBlogToneSelect" class="form-select">
+              <option value="professional">Professional</option>
+              <option value="casual">Casual</option>
+              <option value="bold">Bold</option>
+              <option value="technical">Technical</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="manualBlogAudienceSelect" class="form-label"
+              >Target Audience:</label
+            >
+            <select id="manualBlogAudienceSelect" class="form-select">
+              <option value="CXOs">CXOs</option>
+              <option value="Founders">Founders</option>
+              <option value="Marketers">Marketers</option>
+              <option value="Developers">Developers</option>
+              <option value="Managers">Managers</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="generateBlogManual()"
+        >
+          <i class="fas fa-magic me-2"></i>Generate Blog
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <!-- Loading State -->
+        <div id="loading-state">
+          <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <h5 id="loading-message">Processing...</h5>
+          <p class="text-muted">This may take a few moments.</p>
+        </div>
+        
+        <!-- Error State (hidden by default) -->
+        <div id="loading-error-state" class="d-none">
+          <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+          <h5 class="text-danger">Error</h5>
+          <p id="loading-error-message" class="text-muted"></p>
+          <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">
+            <i class="fas fa-times me-2"></i>Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Content Modal -->
+<div class="modal fade" id="contentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contentModalTitle">Blog Title</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div
+        class="modal-body"
+        id="contentModalBody"
+        style="max-height: 70vh; overflow-y: auto"
+      >
+        Blog content will appear here...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-info generate-image-prompt-btn d-none"
+          onclick="generateBlogImagePromptFromModal()"
+        >
+          <i class="fas fa-image me-1"></i>Generate Image Prompt
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="copyModalContent()"
+        >
+          <i class="fas fa-copy me-1"></i>Copy Content
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LinkedIn Post Modal -->
+<div class="modal fade" id="linkedinPostModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="linkedinPostModalTitle">
+          <i class="fab fa-linkedin me-2"></i>LinkedIn Post
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div
+        class="modal-body linkedin-post-body"
+        id="linkedinPostModalBody"
+        style="max-height: 70vh; overflow-y: auto; background-color: #f3f2ef;"
+      >
+        <div class="linkedin-post-container">
+          <div class="linkedin-post-content" id="linkedinPostContent">
+            Post content will appear here...
+          </div>
+          <div class="linkedin-post-hashtags mt-3" id="linkedinPostHashtags">
+            <!-- Hashtags will be populated here -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-warning"
+          id="regenerateLinkedInPostBtn"
+          onclick="regenerateLinkedInPost()"
+        >
+          <i class="fas fa-sync-alt me-1"></i>Regenerate
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="copyLinkedInPostContent()"
+        >
+          <i class="fas fa-copy me-1"></i>Copy Post
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // Dashboard initialization - delegated to external JS file
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("Dashboard template loaded, delegating to external JS...");
+
+    // The external dashboard.js file will handle all initialization
+    // Just ensure we load the initial content after a short delay
+    setTimeout(() => {
+      if (typeof loadContent === "function") {
+        loadContent("blogs");
+      }
+    }, 500);
+
+    // Add event listeners for main tab clicks
+    document
+      .querySelectorAll('#contentTabs [data-bs-toggle="tab"]')
+      .forEach((tab) => {
+        tab.addEventListener("shown.bs.tab", function (e) {
+          const target = e.target.getAttribute("data-bs-target").substring(1);
+          console.log("Main tab clicked:", target);
+          if (target === "social") {
+            // Load LinkedIn content by default when social tab is opened
+            if (typeof loadSocialContent === "function") {
+              loadSocialContent("linkedin");
+            }
+          } else {
+            if (typeof loadContent === "function") {
+              loadContent(target);
+            }
+          }
+        });
+      });
+
+    // Add event listeners for social sub-tab clicks
+    document
+      .querySelectorAll('#socialTabs [data-bs-toggle="tab"]')
+      .forEach((tab) => {
+        tab.addEventListener("shown.bs.tab", function (e) {
+          const target = e.target.getAttribute("data-bs-target").substring(1);
+          console.log("Social sub-tab clicked:", target);
+          if (typeof loadSocialContent === "function") {
+            loadSocialContent(target);
+          }
+        });
+      });
+  });
+
+  // generateContent function is handled by external dashboard.js
+
+  // loadContent function is handled by external dashboard.js
+
+  // loadSocialContent function is handled by external dashboard.js
+
+  // All utility functions are handled by external dashboard.js
+  // Keep only essential template-specific functions here
+
+  function exportContent() {
+    showLoading("Exporting content...");
+
+    fetch("/export")
+      .then((response) => response.json())
+      .then((data) => {
+        hideLoading();
+        if (data.error) {
+          showError(data.error);
+        } else {
+          // Download the data as JSON
+          const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `marketing_content_${
+            new Date().toISOString().split("T")[0]
+          }.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showSuccess("Content exported successfully!");
+        }
+      })
+      .catch((error) => {
+        hideLoading();
+        showError("Export failed: " + error.message);
+      });
+  }
+
+  function showLoading(message) {
+    document.getElementById("loading-message").textContent = message;
+    new bootstrap.Modal(document.getElementById("loadingModal")).show();
+  }
+
+  function hideLoading() {
+    const modal = bootstrap.Modal.getInstance(
+      document.getElementById("loadingModal")
+    );
+    if (modal) modal.hide();
+  }
+
+  function showSuccess(message) {
+    showAlert(message, "success");
+  }
+
+  function showError(message) {
+    showAlert(message, "danger");
+  }
+
+  function showAlert(message, type) {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    document.querySelector("main").insertAdjacentHTML("afterbegin", alertHtml);
+  }
+</script>
+{% endblock %}

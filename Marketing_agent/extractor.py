@@ -5,90 +5,103 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_genai import (
     GoogleGenerativeAIEmbeddings,
     ChatGoogleGenerativeAI
 )
+from langchain_ollama import OllamaEmbeddings
 from dotenv import load_dotenv
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
 load_dotenv()
 
 VECTOR_DB_DIR = "./vectordb"
-OUTPUT_FILE = "./niche/niche_icp.json"
+OUTPUT_FILE = "./generated/niche_icp.json"
 
 # ----------- PROMPT -------------
-PROMPT_TEMPLATE = """
-You are an AI assistant that extracts structured business insights
-from documents about a company's niche and Ideal Customer Profile (ICP).
+PROMPT_TEMPLATE = """You are an AI assistant that extracts structured business insights from documents about a company's niche and Ideal Customer Profile (ICP).
 
 Hard rules:
-- Do NOT copy sentences or phrases verbatim from the input. Rephrase and summarize.
-- Produce fact-based, granular, and actionable reasons for problems ("why") and concrete mechanisms for solutions ("how").
-- If a fact cannot be inferred, leave it as "" for strings or [] for lists.
-- Output ONLY valid JSON matching the schema below. No extra text, no commentary.
+- PRESERVE key industry terminology, tool names, and specific business concepts exactly as they appear
+- Rephrase only for clarity, but maintain critical keywords and technical terms
+- Include specific methodologies, technologies, and market terms mentioned in the document
+- Produce fact-based, granular, and actionable reasons for problems ("why") and concrete mechanisms for solutions ("how")
+- If a fact cannot be inferred, leave it as "" for strings or [] for lists
+- Output ONLY valid JSON matching the schema below. No extra text, no commentary
 
-From the provided context, extract and rephrase the following fields.
+Keyword Preservation Priority:
+- Keep exact technology names (e.g., "Gong", "Clari", "HubSpot", "Salesforce", "Outreach", "ZoomInfo")
+- Preserve industry acronyms (e.g., "GTM", "RevOps", "CRM", "SaaS", "B2B", "PLG", "ABM")
+- Maintain specific methodologies (e.g., "pipeline forecasting", "conversion optimization", "lead scoring")
+- Include market terminology (e.g., "predictable revenue", "scalable growth", "product-led growth")
+- Preserve measurement terms and KPI language exactly as written
+
+Industry Context Requirements:
+- Extract and preserve all mentions of specific business processes, tools, and methodologies
+- Include competitive landscape terms and market positioning language
+- Maintain technical terminology that would appear in industry publications
+- Preserve measurement terms and KPI language exactly as written
+
+From the provided context, extract and preserve the following fields with industry-specific terminology.
 
 Schema & required content expectations:
-
-- industry: (string) concise category, e.g., "B2B SaaS Go-To-Market"
-- target_audience: (list of strings) concise roles or groups, e.g., ["Founders", "RevOps"]
+- industry: (string) concise category using exact industry terminology, e.g., "B2B SaaS Go-To-Market", "Enterprise Sales Automation", "RevOps Technology"
+- target_audience: (list of strings) Include specific role titles, company types, and industry segments exactly as mentioned. Combine roles with industry context (e.g., "B2B SaaS Founders", "GTM Leaders in lean sales teams", "RevOps Directors at growth-stage companies")
 - customer_pain_points: (list of objects) each object MUST include:
-    - challenge: (string) short rephrased challenge
-    - why: (list of objects) each object is a specific possible cause with:
-        - cause: (string) concise label of the cause (e.g., "poor data instrumentation")
-        - explanation: (string) 1-3 sentences explaining the causal mechanism — how the cause produces the challenge (be specific; cite typical mechanisms or system failures)
-        - indicators: (list of strings) concrete signals, metrics, or behaviors you would observe if this cause is true (e.g., "conversion drops at demo stage", "CRM lead source empty")
-        - recommended_first_checks: (list of short actions) immediate, low-effort checks or data points to verify this cause (e.g., "review last 30 CRM records for missing source")
+  - challenge: (string) Include specific business terms, tool names, and measurable outcomes from the document. Use industry terminology that would appear in news headlines or trend articles
+  - why: (list of objects) each object is a specific possible cause with:
+    - cause: (string) concise label using industry terminology (e.g., "poor CRM data instrumentation", "GTM stack fragmentation")
+    - explanation: (string) 1-3 sentences explaining the causal mechanism using specific tools, processes, and industry terms
+    - indicators: (list of strings) concrete signals using industry KPIs and metrics (e.g., "Salesforce conversion drops at demo stage", "Gong call analysis shows objection patterns")
+    - recommended_first_checks: (list of short actions) immediate checks using specific tools and processes (e.g., "audit last 30 HubSpot records for missing UTM sources")
 - customer_needs: (list of objects) each object MUST include:
-    - need: (string) desired outcome
-    - how: (list of objects) each object is a concrete way the company can meet that need:
-        - approach: (string) short name of the approach/mechanism (e.g., "instrumentation + analytics layer")
-        - details: (string) 1-3 sentences describing exactly how it works or is implemented (tools, integration points, behaviors)
-        - measurable_signs: (list of strings) KPIs or signals that show the approach is working (e.g., "win rate +7pp", "reduction in average sales cycle")
-        - first_deliverables: (list of strings) immediate outputs to expect (e.g., "dashboard of 5 leading GTM metrics", "20 prioritized playbook changes")
-- value_proposition: (string) 1 sentence paraphrase of unique offering
-- brand_tone: (string) inferred communication style, e.g., "Strategic, Direct, Thought-leadership"
+  - need: (string) Use specific, searchable terminology that includes technology names, business processes, and measurable outcomes mentioned in the document
+  - how: (list of objects) each object is a concrete way the company can meet that need:
+    - approach: (string) short name using industry terminology (e.g., "RevOps instrumentation + Mixpanel analytics layer")
+    - details: (string) 1-3 sentences describing implementation using specific tools, integration points, and industry processes
+    - measurable_signs: (list of strings) KPIs using industry-standard metrics (e.g., "pipeline velocity +15%", "Gong conversation intelligence score >8.5")
+    - first_deliverables: (list of strings) immediate outputs using industry terminology (e.g., "Salesforce dashboard with 5 leading GTM indicators", "RevOps playbook with 20 prioritized conversion optimizations")
+- value_proposition: (string) 1 sentence using industry terminology and specific business outcomes mentioned in the document
+- brand_tone: (string) inferred communication style using industry context, e.g., "Strategic GTM Thought-leadership", "Data-driven RevOps Authority"
 
 Output format (must match exactly):
 {{
-  \"industry": \"\",
-  \"target_audience\": [],
-  \"customer_pain_points\": [
+  "industry": "",
+  "target_audience": [],
+  "customer_pain_points": [
     {{
-      \"challenge": \"\",
-      \"why\": [
+      "challenge": "",
+      "why": [
         {{
-          \"cause\": \"\",
-          \"explanation\": \"\",
-          \"indicators\": [],
-          \"recommended_first_checks\": [],
+          "cause": "",
+          "explanation": "",
+          "indicators": [],
+          "recommended_first_checks": []
         }}
       ]
     }}
   ],
-  \"customer_needs\": [
+  "customer_needs": [
     {{
-      \"need\": \"\",
-      \"how\": [
+      "need": "",
+      "how": [
         {{
-          \"approach\": \"\",
-          \"details\": \"\",
-          \"measurable_signs\": [],
-          \"first_deliverables\": []
+          "approach": "",
+          "details": "",
+          "measurable_signs": [],
+          "first_deliverables": []
         }}
       ]
     }}
   ],
-  \"value_proposition\": \"\",
-  \"brand_tone\": \"\"
+  "value_proposition": "",
+  "brand_tone": ""
 }}
 
 Context:
-{context}
-"""
+{context}"""
+
 
 
 
